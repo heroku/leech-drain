@@ -9,5 +9,5 @@
   (or (env k) (throw (Exception. (str "missing key " k)))))
 
 (defn aorta-urls [] (str/split (env! "AORTA_URLS") #","))
-(defn redis-url []) (env! "REDIS_URL")
+(defn redis-url [] (env! "REDIS_URL"))
 (defn cloud [] (env! "CLOUD"))
