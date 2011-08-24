@@ -1,6 +1,8 @@
 (ns leech.io
   (:require [leech.util :as util])
   (:require [leech.queue :as queue])
+  (:require [clj-json.core :as json])
+  (:require [clj-redis.client :as redis])
   (:import (clojure.lang LineNumberingPushbackReader))
   (:import (java.io InputStreamReader BufferedReader PrintWriter))
   (:import (java.net Socket ConnectException)))
@@ -37,3 +39,16 @@
         (bleeder aorta-url (fn [line]
           (queue/offer apply-queue [aorta-host line]))))))))
 
+(defn init-publishers [publish-queue redis-url chan workers]
+  (let [redis (redis/init {:url redis-url})]
+    (log "init_publishers chan=%s" chan)
+    (dotimes [i workers]
+      (log "init_publisher chan=%s index=%d" chan i)
+      (util/spawn-loop (fn []
+        (let [data (queue/take publish-queue)
+              data-str (try
+                         (json/generate-string data)
+                         (catch Exception e
+                           (log "publish event=error data=%s" (pr-str data))
+                           (throw e)))]
+          (redis/publish redis chan data-str)))))))
