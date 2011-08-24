@@ -52,3 +52,9 @@
                            (log "publish event=error data=%s" (pr-str data))
                            (throw e)))]
           (redis/publish redis chan data-str)))))))
+
+(defn init-subscriber [redis-url chan sub-queue]
+  (let [redis (redis/init {:url redis-url})]
+    (redis/subscribe redis [chan]
+      (fn [_ data-json]
+        (queue/offer sub-queue (json/parse-string data-json))))))
