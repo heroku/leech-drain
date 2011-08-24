@@ -8,19 +8,21 @@
 (defn log [msg & args]
   (apply util/log (str "bleeder " msg) args))
 
-(defn init-receiver [receive-queue]
+(defn init-receiver [receive-queue publish-queue]
   (log "init_receiver")
   (util/spawn-loop (fn []
     (let [[_ line] (queue/take receive-queue)]
       (when-let [parsed (parse/parse-line line)]
         (when (= (conf/cloud) (:cloud parsed))
-          (log "line %s" line)
-          (log "parsed %s" (pr-str parsed))))))))
+           (queue/offer publish-queue (assoc parsed :line line))))))))
 
 (defn -main []
   (log "init event=start")
-  (let [receive-queue (queue/init 20000)]
+  (let [receive-queue (queue/init 20000)
+        publish-queue (queue/init 1000)]
     (queue/init-watcher receive-queue "receive")
-    (io/init-bleeders (conf/aorta-urls) receive-queue)
-    (init-receiver receive-queue))
+    (queue/init-watcher publish-queue "publish")
+    (io/init-publishers publish-queue (conf/redis-url) "event.received" 4)
+    (init-receiver receive-queue publish-queue)
+    (io/init-bleeders (conf/aorta-urls) receive-queue))
   (log "init event=finish"))
