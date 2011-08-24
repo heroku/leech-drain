@@ -10,5 +10,5 @@ Leech events from the Heroku event stream.
         AORTA_URLS="aorta://..." \
         CLOUD="mark.herokudev.com"
     $ git push heroku master
-    $ heroku scale receiver=10 web=0
+    $ heroku scale receiver=10
     $ heroku logs --tail

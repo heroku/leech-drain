@@ -1,1 +1,1 @@
-receiver:  lein run -m leach.receiver
+receiver:  lein run -m leech.receiver
