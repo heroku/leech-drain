@@ -1,0 +1,5 @@
+.env*
+!.end.sample
+lib
+*.xml
+*.jar
