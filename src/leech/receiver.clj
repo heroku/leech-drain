@@ -14,7 +14,8 @@
     (let [[_ line] (queue/take receive-queue)]
       (when-let [parsed (parse/parse-line line)]
         (when (= (conf/cloud) (:cloud parsed))
-          (log (pr-str parsed))))))))
+          (log "line %s" line)
+          (log "parsed %s" (pr-str parsed))))))))
 
 (defn -main []
   (log "init event=start")
