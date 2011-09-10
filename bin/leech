@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ -f "out/leech.js" ]; then
+  exec node out/leech.js $@
+else
+  echo "  ! missing file out/leech.js" 1>&2
+  echo "  ! compile leech with cljs" 1>&2
+  exit 1
+fi

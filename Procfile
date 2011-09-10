@@ -1,1 +1,2 @@
-receiver:  lein run -m leech.receiver
+receiver:  bin/leech receiver
+web:       bin/leech web
