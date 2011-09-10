@@ -1,14 +1,13 @@
 (ns leech.io
   (:require [leech.util :as util])
-  (:require [leech.queue :as queue])
   (:require [clj-json.core :as json])
   (:require [clj-redis.client :as redis])
   (:import (clojure.lang LineNumberingPushbackReader))
   (:import (java.io InputStreamReader BufferedReader PrintWriter))
   (:import (java.net Socket ConnectException)))
 
-(defn log [msg & args]
-  (apply util/log (str "io " msg) args))
+(defn log [data]
+  (util/log (merge {:ns "io"} data)))
 
 (defn bleeder [aorta-url handler]
   (let [{:keys [^String host ^Integer port auth]} (util/url-parse aorta-url)]
@@ -38,23 +37,3 @@
       (util/spawn (fn []
         (bleeder aorta-url (fn [line]
           (queue/offer apply-queue [aorta-host line]))))))))
-
-(defn init-publishers [publish-queue redis-url chan workers]
-  (let [redis (redis/init {:url redis-url})]
-    (log "init_publishers chan=%s" chan)
-    (dotimes [i workers]
-      (log "init_publisher chan=%s index=%d" chan i)
-      (util/spawn-loop (fn []
-        (let [data (queue/take publish-queue)
-              data-str (try
-                         (json/generate-string data)
-                         (catch Exception e
-                           (log "publish event=error data=%s" (pr-str data))
-                           (throw e)))]
-          (redis/publish redis chan data-str)))))))
-
-(defn init-subscriber [redis-url chan sub-queue]
-  (let [redis (redis/init {:url redis-url})]
-    (redis/subscribe redis [chan]
-      (fn [_ data-json]
-        (queue/offer sub-queue (json/parse-string data-json))))))

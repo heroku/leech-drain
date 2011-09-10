@@ -1,8 +1,7 @@
-(ns leech.term
-  (:require [leech.conf :as conf])
-  (:require [leech.util :as util])
-  (:require [leech.queue :as queue])
-  (:require [leech.io :as io]))
+(ns leech.tail
+  (:require [leech.conf :as conf]
+            [leech.util :as util]
+            [leech.redis :as redis]))
 
 (def color-codes
   {:red     "\033[31m"
@@ -39,13 +38,10 @@
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
-(defn init-writer [write-queue]
-  (util/spawn-loop (fn []
-    (let [{:strs [line component]} (queue/take write-queue)
-          color (get component-colors component)]
-      (println (colored color line))))))
+(defn init []
+  (redis/init-subscriber (conf/redis-url) "event-received"
+    (fn [{:strs [line component]}
+         color (get component-colors component)]
+      (println (colored color line)))))
 
-(defn -main []
-  (let [write-queue (queue/init 1000)]
-    (init-writer write-queue)
-    (io/init-subscriber (conf/redis-url) "event.received" write-queue)))
+(util/main "tail" init)

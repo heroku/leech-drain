@@ -3,6 +3,19 @@
 Leech events from the Heroku event stream.
 
 
+## Running locally
+
+Compile the app:
+
+    $ cljsc src \
+        '{:optimizations :simple :pretty-print true :target :nodejs}' \
+        > out/leech.j
+
+Run a namespace:
+
+    $ bin/leech parse
+
+
 ## Running as Heroku app
 
     $ heroku create leech-mark --stack cedar

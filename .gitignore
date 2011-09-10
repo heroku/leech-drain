@@ -1,5 +1,8 @@
 .env*
-!.end.sample
+!.env.sample
+classes
 lib
+node_modules
+out
 *.xml
 *.jar
