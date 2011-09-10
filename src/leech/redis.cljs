@@ -1,3 +1,4 @@
+; TODO
 (ns leech.redis
   (:require [cljs.nodejs :as node]))
 
@@ -22,4 +23,3 @@
     (redis/subscribe redis [chan]
       (fn [_ data-json]
         (receive-fn (util/json-parse data-json))))))
-

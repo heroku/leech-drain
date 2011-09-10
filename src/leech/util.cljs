@@ -61,6 +61,14 @@
   [interval-id]
   (js/clearInterval interval-id))
 
+(defn spin
+  "Call the given function repeatedly."
+  [f]
+  (let [spinner (fn thisfn []
+                  (f)
+                  (.nextTick node/process thisfn))]
+    (spinner)))
+
 (defn trap
   "Trap the Unix signal sig with the given function."
   [sig f]
