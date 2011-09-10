@@ -1,19 +1,17 @@
 ; TODO
 (ns leech.io
-  (:require [leech.util :as util])
-  (:require [clj-json.core :as json])
-  (:require [clj-redis.client :as redis])
-  (:import (clojure.lang LineNumberingPushbackReader))
-  (:import (java.io InputStreamReader BufferedReader PrintWriter))
-  (:import (java.net Socket ConnectException)))
+  (:require [cljs.nodejs :as node]
+            [leech.util :as util]
+            [leech.queue :as queue]
+            [clj-redis.client :as redis]))
 
 (defn log [data]
   (util/log (merge {:ns "io"} data)))
 
-(defn bleeder [aorta-url handler]
-  (let [{:keys [^String host ^Integer port auth]} (util/url-parse aorta-url)]
+(defn bleed [aorta-url handler]
+  (let [{:keys [host port auth]} (util/url-parse aorta-url)]
     (loop []
-      (log "bleed event=connect aorta_host=%s" host)
+      (log {:fn "bleed" :event "connect" :host host})
       (try
         (with-open [socket (Socket. host port)
                     in     (-> (.getInputStream socket) (InputStreamReader.) (BufferedReader.))
@@ -24,17 +22,16 @@
             (when-let [line (.readLine in)]
               (handler line)
               (recur))))
-        (util/log "bleed event=eof aorta_host=%s" host)
+        (util/log {:fn "bleed" :event "eof" :host host})
         (catch ConnectException e
-          (util/log "bleed event=exception aorta_host=%s" host)))
+          (util/log {:fn "bleed" :event "error" :host host})))
       (Thread/sleep 100)
       (recur))))
 
-(defn init-bleeders [aorta-urls apply-queue]
-  (log "init_bleeders")
+(defn init-bleeders [aorta-urls q]
+  (log {:fn "init-bleeders" :event "start"}
   (doseq [aorta-url aorta-urls]
-    (let [{aorta-host :host} (util/url-parse aorta-url)]
-      (log "init_bleeder aorta_host=%s" aorta-host)
-      (util/spawn (fn []
-        (bleeder aorta-url (fn [line]
-          (queue/offer apply-queue [aorta-host line]))))))))
+    (let [{:keys [host]} (util/url-parse aorta-url)]
+      (log {:fn "init-bleeder" :event "bleed" :host host})
+      (bleed aorta-url (fn [line]
+        (queue/offer q [host line])))))))

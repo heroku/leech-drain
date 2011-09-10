@@ -49,7 +49,8 @@
     {:protocol (.substr (get raw "protocol") 0 (dec (.length (get raw "protocol"))))
      :host (get raw "hostname")
      :port (js/parseInt (get raw "port"))
-     :path (get raw "pathname")}))
+     :path (get raw "pathname")
+     :auth (get raw "auth")}))
 
 (defn set-interval
   "Invoke the given function after and every delay milliseconds."
