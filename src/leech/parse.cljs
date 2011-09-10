@@ -149,7 +149,7 @@
       (throw e))))
 
 (defn start [& _]
-  (let [l ]
+  (let [l "2011-09-10T17:50:19+00:00 10.254.143.50 local5.info logplex - logplex.59305@heroku.com - logplex_queue event=enable_producer length=0 enable=true"]
     (prn l)
     (prn (parse-line l))))
 
