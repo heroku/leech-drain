@@ -1,36 +1,49 @@
 (ns leech.queue
-  (:require [leech.util :as util])
+  (:require [goog.structs.Queue :as Queue]
+            [leech.util :as util])
   (:refer-clojure :exclude (take))
-  (:import java.util.concurrent.ArrayBlockingQueue)
-  (:import java.util.concurrent.atomic.AtomicLong))
 
-(defn init [size]
-  [(ArrayBlockingQueue. size) (AtomicLong. 0) (AtomicLong. 0) (AtomicLong. 0)])
+(defn init [limit]
+  [(structs/Queue.) limit (atom 0) (atom 0) (atom 0)])
 
-(defn offer [[^ArrayBlockingQueue queue ^AtomicLong pushed _ ^AtomicLong dropped] elem]
-  (if (.offer queue elem)
-    (.getAndIncrement pushed)
-    (.getAndIncrement dropped)))
+(defn offer [[queue limit pushed-a _ dropped-a] elem]
+  (if (>= (.getCount queue) limit)
+    (swap! dropped-a inc)
+    (do
+      (swap! pushed-a inc)
+      (.enqueue queue elem))))
 
-(defn take [[^ArrayBlockingQueue queue _ ^AtomicLong popped _]]
-  (let [elem (.take queue)]
-    (.getAndIncrement popped)
+(defn take [[queue _ _ popped-a _]]
+  (when-let [elem (.dequeue queue)]
+    (swap! popped-a inc)
     elem))
 
-(defn stats [[^ArrayBlockingQueue queue ^AtomicLong pushed ^AtomicLong popped ^AtomicLong dropped]]
-  [(.size queue) (.get pushed) (.get popped) (.get dropped)])
+(defn stats [[queue _ pushed-a popped-a dropped-a]]
+  [(.getCount queue) (deref pushed) (deref popped) (deref dropped)])
 
-(defn log [msg & args]
-  (apply util/log (str "queue " msg) args))
+(defn log [data]
+  (util/log (merge {:ns "queue"} data)))
 
 (defn init-watcher [queue queue-name]
-  (log "init_watcher name=%s" queue-name)
+  (log {:fn "init-watcher" :name queue-name})
   (let [start (util/millis)
-        popped-prev (atom 0)]
-    (util/spawn-tick 1000 (fn []
+        depth-prev-a   (atom 0)
+        pushed-prev-a  (atom 0)
+        popped-prev-a  (atom 0)
+        dropped-prev-a (atom 0)]
+    (util/set-interval 1000 (fn []
       (let [elapsed (- (util/millis) start)
             [depth pushed popped dropped] (stats queue)
-            rate (- popped @popped-prev)]
-        (swap! popped-prev (constantly popped))
-        (log "watch name=%s depth=%d pushed=%d popped=%d dropped=%d rate=%d"
-          queue-name depth pushed popped dropped rate))))))
+            depth-rate   (- depth   (deref depth-prev-a))
+            pushed-rate  (- pushed  (deref pushed-prev-a))
+            popped-rate  (- popped  (deref popped-prev-a))
+            dropped-rate (- dropped (deref dropped-prev-a))]
+        (swap! depth-prev-a    (constantly depth))
+        (swap! pushed-prev-a   (constantly pushed))
+        (swap! popped-prev-a   (constantly popped))
+        (swap! dropped-prev-a  (constantly dropped)))
+        (log
+          {:fn "init-watcher" :name queue-name
+           :depth depth :pushed pushed :popped popped :dropped dropped
+           :depth-rate depth-rate :pushed-rate pushed-rate
+           :popped-rate popped-rate :dropped-rate dropped-rate})))))
