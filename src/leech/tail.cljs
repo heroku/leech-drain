@@ -38,10 +38,10 @@
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
-(defn init []
-  (redis/init-subscriber (conf/redis-url) "event-received"
-    (fn [{:strs [line component]}
-         color (get component-colors component)]
-      (println (colored color line)))))
+(defn start []
+  (redis/start-subscriber (conf/redis-url) "event-received"
+    (fn [{:strs [line component]}]
+      (let [color (get component-colors component)]
+        (println (colored color line))))))
 
-(util/main "tail" init)
+(util/main "tail" start)

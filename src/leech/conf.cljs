@@ -1,5 +1,6 @@
 (ns leech.conf
-  (:require [clojure.string :as str]
+  (:require [cljs.nodejs :as node]
+            [clojure.string :as str]
             [leech.util :as util]))
 
 (defn env
