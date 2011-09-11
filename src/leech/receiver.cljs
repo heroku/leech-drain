@@ -1,5 +1,6 @@
 (ns leech.receiver
-  (:require [leech.conf :as conf]
+  (:require [cljs.nodejs :as node]
+            [leech.conf :as conf]
             [leech.util :as util]
             [leech.io :as io]
             [leech.parse :as parse]))
@@ -11,7 +12,7 @@
 
 (defn start [& _]
   (let [received-count-a (atom 0)
-        redis-client (.connect redis (conf/redis-url))]
+        redis-client (.createClient redis (conf/redis-url))]
     (log {:fn "start" :event "start"})
     (util/set-interval 1000 (fn []
       (log {:fn "start" :event "watch" :received-count (deref received-count-a)})))

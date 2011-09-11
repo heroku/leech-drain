@@ -7343,13 +7343,13 @@ leech.parse.parse_line = function(a) {
   }
 };
 leech.receiver = {};
-leech.receiver.redis = node.require.call(null, "redis-url");
+leech.receiver.redis = cljs.nodejs.require.call(null, "redis-url");
 leech.receiver.log = function(a) {
   return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"receiver"}), a))
 };
 leech.receiver.start = function() {
   var a = function() {
-    var a = cljs.core.atom.call(null, 0), b = leech.receiver.redis.connect(leech.conf.redis_url.call(null));
+    var a = cljs.core.atom.call(null, 0), b = leech.receiver.redis.createClient(leech.conf.redis_url.call(null));
     leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"start"}));
     leech.util.set_interval.call(null, 1E3, function() {
       return leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'received-count"], {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":cljs.core.deref.call(null, a)}))
