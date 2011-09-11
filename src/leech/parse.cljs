@@ -54,6 +54,7 @@
 (def standard-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) ([a-z\-\_]+)(\[(\d+)\])? - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - (.*)$")
 
+; we hand-optimize this very hot code path.
 (defn parse-standard-line [l]
   (if-let [m (re-matches standard-re l)]
     (let [raw-obj (parse-message-attrs (get m 11))]
