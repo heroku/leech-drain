@@ -7238,7 +7238,7 @@ leech.parse.parse_message_attrs = function(a) {
       break
     }
   }
-  return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, b), b)
+  return cljs.core.ObjMap.fromObject([], {})
 };
 leech.parse.parse_timestamp = function(a) {
   return leech.parse.isodate.call(null, a).getTime()
