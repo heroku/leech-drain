@@ -45,35 +45,29 @@
               val   (aget matches 4)]
           (aset raw-obj key (if (= "" eq) true (coerce-val val)))
           (recur (.substring unparsed-msg (.length match) (.length unparsed-msg))))))
-    (ObjMap. nil (js-keys raw-obj) raw-obj)))
+    raw-obj))
 
 (defn parse-timestamp [s]
   (let [d (isodate s)]
     (. d (getTime))))
-
-(defn merge-fast [m1 m2]
-  (let [raw-obj (.strobj m1)]
-    (doseq [[k v] m2]
-      (aset raw-obj k v))
-    (ObjMap. nil (js-keys raw-obj) raw-obj)))
 
 (def standard-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) ([a-z\-\_]+)(\[(\d+)\])? - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - (.*)$")
 
 (defn parse-standard-line [l]
   (if-let [m (re-matches standard-re l)]
-    (merge-fast
-      (parse-message-attrs (get m 11))
-      {"event_type" "standard"
-      "timestamp_src" (parse-timestamp (get m 1))
-      "host" (get m 2)
-      "facility" (get m 3)
-      "level" (get m 4)
-      "component" (get m 5)
-      "pid" (parse-long (get m 7))
-      "slot" (get m 8)
-      "ion_id" (parse-long (get m 9))
-      "cloud" (get m 10)})))
+    (let [raw-obj (parse-message-attrs (get m 11))]
+      (aset raw-obj "event_type" "standard")
+      (aset raw-obj "timestamp_src" (parse-timestamp (get m 1)))
+      (aset raw-obj "host" (get m 2))
+      (aset raw-obj "facility" (get m 3))
+      (aset raw-obj "level" (get m 4))
+      (aset raw-obj "component" (get m 5))
+      (aset raw-obj "pid" (parse-long (get m 7)))
+      (aset raw-obj "slot" (get m 8))
+      (aset raw-obj "ion_id" (parse-long (get m 9)))
+      (aset raw-obj "cloud" (get m 10))
+      (ObjMap. nil (js-keys raw-obj) raw-obj))))
 
 (def raw-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) (.*)$")
