@@ -7358,7 +7358,7 @@ leech.receiver.start = function() {
     leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(e, f) {
       var i = leech.parse.parse_line.call(null, f);
       cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) && leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'host", "\ufdd0'line"], {"\ufdd0'fn":"start", "\ufdd0'event":"failed", "\ufdd0'host":e, "\ufdd0'line":f}));
-      cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.get.call(null, i, "cloud"), "staging.herokudev.com")) && (leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"match"})), b.publish(leech.util.json_generate.call(null, i)));
+      cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.get.call(null, i, "cloud"), "staging.herokudev.com")) && (leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"match"})), b.publish("staging", leech.util.json_generate.call(null, i)));
       return cljs.core.swap_BANG_.call(null, a, cljs.core.inc)
     });
     leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));

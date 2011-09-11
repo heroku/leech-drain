@@ -23,7 +23,7 @@
           (log {:fn "start" :event "failed" :host host :line line}))
         (when (= (get parsed "cloud") "staging.herokudev.com")
           (log {:fn "start" :event "match"})
-          (.publish redis-client (util/json-generate parsed))))
+          (.publish redis-client "staging" (util/json-generate parsed))))
       (swap! received-count-a inc)))
     (log {:fn "start" :event "bleeding"})
     (doseq [signal ["TERM" "INT"]]
