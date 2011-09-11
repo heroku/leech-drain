@@ -3,3 +3,4 @@
 out/*
 !out/leech.js
 node_modules
+v8.log

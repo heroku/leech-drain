@@ -7304,11 +7304,29 @@ leech.receiver.start = function() {
     leech.util.set_interval.call(null, 1E3, function() {
       return leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'received-count"], {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":cljs.core.deref.call(null, a)}))
     });
-    return leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, e) {
-      var f = leech.parse.parse_line.call(null, e);
-      cljs.core.truth_(cljs.core.nil_QMARK_.call(null, f)) && leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'host", "\ufdd0'line"], {"\ufdd0'fn":"start", "\ufdd0'event":"failed", "\ufdd0'host":b, "\ufdd0'line":e}));
+    leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"watching"}));
+    leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, d) {
+      var e = leech.parse.parse_line.call(null, d);
+      cljs.core.truth_(cljs.core.nil_QMARK_.call(null, e)) && leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'host", "\ufdd0'line"], {"\ufdd0'fn":"start", "\ufdd0'event":"failed", "\ufdd0'host":b, "\ufdd0'line":d}));
       return cljs.core.swap_BANG_.call(null, a, cljs.core.inc)
-    })
+    });
+    leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));
+    for(var b = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
+      if(cljs.core.truth_(b)) {
+        var e = cljs.core.first.call(null, b);
+        leech.util.trap.call(null, e, function() {
+          return function() {
+            leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"catch", "\ufdd0'signal":e}));
+            leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'status"], {"\ufdd0'fn":"start", "\ufdd0'event":"exit", "\ufdd0'status":0}));
+            return leech.util.exit.call(null, 0)
+          }
+        }(b));
+        leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"trapping", "\ufdd0'signal":e}));
+        b = cljs.core.next.call(null, b)
+      }else {
+        return null
+      }
+    }
   }, b = function(b) {
     var d = null;
     goog.isDef(b) && (d = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
