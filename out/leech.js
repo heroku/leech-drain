@@ -7304,7 +7304,8 @@ leech.receiver.start = function() {
     leech.util.set_interval.call(null, 1E3, function() {
       return leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'received-count"], {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":cljs.core.deref.call(null, a)}))
     });
-    return leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function() {
+    return leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, e) {
+      cljs.core.truth_(cljs.core.zero_QMARK_.call(null, cljs.core.rand_int.call(null, 100))) && leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'host", "\ufdd0'line"], {"\ufdd0'fn":"start", "\ufdd0'event":"peek", "\ufdd0'host":b, "\ufdd0'line":e}));
       return cljs.core.swap_BANG_.call(null, a, cljs.core.inc)
     })
   }, b = function(b) {

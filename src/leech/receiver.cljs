@@ -13,6 +13,8 @@
     (util/set-interval 1000 (fn []
       (log {:fn "start" :event "watch" :received-count (deref received-count-a)})))
     (io/start-bleeders (conf/aorta-urls) (fn [host line]
+      (when (zero? (rand-int 100))
+        (log {:fn "start" :event "peek" :host host :line line}))
       (swap! received-count-a inc)))))
 
 (util/main "receiver" start)
