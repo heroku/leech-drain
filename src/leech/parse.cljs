@@ -35,12 +35,7 @@
   #"([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.\_\-\:/]*)")
 
 (defn parse-message-attrs [msg]
-  (reduce
-    (fn [a [_ k e v]]
-      (assoc a k
-        (if (= "" e) true (coerce-val v))))
-    {}
-    (re-seq attrs-re msg)))
+  {"re-seq" (doall (re-seq attrs-re msg))})
 
 (defn parse-timestamp [s]
   (let [d (isodate s)]

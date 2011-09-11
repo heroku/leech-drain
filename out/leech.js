@@ -7228,11 +7228,7 @@ leech.parse.coerce_val = function(a) {
 };
 leech.parse.attrs_re = /([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.\_\-\:\/]*)/;
 leech.parse.parse_message_attrs = function(a) {
-  return cljs.core.reduce.call(null, function(a, c) {
-    cljs.core.nth.call(null, c, 0, null);
-    var d = cljs.core.nth.call(null, c, 1, null), e = cljs.core.nth.call(null, c, 2, null), f = cljs.core.nth.call(null, c, 3, null);
-    return cljs.core.assoc.call(null, a, d, cljs.core.truth_(cljs.core._EQ_.call(null, "", e)) ? !0 : leech.parse.coerce_val.call(null, f))
-  }, cljs.core.ObjMap.fromObject([], {}), cljs.core.re_seq.call(null, leech.parse.attrs_re, a))
+  return cljs.core.ObjMap.fromObject(["re-seq"], {"re-seq":cljs.core.doall.call(null, cljs.core.re_seq.call(null, leech.parse.attrs_re, a))})
 };
 leech.parse.parse_timestamp = function(a) {
   return leech.parse.isodate.call(null, a).getTime()
