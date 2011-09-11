@@ -7467,7 +7467,7 @@ leech.staging.start = function() {
       a.subscribe("staging");
       return a.on("message", function(a, b) {
         var c = leech.util.json_parse.call(null, b);
-        return cljs.core.prn.call(null, c)
+        return cljs.core.println.call(null, cljs.core.get.call(null, c, "line"))
       })
     })
   }, b = function(b) {

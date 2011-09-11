@@ -11,6 +11,6 @@
       (.subscribe client "staging")
       (.on client "message" (fn [_ data]
         (let [parsed (util/json-parse data)]
-          (prn parsed))))))))
+          (println (get parsed "line")))))))))
 
 (util/main "staging" start)
