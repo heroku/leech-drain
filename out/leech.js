@@ -7241,7 +7241,7 @@ leech.parse.standard_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0
 leech.parse.parse_standard_line = function(a) {
   a = cljs.core.re_matches.call(null, leech.parse.standard_re, a);
   return cljs.core.truth_(a) ? cljs.core.merge.call(null, cljs.core.ObjMap.fromObject("\ufdd0'host,\ufdd0'pid,\ufdd0'cloud,\ufdd0'event_type,\ufdd0'ion_id,\ufdd0'timestamp_src,\ufdd0'level,\ufdd0'facility,\ufdd0'component,\ufdd0'slot".split(","), {"\ufdd0'host":cljs.core.get.call(null, a, 2), "\ufdd0'pid":leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 7)), "\ufdd0'cloud":cljs.core.get.call(null, a, 10), "\ufdd0'event_type":"standard", "\ufdd0'ion_id":leech.parse.parse_long.call(null, 
-  cljs.core.get.call(null, a, 9)), "\ufdd0'timestamp_src":leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1)), "\ufdd0'level":cljs.core.get.call(null, a, 4), "\ufdd0'facility":cljs.core.get.call(null, a, 3), "\ufdd0'component":cljs.core.get.call(null, a, 5), "\ufdd0'slot":cljs.core.get.call(null, a, 8)}), leech.parse.parse_message_attrs.call(null, cljs.core.get.call(null, a, 11))) : null
+  cljs.core.get.call(null, a, 9)), "\ufdd0'timestamp_src":leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1)), "\ufdd0'level":cljs.core.get.call(null, a, 4), "\ufdd0'facility":cljs.core.get.call(null, a, 3), "\ufdd0'component":cljs.core.get.call(null, a, 5), "\ufdd0'slot":cljs.core.get.call(null, a, 8)})) : null
 };
 leech.parse.raw_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) (.*)$/;
 leech.parse.parse_raw_line = function(a) {

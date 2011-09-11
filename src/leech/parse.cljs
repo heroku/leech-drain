@@ -61,8 +61,8 @@
        :pid (parse-long (get m 7))
        :slot (get m 8)
        :ion_id (parse-long (get m 9))
-       :cloud (get m 10)}
-      (parse-message-attrs (get m 11)))))
+       :cloud (get m 10)})))
+      ;(parse-message-attrs (get m 11)))))
 
 (def raw-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) (.*)$")
