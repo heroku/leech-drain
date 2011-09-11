@@ -1,8 +1,5 @@
 .env*
 !.env.sample
-classes
-lib
+out/*
+!out/leech.js
 node_modules
-out
-*.xml
-*.jar
