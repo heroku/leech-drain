@@ -7143,6 +7143,35 @@ leech.conf.aorta_urls = function() {
 leech.conf.redis_url = function() {
   return leech.conf.env_BANG_.call(null, "REDIS_URL")
 };
+leech.pubsub = {};
+leech.pubsub.redis = cljs.nodejs.require.call(null, "redis-url");
+leech.pubsub.start = function() {
+  var a = function() {
+    var a = leech.pubsub.redis.createClient(leech.conf.redis_url.call(null)), b = leech.pubsub.redis.createClient(leech.conf.redis_url.call(null)), e = cljs.core.atom.call(null, 0);
+    a.on("subscribe", function() {
+      b.publish("test-chan", "send 1");
+      b.publish("test-chan", "send 2");
+      return b.publish("test-chan", "send 3")
+    });
+    a.on("message", function(a, b) {
+      cljs.core.println.call(null, cljs.core.str.call(null, "client1 on ", a, " got ", b));
+      cljs.core.swap_BANG_.call(null, e, cljs.core.inc);
+      return cljs.core.truth_(cljs.core._EQ_.call(null, 3, cljs.core.deref.call(null, e))) ? leech.util.exit.call(null, 0) : null
+    });
+    return a.subscribe("test-chan")
+  }, b = function(b) {
+    var d = null;
+    goog.isDef(b) && (d = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
+    return a.call(this, d)
+  };
+  b.cljs$lang$maxFixedArity = 0;
+  b.cljs$lang$applyTo = function(b) {
+    b = cljs.core.seq(b);
+    return a.call(this, b)
+  };
+  return b
+}();
+leech.util.main.call(null, "pubsub", leech.pubsub.start);
 leech.split = {};
 leech.split.init = function() {
   return cljs.core.atom.call(null, "")
@@ -7314,35 +7343,37 @@ leech.parse.parse_line = function(a) {
   }
 };
 leech.receiver = {};
+leech.receiver.redis = node.require.call(null, "redis-url");
 leech.receiver.log = function(a) {
   return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"receiver"}), a))
 };
 leech.receiver.start = function() {
   var a = function() {
-    var a = cljs.core.atom.call(null, 0);
+    var a = cljs.core.atom.call(null, 0), b = leech.receiver.redis.connect(leech.conf.redis_url.call(null));
     leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"start"}));
     leech.util.set_interval.call(null, 1E3, function() {
       return leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'received-count"], {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":cljs.core.deref.call(null, a)}))
     });
     leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"watching"}));
-    leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, d) {
-      var e = leech.parse.parse_line.call(null, d);
-      cljs.core.truth_(cljs.core.nil_QMARK_.call(null, e)) && leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'host", "\ufdd0'line"], {"\ufdd0'fn":"start", "\ufdd0'event":"failed", "\ufdd0'host":b, "\ufdd0'line":d}));
+    leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(e, f) {
+      var i = leech.parse.parse_line.call(null, f);
+      cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) && leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'host", "\ufdd0'line"], {"\ufdd0'fn":"start", "\ufdd0'event":"failed", "\ufdd0'host":e, "\ufdd0'line":f}));
+      cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.get.call(null, i, "cloud"), "staging.herokudev.com")) && (leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"match"})), b.publish(leech.util.json_generate.call(null, i)));
       return cljs.core.swap_BANG_.call(null, a, cljs.core.inc)
     });
     leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));
-    for(var b = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
-      if(cljs.core.truth_(b)) {
-        var e = cljs.core.first.call(null, b);
-        leech.util.trap.call(null, e, function() {
+    for(var e = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
+      if(cljs.core.truth_(e)) {
+        var f = cljs.core.first.call(null, e);
+        leech.util.trap.call(null, f, function() {
           return function() {
-            leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"catch", "\ufdd0'signal":e}));
+            leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"catch", "\ufdd0'signal":f}));
             leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'status"], {"\ufdd0'fn":"start", "\ufdd0'event":"exit", "\ufdd0'status":0}));
             return leech.util.exit.call(null, 0)
           }
-        }(b));
-        leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"trapping", "\ufdd0'signal":e}));
-        b = cljs.core.next.call(null, b)
+        }(e));
+        leech.receiver.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"trapping", "\ufdd0'signal":f}));
+        e = cljs.core.next.call(null, e)
       }else {
         return null
       }
