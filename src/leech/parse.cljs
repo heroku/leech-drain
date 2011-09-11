@@ -68,6 +68,7 @@
       (aset raw-obj "slot" (get m 8))
       (aset raw-obj "ion_id" (parse-long (get m 9)))
       (aset raw-obj "cloud" (get m 10))
+      (aset raw-obj "line" l)
       (ObjMap. nil (js-keys raw-obj) raw-obj))))
 
 (def raw-re
@@ -80,7 +81,8 @@
      "host" (get m 2)
      "facility" (get m 3)
      "level" (get m 4)
-     "message" (get m 5)}))
+     "message" (get m 5)
+     "line" l}))
 
 (def nginx-access-re
      ;timestamp_src                              ;host      ;facility    ;level           ;slot        ;ion_id ;cloud           ;http_host                                                              ;http_method,_url,_version      ;http_status,_bytes,_referrer,_user_agent,_domain
@@ -105,7 +107,8 @@
      "http_bytes" (parse-long (get m 13))
      "http_referrer" (get m 14)
      "http_user_agent" (get m 15)
-     "http_domain" (get m 16)}))
+     "http_domain" (get m 16)
+     "line" l}))
 
 (def nginx-error-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d-\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) nginx - ([a-z4-6]+)?\.(\d+)@([a-z.]+\.com) - .* \[error\] (.*)$")
@@ -121,7 +124,8 @@
      "slot" (get m 5)
      "ion_id" (parse-long (get m 6))
      "cloud" (get m 7)
-     "message" (get m 8)}))
+     "message" (get m 8)
+     "line" l}))
 
 (def varnish-access-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) varnish\[(\d+)\] - ([a-z4-6\-]+)?\.(\d+)@([a-z.]+\.com) - [0-9\.]+ - - .*\" (\d\d\d) .*$")
@@ -138,7 +142,8 @@
      "slot" (get m 6)
      "ion_id" (parse-long (get m 7))
      "cloud" (get m 8)
-     "http_status" (parse-long (get m 9))}))
+     "http_status" (parse-long (get m 9))
+     "line" l}))
 
 (defn log [data]
   (util/log (merge {:ns "parse"} data)))
