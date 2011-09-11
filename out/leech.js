@@ -7238,7 +7238,7 @@ leech.parse.parse_message_attrs = function(a) {
       break
     }
   }
-  return cljs.core.ObjMap.fromObject([], {})
+  return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, b), b)
 };
 leech.parse.parse_timestamp = function(a) {
   return leech.parse.isodate.call(null, a).getTime()
@@ -7246,8 +7246,8 @@ leech.parse.parse_timestamp = function(a) {
 leech.parse.standard_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) ([a-z\-\_]+)(\[(\d+)\])? - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - (.*)$/;
 leech.parse.parse_standard_line = function(a) {
   a = cljs.core.re_matches.call(null, leech.parse.standard_re, a);
-  return cljs.core.truth_(a) ? cljs.core.merge.call(null, cljs.core.ObjMap.fromObject("facility,level,host,pid,ion_id,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, a, 3), level:cljs.core.get.call(null, a, 4), host:cljs.core.get.call(null, a, 2), pid:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 7)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 9)), cloud:cljs.core.get.call(null, a, 10), timestamp_src:leech.parse.parse_timestamp.call(null, 
-  cljs.core.get.call(null, a, 1)), component:cljs.core.get.call(null, a, 5), slot:cljs.core.get.call(null, a, 8), event_type:"standard"}), leech.parse.parse_message_attrs.call(null, cljs.core.get.call(null, a, 11))) : null
+  return cljs.core.truth_(a) ? (leech.parse.parse_message_attrs.call(null, cljs.core.get.call(null, a, 11)), cljs.core.ObjMap.fromObject("facility,level,host,pid,ion_id,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, a, 3), level:cljs.core.get.call(null, a, 4), host:cljs.core.get.call(null, a, 2), pid:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 7)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 9)), cloud:cljs.core.get.call(null, 
+  a, 10), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1)), component:cljs.core.get.call(null, a, 5), slot:cljs.core.get.call(null, a, 8), event_type:"standard"})) : null
 };
 leech.parse.raw_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) (.*)$/;
 leech.parse.parse_raw_line = function(a) {

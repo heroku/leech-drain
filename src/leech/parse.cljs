@@ -55,18 +55,18 @@
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) ([a-z\-\_]+)(\[(\d+)\])? - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - (.*)$")
 
 (defn parse-standard-line [l]
-  (if-let [m (re-matches standard-re l)
-           parsed (parsed-message-attrs (get m 11))]
-    {"event_type" "standard"
-     "timestamp_src" (parse-timestamp (get m 1))
-     "host" (get m 2)
-     "facility" (get m 3)
-     "level" (get m 4)
-     "component" (get m 5)
-     "pid" (parse-long (get m 7))
-     "slot" (get m 8)
-     "ion_id" (parse-long (get m 9))
-     "cloud" (get m 10)}))
+  (if-let [m (re-matches standard-re l)]
+    (let [parsed (parse-message-attrs (get m 11))]
+      {"event_type" "standard"
+       "timestamp_src" (parse-timestamp (get m 1))
+       "host" (get m 2)
+       "facility" (get m 3)
+       "level" (get m 4)
+       "component" (get m 5)
+       "pid" (parse-long (get m 7))
+       "slot" (get m 8)
+       "ion_id" (parse-long (get m 9))
+       "cloud" (get m 10)})))
 
 (def raw-re
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) (.*)$")
