@@ -7,10 +7,10 @@
 
 (defn start [& _]
   (let [client (.createClient redis (conf/redis-url))]
-    (.on client "subscribe" (fn []
-      (prn "subscribe")))
-    (.on client "message" (fn [_ data]
-      (prn "message" data)))
-    (.subscribe client "some-chan")))
+    (.on client "ready" (fn []
+      (.subscribe client "staging")
+      (.on client "message" (fn [_ data]
+        (let [parsed (util/json-parse data)]
+          (prn parsed))))))))
 
 (util/main "staging" start)

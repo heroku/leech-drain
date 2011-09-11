@@ -7147,18 +7147,21 @@ leech.pubsub = {};
 leech.pubsub.redis = cljs.nodejs.require.call(null, "redis-url");
 leech.pubsub.start = function() {
   var a = function() {
-    var a = leech.pubsub.redis.createClient(leech.conf.redis_url.call(null)), b = leech.pubsub.redis.createClient(leech.conf.redis_url.call(null)), e = cljs.core.atom.call(null, 0);
+    var a = leech.pubsub.redis.createClient(leech.conf.redis_url.call(null)), b = leech.pubsub.redis.createClient(leech.conf.redis_url.call(null)), e = cljs.core.str.call(null, "pubsub-", cljs.core.rand_int.call(null, 1E3)), f = cljs.core.atom.call(null, 0);
+    a.on("error", function(a) {
+      return cljs.core.prn.call(null, "error", a.message)
+    });
     a.on("subscribe", function() {
-      b.publish("test-chan", "send 1");
-      b.publish("test-chan", "send 2");
-      return b.publish("test-chan", "send 3")
+      b.publish(e, "send 1");
+      b.publish(e, "send 2");
+      return b.publish(e, "send 3")
     });
     a.on("message", function(a, b) {
-      cljs.core.println.call(null, cljs.core.str.call(null, "client1 on ", a, " got ", b));
-      cljs.core.swap_BANG_.call(null, e, cljs.core.inc);
-      return cljs.core.truth_(cljs.core._EQ_.call(null, 3, cljs.core.deref.call(null, e))) ? leech.util.exit.call(null, 0) : null
+      cljs.core.println.call(null, cljs.core.str.call(null, "client1 on ", e, " got ", b));
+      cljs.core.swap_BANG_.call(null, f, cljs.core.inc);
+      return cljs.core.truth_(cljs.core._EQ_.call(null, 3, cljs.core.deref.call(null, f))) ? leech.util.exit.call(null, 0) : null
     });
-    return a.subscribe("test-chan")
+    return a.subscribe(e)
   }, b = function(b) {
     var d = null;
     goog.isDef(b) && (d = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
@@ -7274,47 +7277,48 @@ leech.parse.parse_timestamp = function(a) {
 };
 leech.parse.standard_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) ([a-z\-\_]+)(\[(\d+)\])? - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - (.*)$/;
 leech.parse.parse_standard_line = function(a) {
-  a = cljs.core.re_matches.call(null, leech.parse.standard_re, a);
-  if(cljs.core.truth_(a)) {
-    var b = leech.parse.parse_message_attrs.call(null, cljs.core.get.call(null, a, 11));
-    b.event_type = "standard";
-    b.timestamp_src = leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1));
-    b.host = cljs.core.get.call(null, a, 2);
-    b.facility = cljs.core.get.call(null, a, 3);
-    b.level = cljs.core.get.call(null, a, 4);
-    b.component = cljs.core.get.call(null, a, 5);
-    b.pid = leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 7));
-    b.slot = cljs.core.get.call(null, a, 8);
-    b.ion_id = leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 9));
-    b.cloud = cljs.core.get.call(null, a, 10);
-    return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, b), b)
+  var b = cljs.core.re_matches.call(null, leech.parse.standard_re, a);
+  if(cljs.core.truth_(b)) {
+    var c = leech.parse.parse_message_attrs.call(null, cljs.core.get.call(null, b, 11));
+    c.event_type = "standard";
+    c.timestamp_src = leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1));
+    c.host = cljs.core.get.call(null, b, 2);
+    c.facility = cljs.core.get.call(null, b, 3);
+    c.level = cljs.core.get.call(null, b, 4);
+    c.component = cljs.core.get.call(null, b, 5);
+    c.pid = leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 7));
+    c.slot = cljs.core.get.call(null, b, 8);
+    c.ion_id = leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 9));
+    c.cloud = cljs.core.get.call(null, b, 10);
+    c.line = a;
+    return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, c), c)
   }else {
     return null
   }
 };
 leech.parse.raw_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) (.*)$/;
 leech.parse.parse_raw_line = function(a) {
-  a = cljs.core.re_matches.call(null, leech.parse.raw_re, a);
-  return cljs.core.truth_(a) ? cljs.core.ObjMap.fromObject("event_type,timestamp_src,host,facility,level,message".split(","), {event_type:"raw", timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1)), host:cljs.core.get.call(null, a, 2), facility:cljs.core.get.call(null, a, 3), level:cljs.core.get.call(null, a, 4), message:cljs.core.get.call(null, a, 5)}) : null
+  var b = cljs.core.re_matches.call(null, leech.parse.raw_re, a);
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("event_type,timestamp_src,host,facility,level,message,line".split(","), {event_type:"raw", timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), host:cljs.core.get.call(null, b, 2), facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), message:cljs.core.get.call(null, b, 5), line:a}) : null
 };
 leech.parse.nginx_access_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d-\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) nginx - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - ([0-9\.]+) - - \[\d\d\/[a-zA-z]{3}\/\d\d\d\d:\d\d:\d\d:\d\d -\d\d00\] \"([a-zA-Z]+) (\S+) HTTP\/(...)\" (\d+) (\d+) \"([^\"]+)\" \"([^\"]+)\" (\S+)$/;
 leech.parse.parse_nginx_access_line = function(a) {
-  a = cljs.core.re_matches.call(null, leech.parse.nginx_access_re, a);
-  return cljs.core.truth_(a) ? cljs.core.ObjMap.fromObject("http_version,facility,level,host,http_user_agent,http_status,ion_id,http_bytes,cloud,http_referrer,http_method,http_url,http_domain,timestamp_src,component,slot,event_type,http_host".split(","), {http_version:cljs.core.get.call(null, a, 11), facility:cljs.core.get.call(null, a, 3), level:cljs.core.get.call(null, a, 4), host:cljs.core.get.call(null, a, 2), http_user_agent:cljs.core.get.call(null, a, 15), http_status:leech.parse.parse_long.call(null, 
-  cljs.core.get.call(null, a, 12)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 6)), http_bytes:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 13)), cloud:cljs.core.get.call(null, a, 7), http_referrer:cljs.core.get.call(null, a, 14), http_method:cljs.core.get.call(null, a, 9), http_url:cljs.core.get.call(null, a, 10), http_domain:cljs.core.get.call(null, a, 16), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1)), component:"nginx", 
-  slot:cljs.core.get.call(null, a, 5), event_type:"nginx_access", http_host:cljs.core.get.call(null, a, 8)}) : null
+  var b = cljs.core.re_matches.call(null, leech.parse.nginx_access_re, a);
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("http_version,facility,level,host,http_user_agent,http_status,ion_id,http_bytes,line,cloud,http_referrer,http_method,http_url,http_domain,timestamp_src,component,slot,event_type,http_host".split(","), {http_version:cljs.core.get.call(null, b, 11), facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), host:cljs.core.get.call(null, b, 2), http_user_agent:cljs.core.get.call(null, b, 15), http_status:leech.parse.parse_long.call(null, 
+  cljs.core.get.call(null, b, 12)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 6)), http_bytes:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 13)), line:a, cloud:cljs.core.get.call(null, b, 7), http_referrer:cljs.core.get.call(null, b, 14), http_method:cljs.core.get.call(null, b, 9), http_url:cljs.core.get.call(null, b, 10), http_domain:cljs.core.get.call(null, b, 16), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), component:"nginx", 
+  slot:cljs.core.get.call(null, b, 5), event_type:"nginx_access", http_host:cljs.core.get.call(null, b, 8)}) : null
 };
 leech.parse.nginx_error_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d-\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) nginx - ([a-z4-6]+)?\.(\d+)@([a-z.]+\.com) - .* \[error\] (.*)$/;
 leech.parse.parse_nginx_error_line = function(a) {
-  a = cljs.core.re_matches.call(null, leech.parse.nginx_error_re, a);
-  return cljs.core.truth_(a) ? cljs.core.ObjMap.fromObject("facility,level,message,host,ion_id,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, a, 3), level:cljs.core.get.call(null, a, 4), message:cljs.core.get.call(null, a, 8), host:cljs.core.get.call(null, a, 2), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 6)), cloud:cljs.core.get.call(null, a, 7), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, 
-  a, 1)), component:"nginx", slot:cljs.core.get.call(null, a, 5), event_type:"nginx_error"}) : null
+  var b = cljs.core.re_matches.call(null, leech.parse.nginx_error_re, a);
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("facility,level,message,host,ion_id,line,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), message:cljs.core.get.call(null, b, 8), host:cljs.core.get.call(null, b, 2), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 6)), line:a, cloud:cljs.core.get.call(null, b, 7), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, 
+  b, 1)), component:"nginx", slot:cljs.core.get.call(null, b, 5), event_type:"nginx_error"}) : null
 };
 leech.parse.varnish_access_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) varnish\[(\d+)\] - ([a-z4-6\-]+)?\.(\d+)@([a-z.]+\.com) - [0-9\.]+ - - .*\" (\d\d\d) .*$/;
 leech.parse.parse_varnish_access_line = function(a) {
-  a = cljs.core.re_matches.call(null, leech.parse.varnish_access_re, a);
-  return cljs.core.truth_(a) ? cljs.core.ObjMap.fromObject("facility,level,host,http_status,pid,ion_id,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, a, 3), level:cljs.core.get.call(null, a, 4), host:cljs.core.get.call(null, a, 2), http_status:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 9)), pid:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 5)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, a, 7)), 
-  cloud:cljs.core.get.call(null, a, 8), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, a, 1)), component:"varnish", slot:cljs.core.get.call(null, a, 6), event_type:"varnish_access"}) : null
+  var b = cljs.core.re_matches.call(null, leech.parse.varnish_access_re, a);
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("facility,level,host,http_status,pid,ion_id,line,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), host:cljs.core.get.call(null, b, 2), http_status:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 9)), pid:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 5)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 
+  7)), line:a, cloud:cljs.core.get.call(null, b, 8), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), component:"varnish", slot:cljs.core.get.call(null, b, 6), event_type:"varnish_access"}) : null
 };
 leech.parse.log = function(a) {
   return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"parse"}), a))
@@ -7454,6 +7458,31 @@ leech.queue.start_watcher = function(a, b) {
     return leech.queue.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'depth-rate,\ufdd0'dropped,\ufdd0'depth,\ufdd0'popped-rate,\ufdd0'name,\ufdd0'pushed,\ufdd0'popped,\ufdd0'dropped-rate,\ufdd0'pushed-rate,\ufdd0'fn".split(","), {"\ufdd0'depth-rate":m, "\ufdd0'dropped":h, "\ufdd0'depth":i, "\ufdd0'popped-rate":o, "\ufdd0'name":b, "\ufdd0'pushed":j, "\ufdd0'popped":k, "\ufdd0'dropped-rate":n, "\ufdd0'pushed-rate":l, "\ufdd0'fn":"start-watcher"}))
   })
 };
+leech.staging = {};
+leech.staging.redis = cljs.nodejs.require.call(null, "redis-url");
+leech.staging.start = function() {
+  var a = function() {
+    var a = leech.staging.redis.createClient(leech.conf.redis_url.call(null));
+    return a.on("ready", function() {
+      a.subscribe("staging");
+      return a.on("message", function(a, b) {
+        var c = leech.util.json_parse.call(null, b);
+        return cljs.core.prn.call(null, c)
+      })
+    })
+  }, b = function(b) {
+    var d = null;
+    goog.isDef(b) && (d = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
+    return a.call(this, d)
+  };
+  b.cljs$lang$maxFixedArity = 0;
+  b.cljs$lang$applyTo = function(b) {
+    b = cljs.core.seq(b);
+    return a.call(this, b)
+  };
+  return b
+}();
+leech.util.main.call(null, "staging", leech.staging.start);
 cljs.nodejscli = {};
 cljs.core.apply.call(null, cljs.core._STAR_main_cli_fn_STAR_, cljs.core.drop.call(null, 2, cljs.nodejs.process.argv));
 
