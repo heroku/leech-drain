@@ -1,1 +1,1 @@
-receiver:  bin/leech receiver
+receiver:  bin/run receiver
