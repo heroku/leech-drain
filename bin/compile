@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+cljsc src '{:optimizations :simple :pretty-print true :target :nodejs}' > out/leech.js
+rm -rf out/cljs out/clojure out/leech

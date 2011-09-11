@@ -4,6 +4,6 @@ if [ -f "out/leech.js" ]; then
   exec node out/leech.js $@
 else
   echo "  ! Missing file out/leech.js" 1>&2
-  echo "  ! See Readme.md" 1>&2
+  echo "  ! See bin/compile" 1>&2
   exit 1
 fi
