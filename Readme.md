@@ -9,7 +9,7 @@ Compile the app:
 
     $ cljsc src \
         '{:optimizations :simple :pretty-print true :target :nodejs}' \
-        > out/leech.j
+        > out/leech.js
 
 Run a namespace:
 

@@ -58,9 +58,19 @@
   (js/setInterval f delay))
 
 (defn clear-interval
-  "Cancel the periodic invokation specified by the given interval id."
+  "Cancel the periodic invocation specified by the given interval id."
   [interval-id]
   (js/clearInterval interval-id))
+
+(defn set-timeout
+  "Invoke the given function after delay milliseconds."
+  [delay f]
+  (js/setTimeout f delay))
+
+(defn clear-timeout
+  "Cancle the delayed invocation specified by the given timeout id."
+  [timeout-id]
+  (js/cancelTimeout delay))
 
 (defn next-tick
   "Call the given function on the next tick."
