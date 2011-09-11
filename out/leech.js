@@ -7226,9 +7226,19 @@ leech.parse.parse_double = function(a) {
 leech.parse.coerce_val = function(a) {
   return cljs.core.truth_(leech.parse.re_match_QMARK_.call(null, leech.parse.long_re, a)) ? leech.parse.parse_long.call(null, a) : cljs.core.truth_(leech.parse.re_match_QMARK_.call(null, leech.parse.double_re, a)) ? leech.parse.parse_double.call(null, a) : cljs.core.truth_(cljs.core._EQ_.call(null, "", a)) ? null : cljs.core.truth_("\ufdd0'else") ? a : null
 };
-leech.parse.attrs_re = /([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.\_\-\:\/]*)/;
+leech.parse.attrs_re = /( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:\/_-]*)/;
 leech.parse.parse_message_attrs = function(a) {
-  return cljs.core.ObjMap.fromObject(["re-seq"], {"re-seq":cljs.core.doall.call(null, cljs.core.re_seq.call(null, leech.parse.attrs_re, a))})
+  for(var b = cljs.core.js_obj.call(null);;) {
+    var c = leech.parse.attrs_re.exec(a);
+    if(cljs.core.truth_(c)) {
+      var d = c[0], e = c[4];
+      b[c[2]] = cljs.core.truth_(cljs.core._EQ_.call(null, "", c[3])) ? !0 : leech.parse.coerce_val.call(null, e);
+      a = a.substring(d.length, a.length)
+    }else {
+      break
+    }
+  }
+  return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, b), b)
 };
 leech.parse.parse_timestamp = function(a) {
   return leech.parse.isodate.call(null, a).getTime()

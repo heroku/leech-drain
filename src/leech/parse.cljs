@@ -32,10 +32,20 @@
       v))
 
 (def attrs-re
-  #"([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:/_-]*)")
+  #"( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:/_-]*)")
 
 (defn parse-message-attrs [msg]
-  {"re-seq" (doall (re-seq attrs-re msg))})
+  (let [raw-attrs (js-obj)]
+    (loop [unparsed-msg msg]
+      (if-let [matches (.exec attrs-re unparsed-msg)]
+        (let [match (aget matches 0)
+              space (aget matches 1)
+              key   (aget matches 2)
+              eq    (aget matches 3)
+              val   (aget matches 4)]
+          (aset raw-attrs key (if (= "" eq) true (coerce-val val)))
+          (recur (.substring unparsed-msg (.length match) (.length unparsed-msg))))))
+    (ObjMap. nil (js-keys raw-attrs) raw-attrs)))
 
 (defn parse-timestamp [s]
   (let [d (isodate s)]
