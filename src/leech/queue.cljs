@@ -7,7 +7,7 @@
   [(goog.structs.Queue.) limit (atom 0) (atom 0) (atom 0)])
 
 (defn offer [[queue limit pushed-a _ dropped-a] elem]
-  (if (>= (.getCount queue) limit)
+  (if (>= (. queue (getCount)) limit)
     (swap! dropped-a inc)
     (do
       (swap! pushed-a inc)
@@ -19,7 +19,7 @@
     elem))
 
 (defn stats [[queue _ pushed-a popped-a dropped-a]]
-  [(.getCount queue) (deref pushed-a) (deref popped-a) (deref dropped-a)])
+  [(. queue (getCount)) (deref pushed-a) (deref popped-a) (deref dropped-a)])
 
 (defn log [data]
   (util/log (merge {:ns "queue"} data)))

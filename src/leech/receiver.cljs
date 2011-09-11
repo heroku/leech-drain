@@ -25,8 +25,8 @@
   (log {:fn "start" :event "start"})
   (let [receive-queue (queue/init 20000)]
     (queue/start-watcher receive-queue "receive")
-    (start-receiver receive-queue)
-    (io/start-bleeders (conf/aorta-urls) receive-queue))
+    (start-receiver receive-queue))
+    ;(io/start-bleeders (conf/aorta-urls) receive-queue))
   (log {:fn "start" :event "finish"}))
 
 (util/main "receiver" start)
