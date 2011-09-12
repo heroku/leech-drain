@@ -650,7 +650,7 @@ goog.string.compareVersions = function(a, b) {
       if(m[0].length == 0 && k[0].length == 0) {
         break
       }
-      var c = m[1].length == 0 ? 0 : parseInt(m[1], 10), o = k[1].length == 0 ? 0 : parseInt(k[1], 10), c = goog.string.compareElements_(c, o) || goog.string.compareElements_(m[2].length == 0, k[2].length == 0) || goog.string.compareElements_(m[2], k[2])
+      var c = m[1].length == 0 ? 0 : parseInt(m[1], 10), n = k[1].length == 0 ? 0 : parseInt(k[1], 10), c = goog.string.compareElements_(c, n) || goog.string.compareElements_(m[2].length == 0, k[2].length == 0) || goog.string.compareElements_(m[2], k[2])
     }while(c == 0)
   }
   return c
@@ -3710,9 +3710,9 @@ cljs.core.comp = function() {
     return function() {
       var d = null, i = function() {
         var d = function(d, h, i, j) {
-          var n = null;
-          goog.isDef(j) && (n = cljs.core.array_seq(Array.prototype.slice.call(arguments, 3), 0));
-          return a.call(null, b.call(null, cljs.core.apply.call(null, c, d, h, i, n)))
+          var o = null;
+          goog.isDef(j) && (o = cljs.core.array_seq(Array.prototype.slice.call(arguments, 3), 0));
+          return a.call(null, b.call(null, cljs.core.apply.call(null, c, d, h, i, o)))
         };
         d.cljs$lang$maxFixedArity = 3;
         d.cljs$lang$applyTo = function(d) {
@@ -3825,9 +3825,9 @@ cljs.core.partial = function() {
   }, d = function(a, b, c, d) {
     return function() {
       var e = function(e) {
-        var j = null;
-        goog.isDef(e) && (j = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
-        return cljs.core.apply.call(null, a, b, c, d, j)
+        var m = null;
+        goog.isDef(e) && (m = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
+        return cljs.core.apply.call(null, a, b, c, d, m)
       };
       e.cljs$lang$maxFixedArity = 0;
       e.cljs$lang$applyTo = function(e) {
@@ -3949,8 +3949,8 @@ cljs.core.fnil = function() {
   }, d = function(a, b, c, d) {
     return function() {
       var i = null, j = function() {
-        var i = function(i, j, n, l) {
-          return cljs.core.apply.call(null, a, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, j)) ? c : j, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, n)) ? d : n, l)
+        var i = function(i, j, m, l) {
+          return cljs.core.apply.call(null, a, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, j)) ? c : j, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, m)) ? d : m, l)
         }, j = function(a, b, c, d) {
           var e = null;
           goog.isDef(d) && (e = cljs.core.array_seq(Array.prototype.slice.call(arguments, 3), 0));
@@ -3962,7 +3962,7 @@ cljs.core.fnil = function() {
           return i.call(this, b, c, d, a)
         };
         return j
-      }(), i = function(i, m, k, o) {
+      }(), i = function(i, m, k, n) {
         switch(arguments.length) {
           case 2:
             return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, m)) ? c : m);
@@ -4052,7 +4052,7 @@ cljs.core.every_pred = function() {
           return c.call(this, b, d, e, a)
         };
         return d
-      }(), b = function(b, g, k, o) {
+      }(), b = function(b, g, k, n) {
         switch(arguments.length) {
           case 0:
             return!0;
@@ -4145,13 +4145,13 @@ cljs.core.every_pred = function() {
           return cljs.core.truth_(j) ? (j = b.call(null, d), cljs.core.truth_(j) ? (j = c.call(null, d), cljs.core.truth_(j) ? (j = a.call(null, e), cljs.core.truth_(j) ? (j = b.call(null, e), cljs.core.truth_(j) ? (j = c.call(null, e), cljs.core.truth_(j) ? (j = a.call(null, i), cljs.core.truth_(j) ? (j = b.call(null, i), cljs.core.truth_(j) ? c.call(null, i) : j) : j) : j) : j) : j) : j) : j) : j
         }())
       }, k = function() {
-        var e = function(e, j, k, l) {
+        var e = function(e, j, k, m) {
           return cljs.core.boolean$.call(null, function() {
-            var m = d.call(null, e, j, k);
-            return cljs.core.truth_(m) ? cljs.core.every_QMARK_.call(null, function(d) {
+            var l = d.call(null, e, j, k);
+            return cljs.core.truth_(l) ? cljs.core.every_QMARK_.call(null, function(d) {
               var e = a.call(null, d);
               return cljs.core.truth_(e) ? (e = b.call(null, d), cljs.core.truth_(e) ? c.call(null, d) : e) : e
-            }, l) : m
+            }, m) : l
           }())
         }, j = function(a, b, c, d) {
           var f = null;
@@ -4292,11 +4292,11 @@ cljs.core.some_fn = function() {
           case 1:
             return a.call(null, b);
           case 2:
-            var k = d, o = a.call(null, b);
-            return cljs.core.truth_(o) ? o : a.call(null, k);
+            var k = d, n = a.call(null, b);
+            return cljs.core.truth_(n) ? n : a.call(null, k);
           case 3:
-            var o = d, k = e, n = a.call(null, b);
-            cljs.core.truth_(n) ? k = n : (o = a.call(null, o), k = cljs.core.truth_(o) ? o : a.call(null, k));
+            var n = d, k = e, o = a.call(null, b);
+            cljs.core.truth_(o) ? k = o : (n = a.call(null, n), k = cljs.core.truth_(n) ? n : a.call(null, k));
             return k;
           default:
             return c.apply(this, arguments)
@@ -4330,17 +4330,17 @@ cljs.core.some_fn = function() {
           return d.call(this, b, c, e, a)
         };
         return e
-      }(), c = function(c, h, k, o) {
+      }(), c = function(c, h, k, n) {
         switch(arguments.length) {
           case 0:
             return null;
           case 1:
-            var n = c, q = a.call(null, n);
-            return cljs.core.truth_(q) ? q : b.call(null, n);
+            var o = c, q = a.call(null, o);
+            return cljs.core.truth_(q) ? q : b.call(null, o);
           case 2:
-            var q = c, n = h, p = a.call(null, q);
-            cljs.core.truth_(p) ? n = p : (p = a.call(null, n), cljs.core.truth_(p) ? n = p : (q = b.call(null, q), n = cljs.core.truth_(q) ? q : b.call(null, n)));
-            return n;
+            var q = c, o = h, p = a.call(null, q);
+            cljs.core.truth_(p) ? o = p : (p = a.call(null, o), cljs.core.truth_(p) ? o = p : (q = b.call(null, q), o = cljs.core.truth_(q) ? q : b.call(null, o)));
+            return o;
           case 3:
             return d.call(this, c, h, k);
           default:
@@ -4361,12 +4361,12 @@ cljs.core.some_fn = function() {
         var j = a.call(null, d);
         return cljs.core.truth_(j) ? j : (j = b.call(null, d), cljs.core.truth_(j) ? j : (d = c.call(null, d), cljs.core.truth_(d) ? d : (d = a.call(null, e), cljs.core.truth_(d) ? d : (d = b.call(null, e), cljs.core.truth_(d) ? d : (e = c.call(null, e), cljs.core.truth_(e) ? e : (e = a.call(null, i), cljs.core.truth_(e) ? e : (e = b.call(null, i), cljs.core.truth_(e) ? e : c.call(null, i))))))))
       }, m = function() {
-        var e = function(e, j, m, k) {
+        var e = function(e, j, m, l) {
           e = d.call(null, e, j, m);
           return cljs.core.truth_(e) ? e : cljs.core.some.call(null, function(d) {
             var e = a.call(null, d);
             return cljs.core.truth_(e) ? e : (e = b.call(null, d), cljs.core.truth_(e) ? e : c.call(null, d))
-          }, k)
+          }, l)
         }, j = function(a, b, c, d) {
           var f = null;
           goog.isDef(d) && (f = cljs.core.array_seq(Array.prototype.slice.call(arguments, 3), 0));
@@ -4378,7 +4378,7 @@ cljs.core.some_fn = function() {
           return e.call(this, b, c, d, a)
         };
         return j
-      }(), d = function(d, i, n, q) {
+      }(), d = function(d, i, o, q) {
         switch(arguments.length) {
           case 0:
             return null;
@@ -4391,7 +4391,7 @@ cljs.core.some_fn = function() {
           case 2:
             return e.call(this, d, i);
           case 3:
-            return l.call(this, d, i, n);
+            return l.call(this, d, i, o);
           default:
             return m.apply(this, arguments)
         }
@@ -4503,10 +4503,10 @@ cljs.core.map = function() {
     var b = function(b, c, d, e, f) {
       return a.call(null, function(a) {
         return cljs.core.apply.call(null, b, a)
-      }, function o(b) {
+      }, function n(b) {
         return new cljs.core.LazySeq(null, !1, function() {
           var c = a.call(null, cljs.core.seq, b);
-          return cljs.core.truth_(cljs.core.every_QMARK_.call(null, cljs.core.identity, c)) ? cljs.core.cons.call(null, a.call(null, cljs.core.first, c), o.call(null, a.call(null, cljs.core.rest, c))) : null
+          return cljs.core.truth_(cljs.core.every_QMARK_.call(null, cljs.core.identity, c)) ? cljs.core.cons.call(null, a.call(null, cljs.core.first, c), n.call(null, a.call(null, cljs.core.rest, c))) : null
         })
       }.call(null, cljs.core.conj.call(null, f, e, d, c)))
     }, c = function(a, c, d, e, g) {
@@ -5810,7 +5810,7 @@ cljs.core.juxt = function() {
           return d.call(this, b, c, e, a)
         };
         return e
-      }(), d = function(d, i, k, o) {
+      }(), d = function(d, i, k, n) {
         switch(arguments.length) {
           case 0:
             return cljs.core.vector.call(null, a.call(null), b.call(null), c.call(null));
@@ -7662,8 +7662,8 @@ leech.receive.start = function() {
       leech.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'event,\ufdd0'received-count,\ufdd0'receive-rate,\ufdd0'published-count,\ufdd0'publish-rate".split(","), {"\ufdd0'fn":"start", "\ufdd0'event":"watch-global", "\ufdd0'received-count":g, "\ufdd0'receive-rate":f, "\ufdd0'published-count":i, "\ufdd0'publish-rate":h}));
       for(g = cljs.core.seq.call(null, cljs.core.deref.call(null, a));;) {
         if(cljs.core.truth_(g)) {
-          f = cljs.core.first.call(null, g), f = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, f)) ? cljs.core.apply.call(null, cljs.core.hash_map, f) : f, i = cljs.core.get.call(null, f, "\ufdd0'match-watch"), cljs.core.get.call(null, f, "\ufdd0'id"), i = leech.watch.tick.call(null, i), f = cljs.core.nth.call(null, i, 0, null), i = cljs.core.nth.call(null, i, 1, null), leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'matched-count", "\ufdd0'match-rate"], 
-          {"\ufdd0'fn":"start", "\ufdd0'event":"watch-search", "\ufdd0'matched-count":f, "\ufdd0'match-rate":i})), g = cljs.core.next.call(null, g)
+          f = cljs.core.first.call(null, g), f = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, f)) ? cljs.core.apply.call(null, cljs.core.hash_map, f) : f, i = cljs.core.get.call(null, f, "\ufdd0'match-watch"), f = cljs.core.get.call(null, f, "\ufdd0'id"), h = leech.watch.tick.call(null, i), i = cljs.core.nth.call(null, h, 0, null), h = cljs.core.nth.call(null, h, 1, null), leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'search-id", "\ufdd0'matched-count", 
+          "\ufdd0'match-rate"], {"\ufdd0'fn":"start", "\ufdd0'event":"watch-search", "\ufdd0'search-id":f, "\ufdd0'matched-count":i, "\ufdd0'match-rate":h})), g = cljs.core.next.call(null, g)
         }else {
           return null
         }
@@ -7688,8 +7688,8 @@ leech.receive.start = function() {
       leech.watch.hit.call(null, b);
       for(var i = leech.parse.parse_line.call(null, h), k = cljs.core.seq.call(null, cljs.core.deref.call(null, a));;) {
         if(cljs.core.truth_(k)) {
-          var o = cljs.core.first.call(null, k), o = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, o)) ? cljs.core.apply.call(null, cljs.core.hash_map, o) : o, n = cljs.core.get.call(null, o, "\ufdd0'match-watch"), q = cljs.core.get.call(null, o, "\ufdd0'match-pred"), o = cljs.core.get.call(null, o, "\ufdd0'events-key");
-          cljs.core.truth_(q.call(null, i)) && (leech.watch.hit.call(null, n), n = leech.watch.rate.call(null, n), cljs.core.truth_(cljs.core._LT_.call(null, n, leech.receive.max_match_rate)) && (leech.watch.hit.call(null, e), n = cljs.core.pr_str.call(null, i), g.publish(o, n)));
+          var n = cljs.core.first.call(null, k), n = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, n)) ? cljs.core.apply.call(null, cljs.core.hash_map, n) : n, o = cljs.core.get.call(null, n, "\ufdd0'match-watch"), q = cljs.core.get.call(null, n, "\ufdd0'match-pred"), n = cljs.core.get.call(null, n, "\ufdd0'events-key");
+          cljs.core.truth_(q.call(null, i)) && (leech.watch.hit.call(null, o), o = leech.watch.rate.call(null, o), cljs.core.truth_(cljs.core._LT_.call(null, o, leech.receive.max_match_rate)) && (leech.watch.hit.call(null, e), o = cljs.core.pr_str.call(null, i), g.publish(n, o)));
           k = cljs.core.next.call(null, k)
         }else {
           return null

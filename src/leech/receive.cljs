@@ -51,7 +51,7 @@
               :published-count published-count :publish-rate publish-rate}))
       (doseq [{:keys [id match-watch]} (deref searches-a)]
         (let [[matched-count match-rate] (watch/tick match-watch)]
-          (log {:fn "start" :event "watch-search"
+          (log {:fn "start" :event "watch-search" :search-id id
                 :matched-count matched-count :match-rate match-rate})))))
     (log {:fn "start" :event "watches-ready"})
     ; setup searches
