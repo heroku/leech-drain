@@ -46,11 +46,8 @@
     (.on client "ready" (fn []
       (.subscribe client "staging")
       (.on client "message" (fn [_ data]
-        (prn "data" data)
-        (prn)
-        (prn "parsed" (reader/read-string data))
-        (let [parsed (reader/read-string data)]
-          (println (get parsed "line")))
-        (prn) (prn)))))))
+        (let [parsed (reader/read-string data)
+              color (get component-colors (get parsed "component") :default)]
+          (println (colored color (get parsed "line"))))))))))
 
 (util/main "tail" start)

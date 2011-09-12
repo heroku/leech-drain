@@ -27,7 +27,6 @@
       (let [parsed (parse/parse-line line)]
         (when (= (get parsed "cloud") "staging.herokudev.com")
           (let [serialized (pr-str parsed)]
-            (log {:fn "start" :event "match" :serialized serialized})
             (.publish redis-client "staging" serialized))))
       (swap! received-count-a inc)))
     (log {:fn "start" :event "bleeding"})
