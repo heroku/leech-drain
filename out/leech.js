@@ -7234,7 +7234,7 @@ cljs.reader.read_string = function(a) {
       return cljs.reader.reader_error.call(null, a, "EOF while reading string")
     }else {
       if(cljs.core.truth_(cljs.core._EQ_.call(null, "\\", c))) {
-        b = cljs.reader.escape_char.call(null, b, a), c = cljs.reader.read_char.call(null, a)
+        b.append(cljs.reader.escape_char.call(null, b, a)), c = cljs.reader.read_char.call(null, a)
       }else {
         if(cljs.core.truth_(cljs.core._EQ_.call(null, '"', c))) {
           return b.toString()
