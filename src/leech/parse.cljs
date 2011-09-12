@@ -5,9 +5,7 @@
 
 (def isodate (node/require "isodate"))
 
-(defn re-match?
-  "Returns a boolean indicating whether the given s matches the given re."
-  [re s]
+(defn re-match? [re s]
   (.test re s))
 
 (def long-re
