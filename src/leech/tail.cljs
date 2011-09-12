@@ -52,7 +52,7 @@
   (log {:fn "start" :event "start"})
   (let [search-id (node-uuid)
         query (str/join " " (drop 3 (util/argv)))
-        search-data {:id search-id :query query}
+        search-data {:id search-id :query query :target :pubsub}
         search-str (pr-str search-data)
         events-key (str "searches." search-id ".events")
         search-client (.createClient redis (conf/redis-url))

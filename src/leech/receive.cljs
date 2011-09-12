@@ -28,62 +28,82 @@
       (constantly true)
       crits)))
 
+(defn start-traps []
+  (log {:fn "start-traps" :at "start"})
+  (doseq [signal ["TERM" "INT"]]
+    (util/trap signal (fn []
+      (log {:fn "start-traps" :at "catch" :signal signal})
+      (log {:fn "start-traps" :at "exit" :status 0})
+      (util/exit 0)))
+    (log {:fn "start-traps" :at "trapping" :signal signal}))
+  (log {:fn "start-traps" :at "finish"}))
+
+(defn start-watches [searches-a receive-watch publish-watch]
+  (log {:fn "start-watches" :at "start"})
+  (util/set-interval 0 1000 (fn []
+    (log {:fn "start-watches" :at "tick"})
+    (let [[received-count receive-rate] (watch/tick receive-watch)
+          [published-count publish-rate] (watch/tick publish-watch)]
+      (log {:fn "start-watches" :at "watch-global"
+            :received-count received-count :receive-rate receive-rate
+            :published-count published-count :publish-rate publish-rate}))
+    (doseq [{:keys [id match-watch]} (deref searches-a)]
+      (let [[matched-count match-rate] (watch/tick match-watch)]
+        (log {:fn "start-watches" :at "watch-search" :search-id id
+              :matched-count matched-count :match-rate match-rate})))))
+  (log {:fn "start-watches" :event "finish"}))
+
+(defn start-searches [searches-a redis-client]
+  (log {:fn "start-searches" :at "start"})
+  (.on redis-client "ready" (fn []
+    (log {:fn "start-searches" :at "readying"})
+    (util/set-interval 0 100 (fn []
+      (log {:fn "start-searches" :at "tick"})
+      (.zrangebyscore redis-client "searches" (- (util/millis) 5000) (+ (util/millis) 5000) (fn [err res]
+        (let [searches-data (map reader/read-string res)
+              changed (not= (map :id (deref searches-a)) (map :id searches-data))]
+          (log {:fn "start-searches" :event "poll" :changed changed :num-searches (count searches-data)})
+          (when changed
+            (let [searches (map
+                             (fn [{:keys [id query target]}]
+                               (let [events-key (str "searches." id ".events")
+                                     match-watch (watch/init)
+                                     match-pred (compile-pred query)]
+                                 {:id id :query query :target target :events-key events-key :match-watch match-watch :match-pred match-pred}))
+                            searches-data)]
+              (swap! searches-a (constantly searches)))))))))
+    (log {:fn "start-searches" :at "ready"})))
+  (log {:fn "start-searches" :at "finish"}))
+
+(defn start-bleeders [searches-a redis-client receive-watch publish-watch]
+  (log {:fn "start-bleeders" :at "start"})
+  (io/start-bleeders (conf/aorta-urls) (fn [host line]
+     (watch/hit receive-watch)
+     (let [event-parsed (parse/parse-line line)]
+       (doseq [{:keys [events-key match-pred match-watch target]} (deref searches-a)]
+         (when (match-pred event-parsed)
+           (watch/hit match-watch)
+           (let [match-rate (watch/rate match-watch)]
+             (when (< match-rate max-match-rate)
+               (watch/hit publish-watch)
+               (let [event-serialized (pr-str event-parsed)]
+                 (condp = target
+                   :list
+                     (.lpush redis-client events-key event-serialized))
+                   :pubsub
+                     (.publish redis-client events-key event-serialized)))))))))
+  (log {:fn "start-bleeders" :at "finish"}))
+
 (defn start [& _]
-  (log {:fn "start" :event "start"})
-  (let [searches-a (atom nil)
-        receive-watch (watch/init)
+  (log {:fn "start" :at "start"})
+  (let [receive-watch (watch/init)
         publish-watch (watch/init)
-        search-client (.createClient redis (conf/redis-url))
-        events-client (.createClient redis (conf/redis-url))]
-    ; setup traps
-    (doseq [signal ["TERM" "INT"]]
-      (util/trap signal (fn []
-        (log {:fn "start" :event "catch" :signal signal})
-        (log {:fn "start" :event "exit" :status 0})
-        (util/exit 0))))
-    (log {:fn "start" :event "traps-ready" :signal signal})
-    ; setup watches
-    (util/set-interval 0 1000 (fn []
-      (let [[received-count receive-rate] (watch/tick receive-watch)
-            [published-count publish-rate] (watch/tick publish-watch)]
-        (log {:fn "start" :event "watch-global"
-              :received-count received-count :receive-rate receive-rate
-              :published-count published-count :publish-rate publish-rate}))
-      (doseq [{:keys [id match-watch]} (deref searches-a)]
-        (let [[matched-count match-rate] (watch/tick match-watch)]
-          (log {:fn "start" :event "watch-search" :search-id id
-                :matched-count matched-count :match-rate match-rate})))))
-    (log {:fn "start" :event "watches-ready"})
-    ; setup searches
-    (.on search-client "ready" (fn []
-      (util/set-interval 0 100 (fn []
-        (log {:fn "start" :event "search-tick" :time (util/millis)})
-        (.zrangebyscore search-client "searches" (- (util/millis) 5000) (+ (util/millis) 5000) (fn [err res]
-          (let [searches-data (map reader/read-string res)
-                changed (not= (map :id (deref searches-a)) (map :id searches-data))]
-            (log {:fn "start" :event "search-get" :changed changed :num-searches (count searches-data)})
-            (when changed
-              (let [searches (map
-                               (fn [{:keys [query id]}]
-                                 (let [events-key (str "searches." id ".events")
-                                       match-watch (watch/init)
-                                       match-pred (compile-pred query)]
-                                   {:id id :query query :events-key events-key :match-watch match-watch :match-pred match-pred}))
-                              searches-data)]
-                (swap! searches-a (constantly searches)))))))))
-      (log {:fn "start" :event "search-ready"})))
-    ; setup bleeders
-    (io/start-bleeders (conf/aorta-urls) (fn [host line]
-      (watch/hit receive-watch)
-      (let [event-parsed (parse/parse-line line)]
-        (doseq [{:keys [events-key match-pred match-watch]} (deref searches-a)]
-          (when (match-pred event-parsed)
-            (watch/hit match-watch)
-            (let [match-rate (watch/rate match-watch)]
-              (when (< match-rate max-match-rate)
-                (watch/hit publish-watch)
-                (let [event-serialized (pr-str event-parsed)]
-                  (.publish events-client events-key event-serialized)))))))))
-    (log {:fn "start" :event "bleeding"})))
+        searches-a (atom nil)
+        redis-client (.createClient redis (conf/redis-url))]
+    (start-traps)
+    (start-watches searches-a receive-watch publish-watch)
+    (start-searches searches-a redis-client)
+    (start-receivers searches-a redis-client receive-watch publish-watch)
+    (log {:fn "start" :at "finish"})))
 
 (util/main "receive" start)
