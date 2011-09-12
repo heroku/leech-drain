@@ -6,51 +6,57 @@
 (def redis (node/require "redis-url"))
 (def http (node/require "http"))
 
-(defn handle-not-found [{conn-id :id res :res}]
+(defn write-res [{:keys [res]} status headers body]
+  (.writeHead res status (util/clj->js headers))
+  (.write res body)
+  (. res (end)))
+
+(defn handle-not-found [{:keys [conn-id res]}]
   (log {:fn "handle-not-found" :at "start" :conn-id conn-id})
-  (.writeHead res 404 (util/clj->js {"Content-Type" "application/clj"}))
-  (.write res (pr-str {"error" "not found"}))
-  (. res (end))
+  (write-res res 404 {"Content-Type" "application/clj"} (pr-str {"error" "not found"}))
   (log {:fn "handle-not-found" :at "finish" :conn-id conn-id}))
 
-(defn handle-not-authorized [{conn-id :id res :res}]
+(defn handle-not-authorized [{:keys [conn-id res]}]
   (log {:fn "handle-not-authorized" :at "start" :conn-id conn-id})
-  (.writeHead res 403 (util/clj->js {"Content-Type" "application/clj"}))
-  (.write res (pr-str {"error" "not authorized"}))
-  (. res (end))
+  (write-res res 403 {"Content-Type" "application/clj"} (pr-str {"error" "not authorized"}))
   (log {:fn "handle-not-authorized" :at "finish" :conn-id conn-id}))
 
-(defn handle-index [{conn-id :id res :res}]
+(defn handle-index [{:keys [conn-id res]}]
   )
 
-(defn handle-search [redis-client {conn-id :id res :res} {search-id :id events-key :events-key :as search-data}]
-  (let [search-str (pr-str search-data)]
+(defn handle-search [redis-client {:keys [conn-id res]} {:keys [search-id events-key] :as search-data}]
+  (let [search-str (pr-str (assoc search-data :target :list))]
     (log {:fn "handle-search" :at "start" :conn-id conn-id :search-id search-id})
     (.. redis-client
       (multi)
       (zadd searches (util/millis) search-str)
       (lrange events-key 0 100000)
       (ltrim events-key 100000 -1)
-      (exec (fn [err [events-serialized _]]
+      (exec (fn [err [_ events-serialized _]]
         (log {:fn "handle-search" :at "execed" :conn-id conn-id :search-id search-id :err err :events-count (count events-serialized)})
         (let [events (map reader/read-string events-serialized)]
-          (.writeHead res 200 (util/clj->js {"Content-Type" "application/clj"}))
-          (.write res (pr-str {:events events})))
-          (. res (end))
+          (write-res res 200 {"Content-Type" "application/clj"} (pr-str {:events events})))
         (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id})))
     (log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id}))))
 
-(defn handle [redis-client conn]
-  ; get /
-  (if (auth?)
-    (handle-index conn)
-    (handle-not-authorized conn))
-  ; post /searches
-  (if (auth?)
-    (handle-search redis-client conn search-data)
-    (handle-not-authorized conn))
-  ; else
-  (handle-not-found conn))
+(defn parse-req [req]
+  {:method (.method req)
+   :path   (.pathname (.parse url (.url req)))})
+
+(defn handle [redis-client {:keys [conn-id req res]}]
+  (let [{:keys [method path]} (parse-req req)]
+    (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
+    (condp = [method path]
+      ["get" "/"]
+        (if (authorized? conn)
+          (handle-index conn)
+          (handle-not-authorized conn))
+      ["post" "/searches"]
+        (if (auth?)
+          (handle-search redis-client conn search-data)
+          (handle-not-authorized conn))
+      (handle-not-found conn))
+   (log {:fn "handle" :at "finish" :conn-id conn-id})))
 
 (defn listen [handle-fn port callback]
   (log {:fn "listen" :at "start" :port port})
