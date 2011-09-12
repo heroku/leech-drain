@@ -42,7 +42,10 @@
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
-(defn start [& _]
+(defn start [[cloud]]
+  (when-not (util/re-match? #"[a-z]+\.herokudev\.com" cloud)
+    (println (str "invalid cloud '" cloud "'"))
+    (util/exit 1))
   (let [client (.createClient redis (conf/redis-url))]
     (.on client "ready" (fn []
       (.subscribe client "staging")

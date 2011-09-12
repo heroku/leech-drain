@@ -20,6 +20,11 @@
   [m k f]
   (assoc m k (f (get m k))))
 
+(defn re-match?
+  "Returns a boolean indicating whether the given s matches the given re."
+  [re s]
+  (.test re s))
+
 (defn clj->js
   "Recursively transforms ClojureScript maps into Javascript objects,
    other ClojureScript colls into JavaScript arrays, and ClojureScript
@@ -93,4 +98,4 @@
   (let [cl-name (or (get (js->clj (.argv node/process)) 2)
                     (throw "no main name given"))]
   (if (= cl-name main-name)
-    (set! *main-cli-fn* #(f (rest %))))))
+    (set! *main-cli-fn* (fn [& args] (f (rest args)))))))

@@ -5,9 +5,6 @@
 
 (def isodate (node/require "isodate"))
 
-(defn re-match? [re s]
-  (.test re s))
-
 (def long-re
   #"^-?[0-9]{1,18}$")
 
@@ -22,9 +19,9 @@
 
 (defn coerce-val [v]
   (cond
-    (re-match? long-re v)
+    (util/re-match? long-re v)
       (parse-long v)
-    (re-match? double-re v)
+    (util/re-match? double-re v)
       (parse-double v)
     (= "" v)
       nil
