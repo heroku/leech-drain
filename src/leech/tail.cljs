@@ -7,6 +7,7 @@
             [leech.parse :as parse]))
 
 (def redis (node/require "redis-url"))
+(def node-uuid (node/require "node-uuid"))
 
 (def color-codes
   {:red     "\033[31m"
@@ -40,20 +41,49 @@
    "kernel"    :cyan
    "heroku"    :cyan})
 
-(defn- colored
+(defn colored
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
+(defn log [data]
+  (util/log (merge {:ns "tail"} data)))
+
+;(if (every? (fn [[k v]] (= v (get event-parsed k))) search-parsed)
+;tail-parsed 
+
 (defn start []
-  (let [search-str (str/join " "(drop 3 (util/argv)))
-        search-parsed (parse/parse-message-attrs search-str)
-        client (.createClient redis (conf/redis-url))]
-    (.on client "ready" (fn []
-      (.subscribe client "events.dev")
-      (.on client "message" (fn [_ event-serialized]
+  (log {:fn "start" :event "start"})
+  (let [search-id (node-uuid)
+        query (str/join " " (drop 3 (util/argv)))
+        search-data {:id search-id :query query}
+        search-str (pr-str search-data)
+        events-key (str "searches." search-id ".events")
+        search-client (.createClient redis (conf/redis-url))
+        events-client (.createClient redis (conf/redis-url))]
+    ; handle signals
+    (doseq [signal ["TERM" "INT"]]
+      (util/trap signal (fn []
+        (log {:fn "start" :event "trap"})
+        (util/exit 0)))
+      (log {:fn "start" :event "trapping" :signal signal}))
+    (log {:fn "start" :event "signals-ready"})
+    ; setup search
+    (.on search-client "ready" (fn []
+      (util/set-interval 0 1000 (fn []
+        (log {:fn "start" :event "search-tick" :time (util/millis)})
+        (.zadd search-client "searches" (util/millis) search-str (fn [e r]
+          (log {:fn "start" :event "search-set"})))))
+      (log {:fn "start" :event "search-ready" :search-id search-id})))
+    ; setup stream
+    (.on events-client "ready" (fn []
+      (.subscribe events-client events-key)
+      (.on events-client "subscribe" (fn [_]
+        (log {:fn "start" :event "events-subscribe"})))
+      (.on events-client "message" (fn [_ event-serialized]
         (let [event-parsed (reader/read-string event-serialized)]
-          (if (every? (fn [[k v]] (= v (get event-parsed k))) search-parsed)
-            (let [color (get component-colors (get event-parsed "component") :default)]
-              (println (colored color (get event-parsed "line"))))))))))))
+          (let [color (get component-colors (get event-parsed "component") :default)]
+            ;(println (colored color (get event-parsed "line")))
+            ))))
+      (log {:fn "start" :event "events-ready"})))))
 
 (util/main "tail" start)

@@ -3,7 +3,6 @@
             [clojure.string :as string]))
 
 (def url (node/require "url"))
-(def node-uuid (node/require "node-uuid"))
 
 (defn log
   "Log the given data."
@@ -59,16 +58,6 @@
      :path (get raw "pathname")
      :auth (get raw "auth")}))
 
-(defn set-interval
-  "Invoke the given function after and every delay milliseconds."
-  [delay f]
-  (js/setInterval f delay))
-
-(defn clear-interval
-  "Cancel the periodic invocation specified by the given interval id."
-  [interval-id]
-  (js/clearInterval interval-id))
-
 (defn set-timeout
   "Invoke the given function after delay milliseconds."
   [delay f]
@@ -78,6 +67,23 @@
   "Cancle the delayed invocation specified by the given timeout id."
   [timeout-id]
   (js/cancelTimeout delay))
+
+(defn set-interval
+  "Invoke the given function after delay and then every interval milliseconds."
+  [delay interval f]
+  (let [interval-id-a (atom nil)
+        timeout-id (set-timeout delay (fn []
+                     (f)
+                     (let [interval-id (js/setInterval f interval)]
+                       (swap! interval-id-a (constantly interval-id)))))]
+    [timeout-id interval-id-a]))
+
+(defn clear-interval
+  "Cancel the periodic invocation specified by the given interval id."
+  [[timeout-id interval-id-a]]
+  (js/clearTimeout timeout-id)
+  (if-let [interval-id (deref interval-id-a)]
+    (js/clearInterval interval-id)))
 
 (defn next-tick
   "Call the given function on the next tick."
