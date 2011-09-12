@@ -48,7 +48,7 @@
 (defn log [data]
   (util/log (merge {:ns "tail"} data)))
 
-;(if (every? (fn [[k v]] (= v (get event-parsed k))) search-parsed)
+;(if 
 ;tail-parsed 
 
 (defn start []
@@ -82,8 +82,7 @@
       (.on events-client "message" (fn [_ event-serialized]
         (let [event-parsed (reader/read-string event-serialized)]
           (let [color (get component-colors (get event-parsed "component") :default)]
-            ;(println (colored color (get event-parsed "line")))
-            ))))
+            (println (colored color (get event-parsed "line")))))))
       (log {:fn "start" :event "events-ready"})))))
 
 (util/main "tail" start)

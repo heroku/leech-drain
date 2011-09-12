@@ -45,10 +45,12 @@
             (log {:fn "start" :event "search-get" :changed changed :num-searches (count searches)})
             (when changed
               (swap! searches-a (constantly searches))
+              (prn searches)
               (let [preds (reduce
                             (fn [p {:keys [query id]}]
                               (let [chan (str "searches." id ".events")
                                     crit (parse/parse-message-attrs query)
+                                    _ (prn crit)
                                     pred (fn [evt] (every? (fn [[k v]] (= v (get evt k))) crit))]
                                 (assoc p chan pred)))
                             {}
