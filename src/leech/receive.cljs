@@ -67,11 +67,10 @@
           (when (match-pred event-parsed)
             (watch/hit match-watch)
             (let [match-rate (watch/rate match-watch)]
-              (prn [match-rate max-match-rate])
               (when (< match-rate max-match-rate)
                 (watch/hit publish-watch)
                 (let [event-serialized (pr-str event-parsed)]
-                  (.publish events-client chan event-serialized)))))))))
+                  (.publish events-client events-key event-serialized)))))))))
     (log {:fn "start" :event "bleeding"})))
 
 (util/main "receive" start)
