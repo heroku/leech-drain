@@ -7688,8 +7688,8 @@ nginx:"\ufdd0'blue", slapd:"\ufdd0'cyan", gitproxy:"\ufdd0'yellow", kernel:"\ufd
 leech.tail.colored = function(a, b) {
   return cljs.core.str.call(null, leech.tail.color_codes.call(null, a), b, leech.tail.color_codes.call(null, "\ufdd0'default"))
 };
-leech.tail.log = function(a) {
-  return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"tail"}), a))
+leech.tail.log = function() {
+  return null
 };
 leech.tail.start = function() {
   leech.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"start"}));

@@ -45,11 +45,8 @@
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
-(defn log [data]
-  (util/log (merge {:ns "tail"} data)))
-
-;(if 
-;tail-parsed 
+(defn log [data])
+  ;(util/log (merge {:ns "tail"} data)))
 
 (defn start []
   (log {:fn "start" :event "start"})
@@ -60,7 +57,7 @@
         events-key (str "searches." search-id ".events")
         search-client (.createClient redis (conf/redis-url))
         events-client (.createClient redis (conf/redis-url))]
-    ; handle signals
+    ; setup traps
     (doseq [signal ["TERM" "INT"]]
       (util/trap signal (fn []
         (log {:fn "start" :event "trap"})
