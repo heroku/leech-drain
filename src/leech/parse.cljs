@@ -31,7 +31,7 @@
 (def attrs-re
   #"( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:/_-]*)")
 
-(defn parse-message-attrs [msg]
+(defn parse-message-attrs* [msg]
   (let [raw-obj (js-obj)]
     (loop [unparsed-msg msg]
       (if-let [matches (.exec attrs-re unparsed-msg)]
@@ -44,6 +44,10 @@
           (recur (.substring unparsed-msg (.length match) (.length unparsed-msg))))))
     raw-obj))
 
+(defn parse-message-attrs [msg]
+  (let [raw-obj (parse-message-attrs* msg)]
+    (ObjMap. nil (js-keys raw-obj) raw-obj)))
+
 (defn parse-timestamp [s]
   (let [d (isodate s)]
     (. d (getTime))))
@@ -54,7 +58,7 @@
 ; we hand-optimize this very hot code path.
 (defn parse-standard-line [l]
   (if-let [m (re-matches standard-re l)]
-    (let [raw-obj (parse-message-attrs (get m 11))]
+    (let [raw-obj (parse-message-attrs* (get m 11))]
       (aset raw-obj "event_type" "standard")
       (aset raw-obj "timestamp_src" (parse-timestamp (get m 1)))
       (aset raw-obj "host" (get m 2))

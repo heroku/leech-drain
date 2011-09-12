@@ -1,8 +1,10 @@
 (ns leech.tail
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
+            [clojure.string :as str]
             [leech.util :as util]
-            [leech.conf :as conf]))
+            [leech.conf :as conf]
+            [leech.parse :as parse]))
 
 (def redis (node/require "redis-url"))
 
@@ -42,18 +44,16 @@
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
-(defn start [[cloud]]
-  (when-not (util/re-match? #"\.herokudev\.com" cloud)
-    (println (str "invalid cloud '" cloud "'"))
-    (util/exit 1))
-  (let [client (.createClient redis (conf/redis-url))]
+(defn start []
+  (let [search-str (str/join " "(drop 3 (util/argv)))
+        search-parsed (parse/parse-message-attrs search-str)
+        client (.createClient redis (conf/redis-url))]
     (.on client "ready" (fn []
-      (.subscribe client "devcloud")
-      (.on client "message" (fn [_ data]
-        (let [parsed (reader/read-string data)
-              from-cloud (get parsed "cloud")]
-          (if (= from-cloud cloud)
-            (let [color (get component-colors (get parsed "component") :default)]
-              (println (colored color (get parsed "line"))))))))))))
+      (.subscribe client "events.dev")
+      (.on client "message" (fn [_ event-serialized]
+        (let [event-parsed (reader/read-string event-serialized)]
+          (if (every? (fn [[k v]] (= v (get event-parsed k))) search-parsed)
+            (let [color (get component-colors (get event-parsed "component") :default)]
+              (println (colored color (get event-parsed "line"))))))))))))
 
 (util/main "tail" start)

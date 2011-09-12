@@ -30,7 +30,7 @@
         (when (and cloud (util/re-match? #"\.herokudev\.com" cloud))
           (watch/hit publish-watch)
           (let [serialized (pr-str parsed)]
-            (.publish redis-client "devcloud" serialized))))))
+            (.publish redis-client "events.dev" serialized))))))
     (log {:fn "start" :event "bleeding"})
     (doseq [signal ["TERM" "INT"]]
       (util/trap signal (fn []

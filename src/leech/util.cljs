@@ -25,6 +25,8 @@
   [re s]
   (.test re s))
 
+(declare clj->js)
+
 (defn clj->js
   "Recursively transforms ClojureScript maps into Javascript objects,
    other ClojureScript colls into JavaScript arrays, and ClojureScript
@@ -92,10 +94,15 @@
   [status]
   (.exit node/process status))
 
+(defn argv
+  "Returns the argv as a vector."
+  []
+  (vec (js->clj (.argv node/process))))
+
 (defn main
   "Set the top-level entry point to the given function."
   [main-name f]
   (let [cl-name (or (get (js->clj (.argv node/process)) 2)
                     (throw "no main name given"))]
   (if (= cl-name main-name)
-    (set! *main-cli-fn* (fn [& args] (f (rest args)))))))
+    (set! *main-cli-fn* (fn [& _] (f))))))

@@ -7369,6 +7369,9 @@ leech.util.trap = function(a, b) {
 leech.util.exit = function(a) {
   return cljs.nodejs.process.exit(a)
 };
+leech.util.argv = function() {
+  return cljs.core.vec.call(null, cljs.core.js__GT_clj.call(null, cljs.nodejs.process.argv))
+};
 leech.util.main = function(a, b) {
   var c = function() {
     var a = cljs.core.get.call(null, cljs.core.js__GT_clj.call(null, cljs.nodejs.process.argv), 2);
@@ -7380,14 +7383,13 @@ leech.util.main = function(a, b) {
   }();
   return cljs.core.truth_(cljs.core._EQ_.call(null, c, a)) ? cljs.core._STAR_main_cli_fn_STAR_ = function() {
     var a = function(a) {
-      var c = null;
-      goog.isDef(a) && (c = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
-      return b.call(null, cljs.core.rest.call(null, c))
+      goog.isDef(a) && cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0);
+      return b.call(null)
     };
     a.cljs$lang$maxFixedArity = 0;
     a.cljs$lang$applyTo = function(a) {
-      a = cljs.core.seq(a);
-      return b.call(null, cljs.core.rest.call(null, a))
+      cljs.core.seq(a);
+      return b.call(null)
     };
     return a
   }() : null
@@ -7505,7 +7507,7 @@ leech.parse.coerce_val = function(a) {
   return cljs.core.truth_(leech.util.re_match_QMARK_.call(null, leech.parse.long_re, a)) ? leech.parse.parse_long.call(null, a) : cljs.core.truth_(leech.util.re_match_QMARK_.call(null, leech.parse.double_re, a)) ? leech.parse.parse_double.call(null, a) : cljs.core.truth_(cljs.core._EQ_.call(null, "", a)) ? null : cljs.core.truth_("\ufdd0'else") ? a : null
 };
 leech.parse.attrs_re = /( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:\/_-]*)/;
-leech.parse.parse_message_attrs = function(a) {
+leech.parse.parse_message_attrs_STAR_ = function(a) {
   for(var b = cljs.core.js_obj.call(null);;) {
     var c = leech.parse.attrs_re.exec(a);
     if(cljs.core.truth_(c)) {
@@ -7518,6 +7520,10 @@ leech.parse.parse_message_attrs = function(a) {
   }
   return b
 };
+leech.parse.parse_message_attrs = function(a) {
+  a = leech.parse.parse_message_attrs_STAR_.call(null, a);
+  return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, a), a)
+};
 leech.parse.parse_timestamp = function(a) {
   return leech.parse.isodate.call(null, a).getTime()
 };
@@ -7525,7 +7531,7 @@ leech.parse.standard_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-\+]\d\d:00) ([0
 leech.parse.parse_standard_line = function(a) {
   var b = cljs.core.re_matches.call(null, leech.parse.standard_re, a);
   if(cljs.core.truth_(b)) {
-    var c = leech.parse.parse_message_attrs.call(null, cljs.core.get.call(null, b, 11));
+    var c = leech.parse.parse_message_attrs_STAR_.call(null, cljs.core.get.call(null, b, 11));
     c.event_type = "standard";
     c.timestamp_src = leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1));
     c.host = cljs.core.get.call(null, b, 2);
@@ -7609,7 +7615,7 @@ leech.receive.start = function() {
     leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(f, g) {
       leech.watch.hit.call(null, a);
       var j = leech.parse.parse_line.call(null, g), k = cljs.core.get.call(null, j, "cloud");
-      return cljs.core.truth_(cljs.core.truth_(k) ? leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, k) : k) ? (leech.watch.hit.call(null, b), j = cljs.core.pr_str.call(null, j), e.publish("devcloud", j)) : null
+      return cljs.core.truth_(cljs.core.truth_(k) ? leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, k) : k) ? (leech.watch.hit.call(null, b), j = cljs.core.pr_str.call(null, j), e.publish("events.dev", j)) : null
     });
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));
     for(var f = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
@@ -7649,15 +7655,21 @@ nginx:"\ufdd0'blue", slapd:"\ufdd0'cyan", gitproxy:"\ufdd0'yellow", kernel:"\ufd
 leech.tail.colored = function(a, b) {
   return cljs.core.str.call(null, leech.tail.color_codes.call(null, a), b, leech.tail.color_codes.call(null, "\ufdd0'default"))
 };
-leech.tail.start = function(a) {
-  var b = cljs.core.nth.call(null, a, 0, null);
-  cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, b)) || (cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", b, "'")), leech.util.exit.call(null, 1));
-  var c = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
+leech.tail.start = function() {
+  var a = clojure.string.join.call(null, " ", cljs.core.drop.call(null, 3, leech.util.argv.call(null))), b = leech.parse.parse_message_attrs.call(null, a), c = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
   return c.on("ready", function() {
-    c.subscribe("devcloud");
+    c.subscribe("events.dev");
     return c.on("message", function(a, c) {
-      var f = cljs.reader.read_string.call(null, c), g = cljs.core.get.call(null, f, "cloud");
-      return cljs.core.truth_(cljs.core._EQ_.call(null, g, b)) ? (g = cljs.core.get.call(null, leech.tail.component_colors, cljs.core.get.call(null, f, "component"), "\ufdd0'default"), cljs.core.println.call(null, leech.tail.colored.call(null, g, cljs.core.get.call(null, f, "line")))) : null
+      var f = cljs.reader.read_string.call(null, c);
+      if(cljs.core.truth_(cljs.core.every_QMARK_.call(null, function(a) {
+        var b = cljs.core.nth.call(null, a, 0, null), a = cljs.core.nth.call(null, a, 1, null);
+        return cljs.core._EQ_.call(null, a, cljs.core.get.call(null, f, b))
+      }, b))) {
+        var g = cljs.core.get.call(null, leech.tail.component_colors, cljs.core.get.call(null, f, "component"), "\ufdd0'default");
+        return cljs.core.println.call(null, leech.tail.colored.call(null, g, cljs.core.get.call(null, f, "line")))
+      }else {
+        return null
+      }
     })
   })
 };
