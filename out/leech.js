@@ -7517,7 +7517,7 @@ leech.parse.parse_double = function(a) {
 leech.parse.coerce_val = function(a) {
   return cljs.core.truth_(leech.util.re_match_QMARK_.call(null, leech.parse.long_re, a)) ? leech.parse.parse_long.call(null, a) : cljs.core.truth_(leech.util.re_match_QMARK_.call(null, leech.parse.double_re, a)) ? leech.parse.parse_double.call(null, a) : cljs.core.truth_(cljs.core._EQ_.call(null, "", a)) ? null : cljs.core.truth_("\ufdd0'else") ? a : null
 };
-leech.parse.attrs_re = /( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:\/_-]*)/;
+leech.parse.attrs_re = /( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:\/_,-]*)/;
 leech.parse.parse_message_attrs_STAR_ = function(a) {
   for(var b = cljs.core.js_obj.call(null);;) {
     var c = leech.parse.attrs_re.exec(a);
