@@ -7329,9 +7329,6 @@ leech.util.millis = function() {
 leech.util.update = function(a, b, c) {
   return cljs.core.assoc.call(null, a, b, c.call(null, cljs.core.get.call(null, a, b)))
 };
-leech.util.re_match_QMARK_ = function(a, b) {
-  return a.test(b)
-};
 leech.util.clj__GT_js = function clj__GT_js(b) {
   return cljs.core.truth_(cljs.core.string_QMARK_.call(null, b)) ? b : cljs.core.truth_(cljs.core.keyword_QMARK_.call(null, b)) ? cljs.core.name.call(null, b) : cljs.core.truth_(cljs.core.map_QMARK_.call(null, b)) ? cljs.core.reduce.call(null, function(b, d) {
     var e = cljs.core.nth.call(null, d, 0, null), f = cljs.core.nth.call(null, d, 1, null);
@@ -7420,7 +7417,7 @@ leech.tail.colored = function(a, b) {
 };
 leech.tail.start = function(a) {
   a = cljs.core.nth.call(null, a, 0, null);
-  cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /[a-z]+\.herokudev\.com/, a)) || (cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", a, "'")), leech.util.exit.call(null, 1));
+  cljs.core.truth_(cljs.core.neg_QMARK_.call(null, a.substring(".herokudev.com"), cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", a, "'")), leech.util.exit.call(null, 1)));
   var b = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
   return b.on("ready", function() {
     b.subscribe("staging");
@@ -7500,6 +7497,9 @@ leech.io.start_bleeders = function(a, b) {
 };
 leech.parse = {};
 leech.parse.isodate = cljs.nodejs.require.call(null, "isodate");
+leech.parse.re_match_QMARK_ = function(a, b) {
+  return a.test(b)
+};
 leech.parse.long_re = /^-?[0-9]{1,18}$/;
 leech.parse.double_re = /^-?[0-9]+\.[0-9]+$/;
 leech.parse.parse_long = function(a) {
@@ -7509,7 +7509,7 @@ leech.parse.parse_double = function(a) {
   return cljs.core.truth_(a) ? parseFloat.call(null, a) : null
 };
 leech.parse.coerce_val = function(a) {
-  return cljs.core.truth_(leech.util.re_match_QMARK_.call(null, leech.parse.long_re, a)) ? leech.parse.parse_long.call(null, a) : cljs.core.truth_(leech.util.re_match_QMARK_.call(null, leech.parse.double_re, a)) ? leech.parse.parse_double.call(null, a) : cljs.core.truth_(cljs.core._EQ_.call(null, "", a)) ? null : cljs.core.truth_("\ufdd0'else") ? a : null
+  return cljs.core.truth_(leech.parse.re_match_QMARK_.call(null, leech.parse.long_re, a)) ? leech.parse.parse_long.call(null, a) : cljs.core.truth_(leech.parse.re_match_QMARK_.call(null, leech.parse.double_re, a)) ? leech.parse.parse_double.call(null, a) : cljs.core.truth_(cljs.core._EQ_.call(null, "", a)) ? null : cljs.core.truth_("\ufdd0'else") ? a : null
 };
 leech.parse.attrs_re = /( *)([a-zA-Z0-9_]+)(=?)([a-zA-Z0-9\.:\/_-]*)/;
 leech.parse.parse_message_attrs = function(a) {
