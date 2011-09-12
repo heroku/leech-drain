@@ -7419,14 +7419,14 @@ leech.tail.colored = function(a, b) {
   return cljs.core.str.call(null, leech.tail.color_codes.call(null, a), b, leech.tail.color_codes.call(null, "\ufdd0'default"))
 };
 leech.tail.start = function(a) {
-  a = cljs.core.nth.call(null, a, 0, null);
-  cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, a)) || (cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", a, "'")), leech.util.exit.call(null, 1));
-  var b = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
-  return b.on("ready", function() {
-    b.subscribe("staging");
-    return b.on("message", function(a, b) {
-      var e = cljs.reader.read_string.call(null, b), f = cljs.core.get.call(null, leech.tail.component_colors, cljs.core.get.call(null, e, "component"), "\ufdd0'default");
-      return cljs.core.println.call(null, leech.tail.colored.call(null, f, cljs.core.get.call(null, e, "line")))
+  var b = cljs.core.nth.call(null, a, 0, null);
+  cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, b)) || (cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", b, "'")), leech.util.exit.call(null, 1));
+  var c = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
+  return c.on("ready", function() {
+    c.subscribe("devcloud");
+    return c.on("message", function(a, c) {
+      var f = cljs.reader.read_string.call(null, c), g = cljs.core.get.call(null, f, "cloud");
+      return cljs.core.truth_(cljs.core._EQ_.call(null, g, b)) ? (g = cljs.core.get.call(null, leech.tail.component_colors, cljs.core.get.call(null, f, "component"), "\ufdd0'default"), cljs.core.println.call(null, leech.tail.colored.call(null, g, cljs.core.get.call(null, f, "line")))) : null
     })
   })
 };

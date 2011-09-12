@@ -48,10 +48,12 @@
     (util/exit 1))
   (let [client (.createClient redis (conf/redis-url))]
     (.on client "ready" (fn []
-      (.subscribe client "staging")
+      (.subscribe client "devcloud")
       (.on client "message" (fn [_ data]
         (let [parsed (reader/read-string data)
-              color (get component-colors (get parsed "component") :default)]
-          (println (colored color (get parsed "line"))))))))))
+              from-cloud (get parsed "cloud")]
+          (if (= from-cloud cloud)
+            (let [color (get component-colors (get parsed "component") :default)]
+              (println (colored color (get parsed "line"))))))))))))
 
 (util/main "tail" start)
