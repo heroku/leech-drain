@@ -45,12 +45,10 @@
             (log {:fn "start" :event "search-get" :changed changed :num-searches (count searches)})
             (when changed
               (swap! searches-a (constantly searches))
-              (prn searches)
               (let [preds (reduce
                             (fn [p {:keys [query id]}]
                               (let [chan (str "searches." id ".events")
                                     crit (parse/parse-message-attrs query)
-                                    _ (prn crit)
                                     pred (fn [evt] (every? (fn [[k v]] (= v (get evt k))) crit))]
                                 (assoc p chan pred)))
                             {}
@@ -60,11 +58,12 @@
     ; setup bleeders
     (io/start-bleeders (conf/aorta-urls) (fn [host line]
       (watch/hit receive-watch)
-      (let [parsed (parse/parse-line line)]
+      (let [event-parsed (parse/parse-line line)]
         (doseq [[chan pred] (deref preds-a)]
-          (watch/hit publish-watch)
-          (let [serialized (pr-str parsed)]
-            (.publish events-client chan serialized))))))
+          (when (pred event-parsed)
+            (watch/hit publish-watch)
+            (let [event-serialized (pr-str event-parsed)]
+              (.publish events-client chan event-serialized)))))))
     (log {:fn "start" :event "bleeding"})))
 
 (util/main "receive" start)
