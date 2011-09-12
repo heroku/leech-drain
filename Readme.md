@@ -5,11 +5,11 @@ Leech events from the Heroku event stream.
 
 ## Running locally
 
-Compile the app:
+Compile:
 
     $ bin/compile
 
-Configure environment:
+Configure:
 
     $ cp .env.sample .env
     $ export $(cat .env)
