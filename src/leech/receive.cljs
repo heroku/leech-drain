@@ -24,10 +24,11 @@
         (swap! received-count-prev-a (constantly received-count)))))
     (log {:fn "start" :event "watching"})
     (io/start-bleeders (conf/aorta-urls) (fn [host line]
-      (let [parsed (parse/parse-line line)]
-        (when (= (get parsed "cloud") "staging.herokudev.com")
+      (let [parsed (parse/parse-line line)
+            cloud (get parsed "cloud")]
+        (when (and cloud (util/re-match? #"\.herokudev\.com" cloud))
           (let [serialized (pr-str parsed)]
-            (.publish redis-client "staging" serialized))))
+            (.publish redis-client "devcloud" serialized))))
       (swap! received-count-a inc)))
     (log {:fn "start" :event "bleeding"})
     (doseq [signal ["TERM" "INT"]]
