@@ -2,5 +2,8 @@
 
 set -e
 set -x
+
+rm -rf out
+mkdir out
 cljsc src '{:optimizations :simple :pretty-print true :target :nodejs}' > out/leech.js
 rm -rf out/cljs out/clojure out/leech

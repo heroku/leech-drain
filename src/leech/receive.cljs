@@ -12,15 +12,19 @@
 
 (defn start [& _]
   (let [received-count-a (atom 0)
+        received-count-prev-a (atom 0)
         redis-client (.createClient redis (conf/redis-url))]
     (log {:fn "start" :event "start"})
     (util/set-interval 1000 (fn []
-      (log {:fn "start" :event "watch" :received-count (deref received-count-a)})))
+      (let [elapsed (- (util/millis) start)
+            received-count (deref received-count-a)
+            received-count-prev (deref received-count-prev-a)
+            receive-rate (- received-count received-count-prev)]
+        (log {:fn "start" :event "watch" :received-count received-count :receive-rate receive-rate})
+        (swap! received-count-prev-a (constantly received-count)))))
     (log {:fn "start" :event "watching"})
     (io/start-bleeders (conf/aorta-urls) (fn [host line]
       (let [parsed (parse/parse-line line)]
-        (when (nil? parsed)
-          (log {:fn "start" :event "failed" :host host :line line}))
         (when (= (get parsed "cloud") "staging.herokudev.com")
           (log {:fn "start" :event "match"})
           (.publish redis-client "staging" (pr-str parsed))))
