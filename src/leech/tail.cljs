@@ -28,6 +28,7 @@
    "nginx"     :blue
    "face"      :blue
    "logplex"   :blue
+   "apolo"     :blue
    "shen"      :red
    "pgmonitor" :red
    "su"        :cyan
