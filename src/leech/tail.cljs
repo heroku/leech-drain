@@ -46,7 +46,11 @@
     (.on client "ready" (fn []
       (.subscribe client "staging")
       (.on client "message" (fn [_ data]
+        (prn "data" data)
+        (prn)
+        (prn "parsed" (reader/read-string data))
         (let [parsed (reader/read-string data)]
-          (println (get parsed "line")))))))))
+          (println (get parsed "line")))
+        (prn) (prn)))))))
 
 (util/main "tail" start)

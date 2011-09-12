@@ -7410,8 +7410,13 @@ leech.tail.start = function() {
     return a.on("ready", function() {
       a.subscribe("staging");
       return a.on("message", function(a, b) {
+        cljs.core.prn.call(null, "data", b);
+        cljs.core.prn.call(null);
+        cljs.core.prn.call(null, "parsed", cljs.reader.read_string.call(null, b));
         var c = cljs.reader.read_string.call(null, b);
-        return cljs.core.println.call(null, cljs.core.get.call(null, c, "line"))
+        cljs.core.println.call(null, cljs.core.get.call(null, c, "line"));
+        cljs.core.prn.call(null);
+        return cljs.core.prn.call(null)
       })
     })
   }, b = function(b) {
@@ -7616,7 +7621,7 @@ leech.receive.start = function() {
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"watching"}));
     leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, d) {
       var f = leech.parse.parse_line.call(null, d);
-      cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.get.call(null, f, "cloud"), "staging.herokudev.com")) && (leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"match"})), e.publish("staging", cljs.core.pr_str.call(null, f)));
+      cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.get.call(null, f, "cloud"), "staging.herokudev.com")) && (f = cljs.core.pr_str.call(null, f), leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'serialized"], {"\ufdd0'fn":"start", "\ufdd0'event":"match", "\ufdd0'serialized":f})), e.publish("staging", f));
       return cljs.core.swap_BANG_.call(null, a, cljs.core.inc)
     });
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));

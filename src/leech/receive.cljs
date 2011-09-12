@@ -26,8 +26,9 @@
     (io/start-bleeders (conf/aorta-urls) (fn [host line]
       (let [parsed (parse/parse-line line)]
         (when (= (get parsed "cloud") "staging.herokudev.com")
-          (log {:fn "start" :event "match"})
-          (.publish redis-client "staging" (pr-str parsed))))
+          (let [serialized (pr-str parsed)]
+            (log {:fn "start" :event "match" :serialized serialized})
+            (.publish redis-client "staging" serialized))))
       (swap! received-count-a inc)))
     (log {:fn "start" :event "bleeding"})
     (doseq [signal ["TERM" "INT"]]
