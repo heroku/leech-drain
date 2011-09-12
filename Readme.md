@@ -5,8 +5,9 @@ Leech events from the Heroku event stream.
 
 ## Running locally
 
-Compile:
+Build:
 
+    $ npm install
     $ bin/compile
 
 Configure:
