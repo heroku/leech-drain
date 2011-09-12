@@ -20,9 +20,9 @@
     (reduce
       (fn [p [crit-k crit-v]]
         (let [crit-p (if (or (not (string? crit-v)) (= 1 (count (str/split crit-v ","))))
-                       (fn [evt] (= (get evt crit-k) crit-v))
-                       (let [crit-s (set (str/split crit-v ","))]
-                         (prn [crit-k crit-s])
+                       (let [crit-c (parse/parse-val crit-v)]
+                         (fn [evt] (= (get evt crit-k) crit-c)))
+                       (let [crit-s (set (map parse/parse-val (str/split crit-v ",")))]
                          (fn [evt] (contains? crit-s (get evt crit-k)))))]
           (fn [evt] (and (p evt) (crit-p evt)))))
       (constantly true)

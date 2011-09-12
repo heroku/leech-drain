@@ -7621,11 +7621,13 @@ leech.receive.compile_pred = function(a) {
     var d = cljs.core.nth.call(null, c, 0, null), e = cljs.core.nth.call(null, c, 1, null), f = cljs.core.truth_(function() {
       var a = cljs.core.not.call(null, cljs.core.string_QMARK_.call(null, e));
       return cljs.core.truth_(a) ? a : cljs.core._EQ_.call(null, 1, cljs.core.count.call(null, clojure.string.split.call(null, e, ",")))
-    }()) ? function(a) {
-      return cljs.core._EQ_.call(null, cljs.core.get.call(null, a, d), e)
-    } : function() {
-      var a = cljs.core.set.call(null, clojure.string.split.call(null, e, ","));
-      cljs.core.prn.call(null, cljs.core.Vector.fromArray([d, a]));
+    }()) ? function() {
+      var a = leech.parse.parse_val.call(null, e);
+      return function(b) {
+        return cljs.core._EQ_.call(null, cljs.core.get.call(null, b, d), a)
+      }
+    }() : function() {
+      var a = cljs.core.set.call(null, cljs.core.map.call(null, leech.parse.parse_val, clojure.string.split.call(null, e, ",")));
       return function(b) {
         return cljs.core.contains_QMARK_.call(null, a, cljs.core.get.call(null, b, d))
       }
