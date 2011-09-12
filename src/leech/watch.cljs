@@ -7,6 +7,11 @@
 (defn hit [[total-a _]]
   (swap! total-a inc))
 
+(defn rate [[total-a prev-a]]
+  (let [total (deref total-a)
+        prev (deref prev-a)]
+    (- total prev)))
+
 (defn tick [[total-a prev-a]]
   (let [total (deref total-a)
         prev  (deref prev-a)]
