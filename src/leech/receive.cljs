@@ -62,7 +62,7 @@
       (.zrangebyscore redis-client "searches" (- (util/millis) 5000) (+ (util/millis) 5000) (fn [err res]
         (let [searches-data (map reader/read-string res)
               changed (not= (map :id (deref searches-a)) (map :id searches-data))]
-          (log {:fn "start-searches" :event "poll" :changed changed :num-searches (count searches-data)})
+          (log {:fn "start-searches" :event "poll" :changed changed :searches-count (count searches-data)})
           (when changed
             (let [searches (map
                              (fn [{:keys [id query target events-key]}]
