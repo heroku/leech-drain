@@ -7615,6 +7615,26 @@ leech.receive.log = function(a) {
   return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"receive"}), a))
 };
 leech.receive.max_match_rate = 50;
+leech.receive.compile_pred = function(a) {
+  a = leech.parse.parse_message_attrs.call(null, a);
+  return cljs.core.reduce.call(null, function(a, c) {
+    var d = cljs.core.nth.call(null, c, 0, null), e = cljs.core.nth.call(null, c, 1, null), f = cljs.core.truth_(function() {
+      var a = cljs.core.not.call(null, cljs.core.string_QMARK_.call(null, e));
+      return cljs.core.truth_(a) ? a : cljs.core._EQ_.call(null, 1, cljs.core.count.call(null, clojure.string.split.call(null, e, ",")))
+    }()) ? function(a) {
+      return cljs.core._EQ_.call(null, cljs.core.get.call(null, a, d), e)
+    } : function() {
+      var a = cljs.core.apply.call(null, cljs.core.set, clojure.string.split.call(null, e, ","));
+      return function(b) {
+        return cljs.core.contains_QMARK_.call(null, a, cljs.core.get.call(null, b, d))
+      }
+    }();
+    return function(c) {
+      var d = a.call(null, c);
+      return cljs.core.truth_(d) ? f.call(null, c) : d
+    }
+  }, cljs.core.constantly.call(null, !0), a)
+};
 leech.receive.start = function() {
   var a = function() {
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"start"}));
@@ -7654,13 +7674,8 @@ leech.receive.start = function() {
           var e = cljs.core.map.call(null, cljs.reader.read_string, d), f = cljs.core.not_EQ_.call(null, cljs.core.map.call(null, "\ufdd0'id", cljs.core.deref.call(null, a)), cljs.core.map.call(null, "\ufdd0'id", e));
           leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'changed", "\ufdd0'num-searches"], {"\ufdd0'fn":"start", "\ufdd0'event":"search-get", "\ufdd0'changed":f, "\ufdd0'num-searches":cljs.core.count.call(null, e)}));
           return cljs.core.truth_(f) ? (e = cljs.core.map.call(null, function(a) {
-            var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'id"), b = cljs.core.get.call(null, b, "\ufdd0'query"), c = cljs.core.str.call(null, "searches.", a, ".events"), d = leech.watch.init.call(null), e = leech.parse.parse_message_attrs.call(null, b);
-            return cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'events-key", "\ufdd0'match-watch", "\ufdd0'match-pred"], {"\ufdd0'id":a, "\ufdd0'events-key":c, "\ufdd0'match-watch":d, "\ufdd0'match-pred":function(a) {
-              return cljs.core.every_QMARK_.call(null, function(b) {
-                var c = cljs.core.nth.call(null, b, 0, null), b = cljs.core.nth.call(null, b, 1, null);
-                return cljs.core._EQ_.call(null, b, cljs.core.get.call(null, a, c))
-              }, e)
-            }})
+            var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'id"), b = cljs.core.get.call(null, b, "\ufdd0'query"), c = cljs.core.str.call(null, "searches.", a, ".events"), d = leech.watch.init.call(null), e = leech.receive.compile_pred.call(null, b);
+            return cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'match-watch", "\ufdd0'match-pred"], {"\ufdd0'id":a, "\ufdd0'query":b, "\ufdd0'events-key":c, "\ufdd0'match-watch":d, "\ufdd0'match-pred":e})
           }, e), cljs.core.swap_BANG_.call(null, a, cljs.core.constantly.call(null, e))) : null
         })
       });

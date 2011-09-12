@@ -1,6 +1,7 @@
 (ns leech.receive
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
+            [clojure.string :as str]
             [leech.conf :as conf]
             [leech.util :as util]
             [leech.watch :as watch]
@@ -13,6 +14,18 @@
   (util/log (merge {:ns "receive"} data)))
 
 (def max-match-rate 50)
+
+(defn compile-pred [query]
+  (let [crits (parse/parse-message-attrs query)]
+    (reduce
+      (fn [p [crit-k crit-v]]
+        (let [crit-p (if (or (not (string? crit-v)) (= 1 (count (str/split crit-v ","))))
+                       (fn [evt] (= (get evt crit-k) crit-v))
+                       (let [crit-s (apply set (str/split crit-v ","))]
+                         (fn [evt] (contains? crit-s (get evt crit-k)))))]
+          (fn [evt] (and (p evt) (crit-p evt)))))
+      (constantly true)
+      crits)))
 
 (defn start [& _]
   (log {:fn "start" :event "start"})
@@ -53,9 +66,8 @@
                                (fn [{:keys [query id]}]
                                  (let [events-key (str "searches." id ".events")
                                        match-watch (watch/init)
-                                       match-crit (parse/parse-message-attrs query)
-                                       match-pred (fn [evt] (every? (fn [[k v]] (= v (get evt k))) match-crit))]
-                                   {:id id :events-key events-key :match-watch match-watch :match-pred match-pred}))
+                                       match-pred (compile-pred query)]
+                                   {:id id :query query :events-key events-key :match-watch match-watch :match-pred match-pred}))
                               searches-data)]
                 (swap! searches-a (constantly searches)))))))))
       (log {:fn "start" :event "search-ready"})))
