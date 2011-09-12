@@ -51,11 +51,11 @@
             (when changed
               (let [searches (map
                                (fn [{:keys [query id]}]
-                                 (let [event-key (str "searches." id ".events")
+                                 (let [events-key (str "searches." id ".events")
                                        match-watch (watch/init)
                                        match-crit (parse/parse-message-attrs query)
                                        match-pred (fn [evt] (every? (fn [[k v]] (= v (get evt k))) match-crit))]
-                                   {:id id :event-key event-key :match-watch match-watch :match-pred match-pred}))
+                                   {:id id :events-key events-key :match-watch match-watch :match-pred match-pred}))
                               searches-data)]
                 (swap! searches-a (constantly searches)))))))))
       (log {:fn "start" :event "search-ready"})))

@@ -7655,7 +7655,7 @@ leech.receive.start = function() {
           leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'changed", "\ufdd0'num-searches"], {"\ufdd0'fn":"start", "\ufdd0'event":"search-get", "\ufdd0'changed":f, "\ufdd0'num-searches":cljs.core.count.call(null, e)}));
           return cljs.core.truth_(f) ? (e = cljs.core.map.call(null, function(a) {
             var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'id"), b = cljs.core.get.call(null, b, "\ufdd0'query"), c = cljs.core.str.call(null, "searches.", a, ".events"), d = leech.watch.init.call(null), e = leech.parse.parse_message_attrs.call(null, b);
-            return cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'event-key", "\ufdd0'match-watch", "\ufdd0'match-pred"], {"\ufdd0'id":a, "\ufdd0'event-key":c, "\ufdd0'match-watch":d, "\ufdd0'match-pred":function(a) {
+            return cljs.core.ObjMap.fromObject(["\ufdd0'id", "\ufdd0'events-key", "\ufdd0'match-watch", "\ufdd0'match-pred"], {"\ufdd0'id":a, "\ufdd0'events-key":c, "\ufdd0'match-watch":d, "\ufdd0'match-pred":function(a) {
               return cljs.core.every_QMARK_.call(null, function(b) {
                 var c = cljs.core.nth.call(null, b, 0, null), b = cljs.core.nth.call(null, b, 1, null);
                 return cljs.core._EQ_.call(null, b, cljs.core.get.call(null, a, c))
