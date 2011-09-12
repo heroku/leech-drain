@@ -7479,7 +7479,7 @@ leech.io.start_bleeders = function(a, b) {
 };
 leech.watch = {};
 leech.watch.init = function() {
-  return cljs.core.Vector.fromArray([cljs.core.atom.call(null, 0), cljs.core.atom.call(null, 0), cljs.core.atom.call(null, leech.util.millis.call(null))])
+  return cljs.core.Vector.fromArray([cljs.core.atom.call(null, 0), cljs.core.atom.call(null, 0)])
 };
 leech.watch.hit = function(a) {
   var b = cljs.core.nth.call(null, a, 0, null);
@@ -7489,7 +7489,7 @@ leech.watch.hit = function(a) {
 leech.watch.tick = function(a) {
   var b = cljs.core.nth.call(null, a, 0, null), a = cljs.core.nth.call(null, a, 1, null), b = cljs.core.deref.call(null, b), c = cljs.core.deref.call(null, a);
   cljs.core.swap_BANG_.call(null, a, cljs.core.constantly.call(null, b));
-  return cljs.core._.call(null, b, c)
+  return cljs.core.Vector.fromArray([b, cljs.core._.call(null, b, c)])
 };
 leech.parse = {};
 leech.parse.isodate = cljs.nodejs.require.call(null, "isodate");
