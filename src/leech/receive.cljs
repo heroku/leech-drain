@@ -29,16 +29,16 @@
               :received-count received-count :receive-rate receive-rate
               :published-count published-count :publish-rate publish-rate})
         (swap! received-count-prev-a (constantly received-count))
-        (swap! published-count-prev-a (constantly publishd-count)))))
+        (swap! published-count-prev-a (constantly published-count)))))
     (log {:fn "start" :event "watching"})
     (io/start-bleeders (conf/aorta-urls) (fn [host line]
+      (swap! received-count-a inc)
       (let [parsed (parse/parse-line line)
             cloud (get parsed "cloud")]
         (when (and cloud (util/re-match? #"\.herokudev\.com" cloud))
+          (swap! published-count-a inc)
           (let [serialized (pr-str parsed)]
-            (.publish redis-client "devcloud" serialized))
-          (swap! published-count-a inc)))
-      (swap! received-count-a inc)))
+            (.publish redis-client "devcloud" serialized))))))
     (log {:fn "start" :event "bleeding"})
     (doseq [signal ["TERM" "INT"]]
       (util/trap signal (fn []

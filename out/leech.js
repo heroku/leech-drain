@@ -7613,15 +7613,13 @@ leech.receive.start = function() {
       var g = cljs.core.deref.call(null, a), h = cljs.core.deref.call(null, d), h = cljs.core._.call(null, g, h), i = cljs.core.deref.call(null, e), m = cljs.core.deref.call(null, f), m = cljs.core._.call(null, i, m);
       leech.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'event,\ufdd0'received-count,\ufdd0'receive-rate,\ufdd0'published-count,\ufdd0'publish-rate".split(","), {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":g, "\ufdd0'receive-rate":h, "\ufdd0'published-count":i, "\ufdd0'publish-rate":m}));
       cljs.core.swap_BANG_.call(null, d, cljs.core.constantly.call(null, g));
-      return cljs.core.swap_BANG_.call(null, f, cljs.core.constantly.call(null, leech.receive.publishd_count))
+      return cljs.core.swap_BANG_.call(null, f, cljs.core.constantly.call(null, i))
     });
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"watching"}));
     leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, d) {
+      cljs.core.swap_BANG_.call(null, a, cljs.core.inc);
       var f = leech.parse.parse_line.call(null, d), h = cljs.core.get.call(null, f, "cloud");
-      if(cljs.core.truth_(cljs.core.truth_(h) ? leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, h) : h)) {
-        f = cljs.core.pr_str.call(null, f), g.publish("devcloud", f), cljs.core.swap_BANG_.call(null, e, cljs.core.inc)
-      }
-      return cljs.core.swap_BANG_.call(null, a, cljs.core.inc)
+      return cljs.core.truth_(cljs.core.truth_(h) ? leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, h) : h) ? (cljs.core.swap_BANG_.call(null, e, cljs.core.inc), f = cljs.core.pr_str.call(null, f), g.publish("devcloud", f)) : null
     });
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));
     for(var h = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
