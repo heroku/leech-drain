@@ -65,9 +65,8 @@
           (log {:fn "start-searches" :event "poll" :changed changed :num-searches (count searches-data)})
           (when changed
             (let [searches (map
-                             (fn [{:keys [id query target]}]
-                               (let [events-key (str "searches." id ".events")
-                                     match-watch (watch/init)
+                             (fn [{:keys [id query target events-key]}]
+                               (let [match-watch (watch/init)
                                      match-pred (compile-pred query)]
                                  {:id id :query query :target target :events-key events-key :match-watch match-watch :match-pred match-pred}))
                             searches-data)]
