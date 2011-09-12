@@ -88,7 +88,7 @@
                (let [event-serialized (pr-str event-parsed)]
                  (condp = target
                    :list
-                     (.lpush redis-client events-key event-serialized))
+                     (.rpush redis-client events-key event-serialized))
                    :pubsub
                      (.publish redis-client events-key event-serialized)))))))))
   (log {:fn "start-bleeders" :at "finish"}))
