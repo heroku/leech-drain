@@ -7624,7 +7624,7 @@ leech.receive.compile_pred = function(a) {
     }()) ? function(a) {
       return cljs.core._EQ_.call(null, cljs.core.get.call(null, a, d), e)
     } : function() {
-      var a = cljs.core.apply.call(null, cljs.core.set, clojure.string.split.call(null, e, ","));
+      var a = cljs.core.set.call(null, clojure.string.split.call(null, e, ","));
       return function(b) {
         return cljs.core.contains_QMARK_.call(null, a, cljs.core.get.call(null, b, d))
       }
