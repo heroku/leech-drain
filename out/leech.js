@@ -646,11 +646,11 @@ goog.string.compareVersions = function(a, b) {
   for(var c = 0, d = goog.string.trim(String(a)).split("."), e = goog.string.trim(String(b)).split("."), f = Math.max(d.length, e.length), g = 0;c == 0 && g < f;g++) {
     var h = d[g] || "", i = e[g] || "", j = RegExp("(\\d*)(\\D*)", "g"), k = RegExp("(\\d*)(\\D*)", "g");
     do {
-      var l = j.exec(h) || ["", "", ""], m = k.exec(i) || ["", "", ""];
-      if(l[0].length == 0 && m[0].length == 0) {
+      var m = j.exec(h) || ["", "", ""], l = k.exec(i) || ["", "", ""];
+      if(m[0].length == 0 && l[0].length == 0) {
         break
       }
-      var c = l[1].length == 0 ? 0 : parseInt(l[1], 10), o = m[1].length == 0 ? 0 : parseInt(m[1], 10), c = goog.string.compareElements_(c, o) || goog.string.compareElements_(l[2].length == 0, m[2].length == 0) || goog.string.compareElements_(l[2], m[2])
+      var c = m[1].length == 0 ? 0 : parseInt(m[1], 10), o = l[1].length == 0 ? 0 : parseInt(l[1], 10), c = goog.string.compareElements_(c, o) || goog.string.compareElements_(m[2].length == 0, l[2].length == 0) || goog.string.compareElements_(m[2], l[2])
     }while(c == 0)
   }
   return c
@@ -3429,10 +3429,10 @@ cljs.core.concat = function() {
     })
   }, e = function() {
     var b = function(b, c, d) {
-      return function l(a, b) {
+      return function m(a, b) {
         return new cljs.core.LazySeq(null, !1, function() {
           var c = cljs.core.seq.call(null, a);
-          return cljs.core.truth_(c) ? cljs.core.cons.call(null, cljs.core.first.call(null, c), l.call(null, cljs.core.rest.call(null, c), b)) : cljs.core.truth_(b) ? l.call(null, cljs.core.first.call(null, b), cljs.core.next.call(null, b)) : null
+          return cljs.core.truth_(c) ? cljs.core.cons.call(null, cljs.core.first.call(null, c), m.call(null, cljs.core.rest.call(null, c), b)) : cljs.core.truth_(b) ? m.call(null, cljs.core.first.call(null, b), cljs.core.next.call(null, b)) : null
         })
       }.call(null, a.call(null, b, c), d)
     }, c = function(a, c, d) {
@@ -3687,7 +3687,7 @@ cljs.core.comp = function() {
           return a.call(null, cljs.core.apply.call(null, b, d, g, h, c))
         };
         return c
-      }(), c = function(c, g, k, l) {
+      }(), c = function(c, g, k, m) {
         switch(arguments.length) {
           case 0:
             return a.call(null, b.call(null));
@@ -3720,7 +3720,7 @@ cljs.core.comp = function() {
           return a.call(null, b.call(null, cljs.core.apply.call(null, c, h, i, j, d)))
         };
         return d
-      }(), d = function(d, h, l, m) {
+      }(), d = function(d, h, m, l) {
         switch(arguments.length) {
           case 0:
             return a.call(null, b.call(null, c.call(null)));
@@ -3729,7 +3729,7 @@ cljs.core.comp = function() {
           case 2:
             return a.call(null, b.call(null, c.call(null, d, h)));
           case 3:
-            return a.call(null, b.call(null, c.call(null, d, h, l)));
+            return a.call(null, b.call(null, c.call(null, d, h, m)));
           default:
             return i.apply(this, arguments)
         }
@@ -3825,9 +3825,9 @@ cljs.core.partial = function() {
   }, d = function(a, b, c, d) {
     return function() {
       var e = function(e) {
-        var l = null;
-        goog.isDef(e) && (l = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
-        return cljs.core.apply.call(null, a, b, c, d, l)
+        var j = null;
+        goog.isDef(e) && (j = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
+        return cljs.core.apply.call(null, a, b, c, d, j)
       };
       e.cljs$lang$maxFixedArity = 0;
       e.cljs$lang$applyTo = function(e) {
@@ -3854,9 +3854,9 @@ cljs.core.partial = function() {
         return g
       }()
     }, b = function(b, c, d, e, g) {
-      var m = null;
-      goog.isDef(g) && (m = cljs.core.array_seq(Array.prototype.slice.call(arguments, 4), 0));
-      return a.call(this, b, c, d, e, m)
+      var l = null;
+      goog.isDef(g) && (l = cljs.core.array_seq(Array.prototype.slice.call(arguments, 4), 0));
+      return a.call(this, b, c, d, e, l)
     };
     b.cljs$lang$maxFixedArity = 4;
     b.cljs$lang$applyTo = function(b) {
@@ -3898,7 +3898,7 @@ cljs.core.fnil = function() {
           return c.call(this, b, d, e, a)
         };
         return d
-      }(), c = function(c, g, k, l) {
+      }(), c = function(c, g, k, m) {
         switch(arguments.length) {
           case 1:
             return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, c)) ? b : c);
@@ -3918,8 +3918,8 @@ cljs.core.fnil = function() {
   }, c = function(a, b, c) {
     return function() {
       var d = null, i = function() {
-        var d = function(d, h, i, k) {
-          return cljs.core.apply.call(null, a, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, d)) ? b : d, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, h)) ? c : h, i, k)
+        var d = function(d, h, i, j) {
+          return cljs.core.apply.call(null, a, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, d)) ? b : d, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, h)) ? c : h, i, j)
         }, h = function(a, b, c, e) {
           var f = null;
           goog.isDef(e) && (f = cljs.core.array_seq(Array.prototype.slice.call(arguments, 3), 0));
@@ -3931,12 +3931,12 @@ cljs.core.fnil = function() {
           return d.call(this, b, c, e, a)
         };
         return h
-      }(), d = function(d, h, l, m) {
+      }(), d = function(d, h, m, l) {
         switch(arguments.length) {
           case 2:
             return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, d)) ? b : d, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, h)) ? c : h);
           case 3:
-            return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, d)) ? b : d, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, h)) ? c : h, l);
+            return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, d)) ? b : d, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, h)) ? c : h, m);
           default:
             return i.apply(this, arguments)
         }
@@ -3949,25 +3949,25 @@ cljs.core.fnil = function() {
   }, d = function(a, b, c, d) {
     return function() {
       var i = null, j = function() {
-        var i = function(i, l, j, k) {
-          return cljs.core.apply.call(null, a, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, l)) ? c : l, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, j)) ? d : j, k)
-        }, l = function(a, b, c, d) {
+        var i = function(i, j, k, m) {
+          return cljs.core.apply.call(null, a, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, j)) ? c : j, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, k)) ? d : k, m)
+        }, j = function(a, b, c, d) {
           var e = null;
           goog.isDef(d) && (e = cljs.core.array_seq(Array.prototype.slice.call(arguments, 3), 0));
           return i.call(this, a, b, c, e)
         };
-        l.cljs$lang$maxFixedArity = 3;
-        l.cljs$lang$applyTo = function(a) {
+        j.cljs$lang$maxFixedArity = 3;
+        j.cljs$lang$applyTo = function(a) {
           var b = cljs.core.first(a), c = cljs.core.first(cljs.core.next(a)), d = cljs.core.first(cljs.core.next(cljs.core.next(a))), a = cljs.core.rest(cljs.core.next(cljs.core.next(a)));
           return i.call(this, b, c, d, a)
         };
-        return l
-      }(), i = function(i, l, m, o) {
+        return j
+      }(), i = function(i, m, l, o) {
         switch(arguments.length) {
           case 2:
-            return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, l)) ? c : l);
+            return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, m)) ? c : m);
           case 3:
-            return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, l)) ? c : l, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, m)) ? d : m);
+            return a.call(null, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, i)) ? b : i, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, m)) ? c : m, cljs.core.truth_(cljs.core.nil_QMARK_.call(null, l)) ? d : l);
           default:
             return j.apply(this, arguments)
         }
@@ -4052,7 +4052,7 @@ cljs.core.every_pred = function() {
           return c.call(this, b, d, e, a)
         };
         return d
-      }(), b = function(b, g, m, o) {
+      }(), b = function(b, g, l, o) {
         switch(arguments.length) {
           case 0:
             return!0;
@@ -4061,7 +4061,7 @@ cljs.core.every_pred = function() {
           case 2:
             return c.call(this, b, g);
           case 3:
-            return d.call(this, b, g, m);
+            return d.call(this, b, g, l);
           default:
             return e.apply(this, arguments)
         }
@@ -4088,14 +4088,14 @@ cljs.core.every_pred = function() {
           var h = a.call(null, c);
           return cljs.core.truth_(h) ? (h = a.call(null, d), cljs.core.truth_(h) ? (h = a.call(null, e), cljs.core.truth_(h) ? (h = b.call(null, c), cljs.core.truth_(h) ? (h = b.call(null, d), cljs.core.truth_(h) ? b.call(null, e) : h) : h) : h) : h) : h
         }())
-      }, l = function() {
-        var d = function(d, e, i, m) {
+      }, m = function() {
+        var d = function(d, e, i, j) {
           return cljs.core.boolean$.call(null, function() {
-            var j = c.call(null, d, e, i);
-            return cljs.core.truth_(j) ? cljs.core.every_QMARK_.call(null, function(c) {
+            var l = c.call(null, d, e, i);
+            return cljs.core.truth_(l) ? cljs.core.every_QMARK_.call(null, function(c) {
               var d = a.call(null, c);
               return cljs.core.truth_(d) ? b.call(null, c) : d
-            }, m) : j
+            }, j) : l
           }())
         }, e = function(a, b, c, e) {
           var f = null;
@@ -4119,12 +4119,12 @@ cljs.core.every_pred = function() {
           case 3:
             return k.call(this, a, b, c);
           default:
-            return l.apply(this, arguments)
+            return m.apply(this, arguments)
         }
         throw"Invalid arity: " + arguments.length;
       };
       c.cljs$lang$maxFixedArity = 3;
-      c.cljs$lang$applyTo = l.cljs$lang$applyTo;
+      c.cljs$lang$applyTo = m.cljs$lang$applyTo;
       return c
     }()
   }, d = function(a, b, c) {
@@ -4139,19 +4139,19 @@ cljs.core.every_pred = function() {
           var i = a.call(null, d);
           return cljs.core.truth_(i) ? (i = b.call(null, d), cljs.core.truth_(i) ? (i = c.call(null, d), cljs.core.truth_(i) ? (i = a.call(null, e), cljs.core.truth_(i) ? (i = b.call(null, e), cljs.core.truth_(i) ? c.call(null, e) : i) : i) : i) : i) : i
         }())
-      }, l = function(d, e, i) {
+      }, m = function(d, e, i) {
         return cljs.core.boolean$.call(null, function() {
           var j = a.call(null, d);
           return cljs.core.truth_(j) ? (j = b.call(null, d), cljs.core.truth_(j) ? (j = c.call(null, d), cljs.core.truth_(j) ? (j = a.call(null, e), cljs.core.truth_(j) ? (j = b.call(null, e), cljs.core.truth_(j) ? (j = c.call(null, e), cljs.core.truth_(j) ? (j = a.call(null, i), cljs.core.truth_(j) ? (j = b.call(null, i), cljs.core.truth_(j) ? c.call(null, i) : j) : j) : j) : j) : j) : j) : j) : j
         }())
-      }, m = function() {
-        var e = function(e, j, m, l) {
+      }, l = function() {
+        var e = function(e, j, l, k) {
           return cljs.core.boolean$.call(null, function() {
-            var k = d.call(null, e, j, m);
-            return cljs.core.truth_(k) ? cljs.core.every_QMARK_.call(null, function(d) {
+            var m = d.call(null, e, j, l);
+            return cljs.core.truth_(m) ? cljs.core.every_QMARK_.call(null, function(d) {
               var e = a.call(null, d);
               return cljs.core.truth_(e) ? (e = b.call(null, d), cljs.core.truth_(e) ? c.call(null, d) : e) : e
-            }, l) : k
+            }, k) : m
           }())
         }, j = function(a, b, c, d) {
           var f = null;
@@ -4173,14 +4173,14 @@ cljs.core.every_pred = function() {
           case 2:
             return k.call(this, a, b);
           case 3:
-            return l.call(this, a, b, c);
+            return m.call(this, a, b, c);
           default:
-            return m.apply(this, arguments)
+            return l.apply(this, arguments)
         }
         throw"Invalid arity: " + arguments.length;
       };
       d.cljs$lang$maxFixedArity = 3;
-      d.cljs$lang$applyTo = m.cljs$lang$applyTo;
+      d.cljs$lang$applyTo = l.cljs$lang$applyTo;
       return d
     }()
   }, e = function() {
@@ -4292,12 +4292,12 @@ cljs.core.some_fn = function() {
           case 1:
             return a.call(null, b);
           case 2:
-            var m = d, o = a.call(null, b);
-            return cljs.core.truth_(o) ? o : a.call(null, m);
+            var l = d, o = a.call(null, b);
+            return cljs.core.truth_(o) ? o : a.call(null, l);
           case 3:
-            var o = d, m = e, n = a.call(null, b);
-            cljs.core.truth_(n) ? m = n : (o = a.call(null, o), m = cljs.core.truth_(o) ? o : a.call(null, m));
-            return m;
+            var o = d, l = e, n = a.call(null, b);
+            cljs.core.truth_(n) ? l = n : (o = a.call(null, o), l = cljs.core.truth_(o) ? o : a.call(null, l));
+            return l;
           default:
             return c.apply(this, arguments)
         }
@@ -4330,7 +4330,7 @@ cljs.core.some_fn = function() {
           return d.call(this, b, c, e, a)
         };
         return e
-      }(), c = function(c, h, m, o) {
+      }(), c = function(c, h, l, o) {
         switch(arguments.length) {
           case 0:
             return null;
@@ -4342,7 +4342,7 @@ cljs.core.some_fn = function() {
             cljs.core.truth_(p) ? n = p : (p = a.call(null, n), cljs.core.truth_(p) ? n = p : (q = b.call(null, q), n = cljs.core.truth_(q) ? q : b.call(null, n)));
             return n;
           case 3:
-            return d.call(this, c, h, m);
+            return d.call(this, c, h, l);
           default:
             return e.apply(this, arguments)
         }
@@ -4360,9 +4360,9 @@ cljs.core.some_fn = function() {
       }, k = function(d, e, i) {
         var j = a.call(null, d);
         return cljs.core.truth_(j) ? j : (j = b.call(null, d), cljs.core.truth_(j) ? j : (d = c.call(null, d), cljs.core.truth_(d) ? d : (d = a.call(null, e), cljs.core.truth_(d) ? d : (d = b.call(null, e), cljs.core.truth_(d) ? d : (e = c.call(null, e), cljs.core.truth_(e) ? e : (e = a.call(null, i), cljs.core.truth_(e) ? e : (e = b.call(null, i), cljs.core.truth_(e) ? e : c.call(null, i))))))))
-      }, l = function() {
-        var e = function(e, j, l, k) {
-          e = d.call(null, e, j, l);
+      }, m = function() {
+        var e = function(e, j, m, k) {
+          e = d.call(null, e, j, m);
           return cljs.core.truth_(e) ? e : cljs.core.some.call(null, function(d) {
             var e = a.call(null, d);
             return cljs.core.truth_(e) ? e : (e = b.call(null, d), cljs.core.truth_(e) ? e : c.call(null, d))
@@ -4393,12 +4393,12 @@ cljs.core.some_fn = function() {
           case 3:
             return k.call(this, d, i, n);
           default:
-            return l.apply(this, arguments)
+            return m.apply(this, arguments)
         }
         throw"Invalid arity: " + arguments.length;
       };
       d.cljs$lang$maxFixedArity = 3;
-      d.cljs$lang$applyTo = l.cljs$lang$applyTo;
+      d.cljs$lang$applyTo = m.cljs$lang$applyTo;
       return d
     }()
   }, e = function() {
@@ -4496,8 +4496,8 @@ cljs.core.map = function() {
     })
   }, d = function(b, c, d, e) {
     return new cljs.core.LazySeq(null, !1, function() {
-      var j = cljs.core.seq.call(null, c), k = cljs.core.seq.call(null, d), l = cljs.core.seq.call(null, e);
-      return cljs.core.truth_(cljs.core.truth_(j) ? cljs.core.truth_(k) ? l : k : j) ? cljs.core.cons.call(null, b.call(null, cljs.core.first.call(null, j), cljs.core.first.call(null, k), cljs.core.first.call(null, l)), a.call(null, b, cljs.core.rest.call(null, j), cljs.core.rest.call(null, k), cljs.core.rest.call(null, l))) : null
+      var j = cljs.core.seq.call(null, c), k = cljs.core.seq.call(null, d), m = cljs.core.seq.call(null, e);
+      return cljs.core.truth_(cljs.core.truth_(j) ? cljs.core.truth_(k) ? m : k : j) ? cljs.core.cons.call(null, b.call(null, cljs.core.first.call(null, j), cljs.core.first.call(null, k), cljs.core.first.call(null, m)), a.call(null, b, cljs.core.rest.call(null, j), cljs.core.rest.call(null, k), cljs.core.rest.call(null, m))) : null
     })
   }, e = function() {
     var b = function(b, c, d, e, f) {
@@ -4510,9 +4510,9 @@ cljs.core.map = function() {
         })
       }.call(null, cljs.core.conj.call(null, f, e, d, c)))
     }, c = function(a, c, d, e, g) {
-      var m = null;
-      goog.isDef(g) && (m = cljs.core.array_seq(Array.prototype.slice.call(arguments, 4), 0));
-      return b.call(this, a, c, d, e, m)
+      var l = null;
+      goog.isDef(g) && (l = cljs.core.array_seq(Array.prototype.slice.call(arguments, 4), 0));
+      return b.call(this, a, c, d, e, l)
     };
     c.cljs$lang$maxFixedArity = 4;
     c.cljs$lang$applyTo = function(a) {
@@ -5775,7 +5775,7 @@ cljs.core.juxt = function() {
           return c.call(this, b, d, e, a)
         };
         return d
-      }(), c = function(c, e, h, m) {
+      }(), c = function(c, e, h, l) {
         switch(arguments.length) {
           case 0:
             return cljs.core.vector.call(null, a.call(null), b.call(null));
@@ -5810,7 +5810,7 @@ cljs.core.juxt = function() {
           return d.call(this, b, c, e, a)
         };
         return e
-      }(), d = function(d, i, m, o) {
+      }(), d = function(d, i, l, o) {
         switch(arguments.length) {
           case 0:
             return cljs.core.vector.call(null, a.call(null), b.call(null), c.call(null));
@@ -5819,7 +5819,7 @@ cljs.core.juxt = function() {
           case 2:
             return cljs.core.vector.call(null, a.call(null, d, i), b.call(null, d, i), c.call(null, d, i));
           case 3:
-            return cljs.core.vector.call(null, a.call(null, d, i, m), b.call(null, d, i, m), c.call(null, d, i, m));
+            return cljs.core.vector.call(null, a.call(null, d, i, l), b.call(null, d, i, l), c.call(null, d, i, l));
           default:
             return e.apply(this, arguments)
         }
@@ -7410,27 +7410,6 @@ leech.conf.aorta_urls = function() {
 leech.conf.redis_url = function() {
   return leech.conf.env_BANG_.call(null, "REDIS_URL")
 };
-leech.tail = {};
-leech.tail.redis = cljs.nodejs.require.call(null, "redis-url");
-leech.tail.color_codes = cljs.core.ObjMap.fromObject("\ufdd0'red,\ufdd0'green,\ufdd0'yellow,\ufdd0'blue,\ufdd0'magenta,\ufdd0'cyan,\ufdd0'default".split(","), {"\ufdd0'red":"\u001b[31m", "\ufdd0'green":"\u001b[32m", "\ufdd0'yellow":"\u001b[33m", "\ufdd0'blue":"\u001b[34m", "\ufdd0'magenta":"\u001b[35m", "\ufdd0'cyan":"\u001b[36m", "\ufdd0'default":"\u001b[39m"});
-leech.tail.component_colors = cljs.core.ObjMap.fromObject("su,pgmonitor,apolo,heroku,hermes,codex,memcache,syslog-ng,logplex,psmgr,varnish,syslog,runtime,nginx,slapd,gitproxy,kernel,face,balrog,shen,core".split(","), {su:"\ufdd0'cyan", pgmonitor:"\ufdd0'red", apolo:"\ufdd0'blue", heroku:"\ufdd0'cyan", hermes:"\ufdd0'blue", codex:"\ufdd0'yellow", memcache:"\ufdd0'green", "syslog-ng":"\ufdd0'cyan", logplex:"\ufdd0'blue", psmgr:"\ufdd0'magenta", varnish:"\ufdd0'blue", syslog:"\ufdd0'cyan", runtime:"\ufdd0'magenta", 
-nginx:"\ufdd0'blue", slapd:"\ufdd0'cyan", gitproxy:"\ufdd0'yellow", kernel:"\ufdd0'cyan", face:"\ufdd0'blue", balrog:"\ufdd0'green", shen:"\ufdd0'red", core:"\ufdd0'green"});
-leech.tail.colored = function(a, b) {
-  return cljs.core.str.call(null, leech.tail.color_codes.call(null, a), b, leech.tail.color_codes.call(null, "\ufdd0'default"))
-};
-leech.tail.start = function(a) {
-  var b = cljs.core.nth.call(null, a, 0, null);
-  cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, b)) || (cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", b, "'")), leech.util.exit.call(null, 1));
-  var c = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
-  return c.on("ready", function() {
-    c.subscribe("devcloud");
-    return c.on("message", function(a, c) {
-      var f = cljs.reader.read_string.call(null, c), g = cljs.core.get.call(null, f, "cloud");
-      return cljs.core.truth_(cljs.core._EQ_.call(null, g, b)) ? (g = cljs.core.get.call(null, leech.tail.component_colors, cljs.core.get.call(null, f, "component"), "\ufdd0'default"), cljs.core.println.call(null, leech.tail.colored.call(null, g, cljs.core.get.call(null, f, "line")))) : null
-    })
-  })
-};
-leech.util.main.call(null, "tail", leech.tail.start);
 leech.split = {};
 leech.split.init = function() {
   return cljs.core.atom.call(null, "")
@@ -7497,6 +7476,20 @@ leech.io.start_bleeders = function(a, b) {
       }
     }
   }())
+};
+leech.watch = {};
+leech.watch.init = function() {
+  return cljs.core.Vector.fromArray([cljs.core.atom.call(null, 0), cljs.core.atom.call(null, 0), cljs.core.atom.call(null, leech.util.millis.call(null))])
+};
+leech.watch.hit = function(a) {
+  var b = cljs.core.nth.call(null, a, 0, null);
+  cljs.core.nth.call(null, a, 1, null);
+  return cljs.core.swap_BANG_.call(null, b, cljs.core.inc)
+};
+leech.watch.tick = function(a) {
+  var b = cljs.core.nth.call(null, a, 0, null), a = cljs.core.nth.call(null, a, 1, null), b = cljs.core.deref.call(null, b), c = cljs.core.deref.call(null, a);
+  cljs.core.swap_BANG_.call(null, a, cljs.core.constantly.call(null, b));
+  return cljs.core._.call(null, b, c)
 };
 leech.parse = {};
 leech.parse.isodate = cljs.nodejs.require.call(null, "isodate");
@@ -7606,34 +7599,31 @@ leech.receive.log = function(a) {
 };
 leech.receive.start = function() {
   var a = function() {
-    var a = cljs.core.atom.call(null, 0), d = cljs.core.atom.call(null, 0), e = cljs.core.atom.call(null, 0), f = cljs.core.atom.call(null, 0), g = leech.receive.redis.createClient(leech.conf.redis_url.call(null));
+    var a = leech.watch.init.call(null), b = leech.watch.init.call(null), e = leech.receive.redis.createClient(leech.conf.redis_url.call(null));
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"start"}));
     leech.util.set_interval.call(null, 1E3, function() {
-      cljs.core._.call(null, leech.util.millis.call(null), b);
-      var g = cljs.core.deref.call(null, a), h = cljs.core.deref.call(null, d), h = cljs.core._.call(null, g, h), i = cljs.core.deref.call(null, e), m = cljs.core.deref.call(null, f), m = cljs.core._.call(null, i, m);
-      leech.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'event,\ufdd0'received-count,\ufdd0'receive-rate,\ufdd0'published-count,\ufdd0'publish-rate".split(","), {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":g, "\ufdd0'receive-rate":h, "\ufdd0'published-count":i, "\ufdd0'publish-rate":m}));
-      cljs.core.swap_BANG_.call(null, d, cljs.core.constantly.call(null, g));
-      return cljs.core.swap_BANG_.call(null, f, cljs.core.constantly.call(null, i))
+      var e = leech.watch.tick.call(null, a), f = cljs.core.nth.call(null, e, 0, null), e = cljs.core.nth.call(null, e, 1, null), g = leech.watch.tick.call(null, b), k = cljs.core.nth.call(null, g, 0, null), g = cljs.core.nth.call(null, g, 1, null);
+      return leech.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'event,\ufdd0'received-count,\ufdd0'receive-rate,\ufdd0'published-count,\ufdd0'publish-rate".split(","), {"\ufdd0'fn":"start", "\ufdd0'event":"watch", "\ufdd0'received-count":f, "\ufdd0'receive-rate":e, "\ufdd0'published-count":k, "\ufdd0'publish-rate":g}))
     });
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"watching"}));
-    leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(b, d) {
-      cljs.core.swap_BANG_.call(null, a, cljs.core.inc);
-      var f = leech.parse.parse_line.call(null, d), h = cljs.core.get.call(null, f, "cloud");
-      return cljs.core.truth_(cljs.core.truth_(h) ? leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, h) : h) ? (cljs.core.swap_BANG_.call(null, e, cljs.core.inc), f = cljs.core.pr_str.call(null, f), g.publish("devcloud", f)) : null
+    leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(f, g) {
+      leech.watch.hit.call(null, a);
+      var j = leech.parse.parse_line.call(null, g), k = cljs.core.get.call(null, j, "cloud");
+      return cljs.core.truth_(cljs.core.truth_(k) ? leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, k) : k) ? (leech.watch.hit.call(null, b), j = cljs.core.pr_str.call(null, j), e.publish("devcloud", j)) : null
     });
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start", "\ufdd0'event":"bleeding"}));
-    for(var h = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
-      if(cljs.core.truth_(h)) {
-        var i = cljs.core.first.call(null, h);
-        leech.util.trap.call(null, i, function() {
+    for(var f = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
+      if(cljs.core.truth_(f)) {
+        var g = cljs.core.first.call(null, f);
+        leech.util.trap.call(null, g, function() {
           return function() {
-            leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"catch", "\ufdd0'signal":i}));
+            leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"catch", "\ufdd0'signal":g}));
             leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'status"], {"\ufdd0'fn":"start", "\ufdd0'event":"exit", "\ufdd0'status":0}));
             return leech.util.exit.call(null, 0)
           }
-        }(h));
-        leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"trapping", "\ufdd0'signal":i}));
-        h = cljs.core.next.call(null, h)
+        }(f));
+        leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'event":"trapping", "\ufdd0'signal":g}));
+        f = cljs.core.next.call(null, f)
       }else {
         return null
       }
@@ -7651,6 +7641,27 @@ leech.receive.start = function() {
   return b
 }();
 leech.util.main.call(null, "receive", leech.receive.start);
+leech.tail = {};
+leech.tail.redis = cljs.nodejs.require.call(null, "redis-url");
+leech.tail.color_codes = cljs.core.ObjMap.fromObject("\ufdd0'red,\ufdd0'green,\ufdd0'yellow,\ufdd0'blue,\ufdd0'magenta,\ufdd0'cyan,\ufdd0'default".split(","), {"\ufdd0'red":"\u001b[31m", "\ufdd0'green":"\u001b[32m", "\ufdd0'yellow":"\u001b[33m", "\ufdd0'blue":"\u001b[34m", "\ufdd0'magenta":"\u001b[35m", "\ufdd0'cyan":"\u001b[36m", "\ufdd0'default":"\u001b[39m"});
+leech.tail.component_colors = cljs.core.ObjMap.fromObject("su,pgmonitor,apolo,heroku,hermes,codex,memcache,syslog-ng,logplex,psmgr,varnish,syslog,runtime,nginx,slapd,gitproxy,kernel,face,balrog,shen,core".split(","), {su:"\ufdd0'cyan", pgmonitor:"\ufdd0'red", apolo:"\ufdd0'blue", heroku:"\ufdd0'cyan", hermes:"\ufdd0'blue", codex:"\ufdd0'yellow", memcache:"\ufdd0'green", "syslog-ng":"\ufdd0'cyan", logplex:"\ufdd0'blue", psmgr:"\ufdd0'magenta", varnish:"\ufdd0'blue", syslog:"\ufdd0'cyan", runtime:"\ufdd0'magenta", 
+nginx:"\ufdd0'blue", slapd:"\ufdd0'cyan", gitproxy:"\ufdd0'yellow", kernel:"\ufdd0'cyan", face:"\ufdd0'blue", balrog:"\ufdd0'green", shen:"\ufdd0'red", core:"\ufdd0'green"});
+leech.tail.colored = function(a, b) {
+  return cljs.core.str.call(null, leech.tail.color_codes.call(null, a), b, leech.tail.color_codes.call(null, "\ufdd0'default"))
+};
+leech.tail.start = function(a) {
+  var b = cljs.core.nth.call(null, a, 0, null);
+  cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /\.herokudev\.com/, b)) || (cljs.core.println.call(null, cljs.core.str.call(null, "invalid cloud '", b, "'")), leech.util.exit.call(null, 1));
+  var c = leech.tail.redis.createClient(leech.conf.redis_url.call(null));
+  return c.on("ready", function() {
+    c.subscribe("devcloud");
+    return c.on("message", function(a, c) {
+      var f = cljs.reader.read_string.call(null, c), g = cljs.core.get.call(null, f, "cloud");
+      return cljs.core.truth_(cljs.core._EQ_.call(null, g, b)) ? (g = cljs.core.get.call(null, leech.tail.component_colors, cljs.core.get.call(null, f, "component"), "\ufdd0'default"), cljs.core.println.call(null, leech.tail.colored.call(null, g, cljs.core.get.call(null, f, "line")))) : null
+    })
+  })
+};
+leech.util.main.call(null, "tail", leech.tail.start);
 cljs.nodejscli = {};
 cljs.core.apply.call(null, cljs.core._STAR_main_cli_fn_STAR_, cljs.core.drop.call(null, 2, cljs.nodejs.process.argv));
 
