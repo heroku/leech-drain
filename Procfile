@@ -1,1 +1,1 @@
-receiver:  bin/run receiver
+receive:  bin/run receive

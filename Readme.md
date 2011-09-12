@@ -24,7 +24,7 @@ Run a namespace:
         AORTA_URLS="aorta://..." \
         REDIS_URL="redis://redistogo:..."
     $ git push heroku master
-    $ heroku scale receiver=16 web=2
+    $ heroku scale receive=16 web=2
 
 
 ## Tail usage

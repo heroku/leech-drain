@@ -1,4 +1,4 @@
-(ns leech.receiver
+(ns leech.receive
   (:require [cljs.nodejs :as node]
             [leech.conf :as conf]
             [leech.util :as util]
@@ -8,7 +8,7 @@
 (def redis (node/require "redis-url"))
 
 (defn log [data]
-  (util/log (merge {:ns "receiver"} data)))
+  (util/log (merge {:ns "receive"} data)))
 
 (defn start [& _]
   (let [received-count-a (atom 0)
@@ -23,7 +23,7 @@
           (log {:fn "start" :event "failed" :host host :line line}))
         (when (= (get parsed "cloud") "staging.herokudev.com")
           (log {:fn "start" :event "match"})
-          (.publish redis-client "staging" (util/json-generate parsed))))
+          (.publish redis-client "staging" (pr-str parsed))))
       (swap! received-count-a inc)))
     (log {:fn "start" :event "bleeding"})
     (doseq [signal ["TERM" "INT"]]
@@ -33,4 +33,4 @@
         (util/exit 0)))
       (log {:fn "start" :event "trapping" :signal signal}))))
 
-(util/main "receiver" start)
+(util/main "receive" start)

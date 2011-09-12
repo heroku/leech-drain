@@ -1,7 +1,10 @@
 (ns leech.tail
-  (:require [leech.conf :as conf]
+  (:require [cljs.nodejs :as node]
+            [cljs.reader :as reader]
             [leech.util :as util]
-            [leech.redis :as redis]))
+            [leech.conf :as conf]))
+
+(def redis (node/require "redis-url"))
 
 (def color-codes
   {:red     "\033[31m"
@@ -38,10 +41,12 @@
   [color text]
   (str (color-codes color) text (color-codes :default)))
 
-(defn start []
-  (redis/start-subscriber (conf/redis-url) "event-received"
-    (fn [{:strs [line component]}]
-      (let [color (get component-colors component)]
-        (println (colored color line))))))
+(defn start [& _]
+  (let [client (.createClient redis (conf/redis-url))]
+    (.on client "ready" (fn []
+      (.subscribe client "staging")
+      (.on client "message" (fn [_ data]
+        (let [parsed (reader/read-string data)]
+          (println (get parsed "line")))))))))
 
 (util/main "tail" start)
