@@ -67,6 +67,7 @@
           (when (match-pred event-parsed)
             (watch/hit match-watch)
             (let [match-rate (watch/rate match-watch)]
+              (prn [match-rate max-match-rate])
               (when (< match-rate max-match-rate)
                 (watch/hit publish-watch)
                 (let [event-serialized (pr-str event-parsed)]

@@ -7672,7 +7672,7 @@ leech.receive.start = function() {
         if(cljs.core.truth_(k)) {
           var n = cljs.core.first.call(null, k), n = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, n)) ? cljs.core.apply.call(null, cljs.core.hash_map, n) : n, o = cljs.core.get.call(null, n, "\ufdd0'match-watch"), q = cljs.core.get.call(null, n, "\ufdd0'match-pred");
           cljs.core.get.call(null, n, "\ufdd0'events-key");
-          cljs.core.truth_(q.call(null, i)) && (leech.watch.hit.call(null, o), n = leech.watch.rate.call(null, o), cljs.core.truth_(cljs.core._LT_.call(null, n, leech.receive.max_match_rate)) && (leech.watch.hit.call(null, e), n = cljs.core.pr_str.call(null, i), g.publish(leech.receive.chan, n)));
+          cljs.core.truth_(q.call(null, i)) && (leech.watch.hit.call(null, o), n = leech.watch.rate.call(null, o), cljs.core.prn.call(null, cljs.core.Vector.fromArray([n, leech.receive.max_match_rate])), cljs.core.truth_(cljs.core._LT_.call(null, n, leech.receive.max_match_rate)) && (leech.watch.hit.call(null, e), n = cljs.core.pr_str.call(null, i), g.publish(leech.receive.chan, n)));
           k = cljs.core.next.call(null, k)
         }else {
           return null
