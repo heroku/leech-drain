@@ -7,54 +7,35 @@ Leech events from the Heroku event stream.
 
 Compile the app:
 
-    $ cljsc src \
-        '{:optimizations :simple :pretty-print true :target :nodejs}' \
-        > out/leech.js
+    $ bin/compile
 
-Run a namespace:
+Configure environment:
 
-    $ bin/leech parse
+    $ cp .env.sample .env
+    $ export $(cat .env)
+
+Run:
+    
+    $ foreman start
 
 
 ## Running as Heroku app
 
-    $ heroku create leech-mark --stack cedar
+    $ heroku create leech-production --stack cedar
     $ heroku addons:add redistogo:medium
     $ heroku config:add \
-        AORTA_URLS="aorta://..." \
+        AORTA_URLS="aorta://leech-production:...,aorta://leech-production:..." \
         REDIS_URL="redis://redistogo:..."
     $ git push heroku master
-    $ heroku scale receive=16 web=2
+    $ heroku scale receive=16
 
 
-## Tail usage
+## Leeching events
 
-Point to a Leech server:
+Point to a Leech Redis:
 
-    $ export LEECH_URL=https://user:pass@leech-production.herokuapp.com/events
+    $ export REDIS_URL=redis://redistogo:...
 
-Show all logs for a given dev cloud:
+Tail with `key=val(,val2(,val3))` syntax:
 
-    $ bin/leech tail --cloud mark.herokudev.com
-    # (tail ["=" "cloud" "mark.herokudev.com"])
-
-Show all logs across specific components for a given dev cloud:
-
-    $ bin/leech tail --cloud mark.herokudev.com --components core,psmgr,runtime
-    # (tail ["and"
-              ["=" "cloud" "mark.herokudev.com"]
-              ["or"
-                ["=" "component" "core"]
-                ["=" "component" "psmgr"]
-                ["=" "component" "runtime"]]])
-
-Show all error-level logs for a given dev cloud:
-
-    $ bin/leech tail --cloud mark.herokudev.com --level error
-    # (tail ["and"
-              ["=" "cloud" "mark.herokudev.com"]
-              ["=" "level" "error"]])
-
-Disable colorization:
-
-    $ bin/leech tail --cloud mark.herokudev.com --no-color
+    $ bin/run tail cloud=heroku.com level=err
