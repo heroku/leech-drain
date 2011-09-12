@@ -7621,7 +7621,7 @@ leech.receive.start = function() {
       var f = leech.parse.parse_line.call(null, d);
       if(cljs.core.truth_(f)) {
         var h = cljs.core.get.call(null, f, "cloud");
-        return cljs.core.truth_(h) ? cljs.core.truth_(leech.util.re_match_QMARK_.call(null, /[a-z]+\.herokudev\.com/, h)) ? cljs.core.swap_BANG_.call(null, e, cljs.core.inc) : (f = cljs.core.pr_str.call(null, f), g.publish("staging", f)) : null
+        return cljs.core.truth_(h) ? cljs.core.truth_(cljs.core._EQ_.call(null, "staging.herokudev.com", h)) ? cljs.core.swap_BANG_.call(null, e, cljs.core.inc) : (f = cljs.core.pr_str.call(null, f), g.publish("staging", f)) : null
       }else {
         return null
       }

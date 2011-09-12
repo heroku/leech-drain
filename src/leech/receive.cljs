@@ -35,7 +35,7 @@
       (swap! received-count-a inc)
       (if-let [parsed (parse/parse-line line)]
         (if-let [cloud (get parsed "cloud")]
-          (if (util/re-match? #"[a-z]+\.herokudev\.com" cloud)
+          (if (= "staging.herokudev.com" cloud)
             (swap! published-count-a inc)
             (let [serialized (pr-str parsed)]
               (.publish redis-client "staging" serialized)))))))
