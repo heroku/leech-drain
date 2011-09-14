@@ -63,6 +63,27 @@
   (write-res res 200 {"Content-Type" "application/clj"} (pr-str {:events ["logging all the things"]}))
   (log {:fn "handle-events" :at "finish" :conn-id conn-id}))
 
+(defn handle-core [{:keys [conn-id method path] :as conn}]
+  (log {:fn "handle-core" :at "start" :conn-id conn-id :method method :path path})
+  (cond
+    (and (= "GET" method) (= "/" path))
+      (handle-static conn "index.html")
+    (and (= "GET" method) (= "/leech.css" path))
+      (handle-static conn "leech.css")
+    (and (= "GET" method) (= "/leech.js" path))
+      (handle-static conn "leech.js")
+    (and (= "GET" method) (= "/search" path))
+      (handle-search conn)
+    :else
+      (handle-not-found conn))
+  (log {:fn "handle-core" :at "finish" :conn-id conn-id}))
+
+(defn wrap-force-https [handler]
+  (fn [{:keys [headers server-name uri] :as req}]
+    (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
+      (redirect (format "https://%s%s" server-name uri))
+      (handler req))))
+
 (defn parse-req [req]
   (let [url-parsed (.parse url (.url req) true)]
     {:method (.method req)
@@ -70,29 +91,15 @@
      :query-params (js->clj (.query url-parsed))
      :headers (js->clj (.headers req))}))
 
-(defn handle-core [req res e]
-  (let [conn-id (node-uuid)
-        {:keys [method path query-params]} (parse-req req)
-        conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params}]
-    (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
-    (cond
-      (and (= "GET" method) (= "/" path))
-        (handle-static conn "index.html")
-      (and (= "GET" method) (= "/leech.css" path))
-        (handle-static conn "leech.css")
-      (and (= "GET" method) (= "/leech.js" path))
-        (handle-static conn "leech.js")
-      (and (= "GET" method) (= "/search" path))
-        (handle-search conn)
-      :else
-        (handle-not-found conn))
-   (log {:fn "handle" :at "finish" :conn-id conn-id})))
-
 (def handle
-  (let [bp (.. connect middleware (bodyParser))]
-    (fn [req res]
-      (bp req res (fn [e]
-        (handle-core req res e))))))
+  (fn [req res]
+    (let [conn-id (node-uuid)
+         {:keys [method path query-params headers]} (parse-req req)
+          conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
+      (prn headers)
+      (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
+        (write-res conn 302 {"Location" (conf/canonical-host)} "You are being redirected.")
+        (handle-core conn)))))
 
 (defn listen [handle-fn port callback]
   (log {:fn "listen" :at "start" :port port})
