@@ -119,7 +119,7 @@
 (def handle
   (let [cs (.. connect session Cookie)
         cp (.. connect (cookieParser))
-        s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :cookie {:maxAge 60000} :store (cs)})))]
+        s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :store (cs)})))]
     (fn [req res]
       (cp req res (fn [_]
         (s req res (fn [_]

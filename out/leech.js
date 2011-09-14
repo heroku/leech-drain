@@ -7547,7 +7547,7 @@ leech.server.web.parse_req = function(a) {
   return cljs.core.ObjMap.fromObject(["\ufdd0'method", "\ufdd0'path", "\ufdd0'query-params", "\ufdd0'headers"], {"\ufdd0'method":a.method, "\ufdd0'path":b.pathname, "\ufdd0'query-params":cljs.core.js__GT_clj.call(null, b.query), "\ufdd0'headers":cljs.core.js__GT_clj.call(null, a.headers)})
 };
 leech.server.web.handle = function() {
-  var a = leech.server.web.connect.session.Cookie, b = leech.server.web.connect.cookieParser(), c = leech.server.web.connect.session(leech.server.util.clj__GT_js.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'secret", "\ufdd0'cookie", "\ufdd0'store"], {"\ufdd0'secret":leech.server.conf.session_secret.call(null), "\ufdd0'cookie":cljs.core.ObjMap.fromObject(["\ufdd0'maxAge"], {"\ufdd0'maxAge":6E4}), "\ufdd0'store":a.call(null)})));
+  var a = leech.server.web.connect.session.Cookie, b = leech.server.web.connect.cookieParser(), c = leech.server.web.connect.session(leech.server.util.clj__GT_js.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'secret", "\ufdd0'store"], {"\ufdd0'secret":leech.server.conf.session_secret.call(null), "\ufdd0'store":a.call(null)})));
   return function(a, e) {
     return b.call(null, a, e, function() {
       return c.call(null, a, e, function() {
