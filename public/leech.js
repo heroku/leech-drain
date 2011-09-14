@@ -13,11 +13,13 @@ function leechInflate(ev) {
 }
 
 function leechApply(evs) {
-  var results = $("#results");
-  $.each(evs, function(i, ev) {
-    console.log(JSON.stringify(ev));
-    results.append(leechInflate(ev));
-  });
+  if (leechSearchId != "") {
+    var results = $("#results");
+    $.each(evs, function(i, ev) {
+      console.log(JSON.stringify(ev));
+      results.append(leechInflate(ev));
+    });
+  }
 }
 
 function leechUpdate() {
