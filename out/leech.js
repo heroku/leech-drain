@@ -7464,23 +7464,20 @@ leech.server.web.handle_redirect = function(a, b) {
 leech.server.web.handle_not_found = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'conn-id");
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-not-found", "\ufdd0'at":"start", "\ufdd0'conn-id":b}));
-  leech.server.web.write_res.call(null, a, 404, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/clj"}), cljs.core.pr_str.call(null, cljs.core.ObjMap.fromObject(["error"], {error:"not found"})));
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-not-found", "\ufdd0'at":"finish", "\ufdd0'conn-id":b}))
+  return leech.server.web.write_res.call(null, a, 404, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/clj"}), cljs.core.pr_str.call(null, cljs.core.ObjMap.fromObject(["error"], {error:"not found"})))
 };
 leech.server.web.handle_not_authorized = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'conn-id");
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-not-authorized", "\ufdd0'at":"start", "\ufdd0'conn-id":b}));
-  leech.server.web.write_res.call(null, a, 403, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/clj"}), cljs.core.pr_str.call(null, cljs.core.ObjMap.fromObject(["error"], {error:"not authorized"})));
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-not-authorized", "\ufdd0'at":"finish", "\ufdd0'conn-id":b}))
+  return leech.server.web.write_res.call(null, a, 403, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/clj"}), cljs.core.pr_str.call(null, cljs.core.ObjMap.fromObject(["error"], {error:"not authorized"})))
 };
 leech.server.web.handle_static = function(a, b) {
   var c = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0'conn-id");
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'asset"], {"\ufdd0'fn":"handle-static", "\ufdd0'at":"start", "\ufdd0'conn-id":d, "\ufdd0'asset":b}));
-  leech.server.web.fs.readFile(cljs.core.str.call(null, "./public/", b), function(a, b) {
+  return leech.server.web.fs.readFile(cljs.core.str.call(null, "./public/", b), function(a, b) {
     leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"handle-static", "\ufdd0'at":"read"}));
     return leech.server.web.write_res.call(null, c, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"text/html"}), b)
-  });
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"handle-static", "\ufdd0'at":"finish"}))
+  })
 };
 leech.server.web.handle_search = function(a) {
   var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'query-params");
@@ -7490,25 +7487,17 @@ leech.server.web.handle_search = function(a) {
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"start", "\ufdd0'conn-id":c}));
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, a, "query"), e = cljs.core.get.call(null, a, "search-id"), a = cljs.core.str.call(null, "searches.", e, ".events"), d = cljs.core.ObjMap.fromObject(["\ufdd0'search-id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'target"], {"\ufdd0'search-id":e, "\ufdd0'query":d, "\ufdd0'events-key":a, "\ufdd0'target":"\ufdd0'list"}), d = cljs.core.pr_str.call(null, 
   d);
-  cljs.core.deref.call(null, leech.server.web.redis_client).multi().zadd("searches", leech.server.util.millis.call(null), d).lrange(a, 0, 1E5).ltrim(a, 1E5, -1).exec(function(a, d) {
+  return cljs.core.deref.call(null, leech.server.web.redis_client).multi().zadd("searches", leech.server.util.millis.call(null), d).lrange(a, 0, 1E5).ltrim(a, 1E5, -1).exec(function(a, d) {
     var h = cljs.core.js__GT_clj.call(null, d);
     leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'search-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"execed", "\ufdd0'conn-id":c, "\ufdd0'search-id":e}));
     h = cljs.core.map.call(null, cljs.reader.read_string, cljs.core.second.call(null, h));
-    leech.server.web.write_res.call(null, b, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/json"}), leech.server.util.json_generate.call(null, h));
-    return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'search-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"written", "\ufdd0'conn-id":c, "\ufdd0'search-id":e}))
-  });
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'search-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"finish", "\ufdd0'conn-id":c, "\ufdd0'search-id":e}))
-};
-leech.server.web.handle_events = function(a) {
-  var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'res"), b = cljs.core.get.call(null, b, "\ufdd0'conn-id");
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-events", "\ufdd0'at":"start", "\ufdd0'conn-id":b}));
-  leech.server.web.write_res.call(null, a, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/clj"}), cljs.core.pr_str.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'events"], {"\ufdd0'events":cljs.core.Vector.fromArray(["logging all the things"])})));
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-events", "\ufdd0'at":"finish", "\ufdd0'conn-id":b}))
+    return leech.server.web.write_res.call(null, b, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/json"}), leech.server.util.json_generate.call(null, h))
+  })
 };
 leech.server.web.handle_core = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'path"), c = cljs.core.get.call(null, a, "\ufdd0'method"), d = cljs.core.get.call(null, a, "\ufdd0'conn-id");
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'method", "\ufdd0'path"], {"\ufdd0'fn":"handle-core", "\ufdd0'at":"start", "\ufdd0'conn-id":d, "\ufdd0'method":c, "\ufdd0'path":b}));
-  cljs.core.truth_(function() {
+  return cljs.core.truth_(function() {
     var a = cljs.core._EQ_.call(null, "GET", c);
     return cljs.core.truth_(a) ? cljs.core._EQ_.call(null, "/", b) : a
   }()) ? leech.server.web.handle_static.call(null, a, "index.html") : cljs.core.truth_(function() {
@@ -7520,8 +7509,7 @@ leech.server.web.handle_core = function(a) {
   }()) ? leech.server.web.handle_static.call(null, a, "leech.js") : cljs.core.truth_(function() {
     var a = cljs.core._EQ_.call(null, "GET", c);
     return cljs.core.truth_(a) ? cljs.core._EQ_.call(null, "/search", b) : a
-  }()) ? leech.server.web.handle_search.call(null, a) : cljs.core.truth_("\ufdd0'else") && leech.server.web.handle_not_found.call(null, a);
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-core", "\ufdd0'at":"finish", "\ufdd0'conn-id":d}))
+  }()) ? leech.server.web.handle_search.call(null, a) : cljs.core.truth_("\ufdd0'else") ? leech.server.web.handle_not_found.call(null, a) : null
 };
 leech.server.web.handle_openid = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'req"), c = cljs.core.get.call(null, a, "\ufdd0'query-params"), d = cljs.core.get.call(null, a, "\ufdd0'path"), e = cljs.core.get.call(null, a, "\ufdd0'method"), f = cljs.core.get.call(null, a, "\ufdd0'conn-id"), b = b.session;
@@ -7530,16 +7518,16 @@ leech.server.web.handle_openid = function(a) {
   "/auth"), leech.server.web.handle_redirect.call(null, a, cljs.core.str.call(null, leech.server.conf.proxy_url.call(null), "?", "callback_url=", encodeURI.call(null, c)))) : cljs.core.truth_("\ufdd0'authorized") ? leech.server.web.handle_core.call(null, a) : null
 };
 leech.server.web.handle_https = function(a) {
-  var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'headers"), c = cljs.core.get.call(null, a, "\ufdd0'conn-id");
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-https", "\ufdd0'at":"start", "\ufdd0'conn-id":c}));
+  var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'headers");
+  cljs.core.get.call(null, a, "\ufdd0'conn-id");
   return cljs.core.truth_(function() {
     var a = leech.server.conf.force_https_QMARK_.call(null);
     return cljs.core.truth_(a) ? cljs.core.not_EQ_.call(null, cljs.core.get.call(null, b, "x-forwarded-proto"), "https") : a
   }()) ? leech.server.web.handle_redirect.call(null, a, leech.server.conf.canonical_host.call(null)) : leech.server.web.handle_openid.call(null, a)
 };
 leech.server.web.handle_favicon = function(a) {
-  var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'path"), c = cljs.core.get.call(null, a, "\ufdd0'method"), d = cljs.core.get.call(null, a, "\ufdd0'conn-id");
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-favicon", "\ufdd0'at":"start", "\ufdd0'conn-id":d}));
+  var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'path"), c = cljs.core.get.call(null, a, "\ufdd0'method");
+  cljs.core.get.call(null, a, "\ufdd0'conn-id");
   return cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.Vector.fromArray(["GET", "/favicon.ico"]), cljs.core.Vector.fromArray([c, b]))) ? leech.server.web.handle_not_found.call(null, a) : leech.server.web.handle_https.call(null, a)
 };
 leech.server.web.parse_req = function(a) {

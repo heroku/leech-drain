@@ -27,20 +27,17 @@
 
 (defn handle-not-found [{:keys [conn-id] :as conn}]
   (log {:fn "handle-not-found" :at "start" :conn-id conn-id})
-  (write-res conn 404 {"Content-Type" "application/clj"} (pr-str {"error" "not found"}))
-  (log {:fn "handle-not-found" :at "finish" :conn-id conn-id}))
+  (write-res conn 404 {"Content-Type" "application/clj"} (pr-str {"error" "not found"})))
 
 (defn handle-not-authorized [{:keys [conn-id] :as conn}]
   (log {:fn "handle-not-authorized" :at "start" :conn-id conn-id})
-  (write-res conn 403 {"Content-Type" "application/clj"} (pr-str {"error" "not authorized"}))
-  (log {:fn "handle-not-authorized" :at "finish" :conn-id conn-id}))
+  (write-res conn 403 {"Content-Type" "application/clj"} (pr-str {"error" "not authorized"})))
 
 (defn handle-static [{:keys [conn-id] :as conn} asset]
   (log {:fn "handle-static" :at "start" :conn-id conn-id :asset asset})
   (.readFile fs (str "./public/" asset) (fn [e c]
     (log {:fn "handle-static" :at "read"})
-      (write-res conn 200 {"Content-Type" "text/html"} c)))
-  (log {:fn "handle-static" :at "finish"}))
+      (write-res conn 200 {"Content-Type" "text/html"} c))))
 
 (defn handle-search [{:keys [conn-id req res query-params] :as conn}]
   (log {:fn "handle-search" :at "start" :conn-id conn-id})
@@ -57,14 +54,7 @@
         (let [res (js->clj res-js)]
           (log {:fn "handle-search" :at "execed" :conn-id conn-id :search-id search-id})
           (let [events (map reader/read-string (second res))]
-            (write-res conn 200 {"Content-Type" "application/json"} (util/json-generate events)))
-          (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id})))))
-    (log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id})))
-
-(defn handle-events [{:keys [conn-id res] :as conn}]
-  (log {:fn "handle-events" :at "start" :conn-id conn-id})
-  (write-res res 200 {"Content-Type" "application/clj"} (pr-str {:events ["logging all the things"]}))
-  (log {:fn "handle-events" :at "finish" :conn-id conn-id}))
+            (write-res conn 200 {"Content-Type" "application/json"} (util/json-generate events)))))))))
 
 (defn handle-core [{:keys [conn-id method path] :as conn}]
   (log {:fn "handle-core" :at "start" :conn-id conn-id :method method :path path})
@@ -78,8 +68,7 @@
     (and (= "GET" method) (= "/search" path))
       (handle-search conn)
     :else
-      (handle-not-found conn))
-  (log {:fn "handle-core" :at "finish" :conn-id conn-id}))
+      (handle-not-found conn)))
 
 (defn handle-openid [{:keys [conn-id method path query-params req] :as conn}]
   (let [sess (.session req)]
@@ -98,13 +87,11 @@
         (handle-core conn))))
 
 (defn handle-https [{:keys [conn-id headers] :as conn}]
-  (log {:fn "handle-https" :at "start" :conn-id conn-id})
   (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
     (handle-redirect conn (conf/canonical-host))
     (handle-openid conn)))
 
 (defn handle-favicon [{:keys [conn-id method path] :as conn}]
-  (log {:fn "handle-favicon" :at "start" :conn-id conn-id})
   (if (= ["GET" "/favicon.ico"] [method path])
     (handle-not-found conn)
     (handle-https conn)))

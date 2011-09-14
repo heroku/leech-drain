@@ -54,7 +54,7 @@ function leechSubmit() {
 function leechStart() {
   $("#query form").ajaxForm({beforeSubmit: leechSubmit});
   leechUpdate();
-  setInterval(leechUpdate, 300);
+  setInterval(leechUpdate, 500);
 }
 
 $(document).ready(leechStart);
