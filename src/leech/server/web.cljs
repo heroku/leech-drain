@@ -22,6 +22,9 @@
   (.write res body)
   (. res (end)))
 
+(defn handle-redirect [conn loc]
+  (write-res conn 302 {"Location" loc} "You are being redirected."))
+
 (defn handle-not-found [{:keys [conn-id] :as conn}]
   (log {:fn "handle-not-found" :at "start" :conn-id conn-id})
   (write-res conn 404 {"Content-Type" "application/clj"} (pr-str {"error" "not found"}))
@@ -78,17 +81,40 @@
       (handle-not-found conn))
   (log {:fn "handle-core" :at "finish" :conn-id conn-id}))
 
+(defn handle-openid [{:keys [conn-id method path query-params req] :as conn}]
+  (let [sess (.session req)]
+    (log {:fn "handle-openid" :at "start" :conn-id conn-id :session (js->clj sess)})
+    (cond
+      (= ["GET" "/auth"] [method path])
+        (if (= (conf/proxy-secret) (get query-params "proxy_secret"))
+          (do
+            (set! (.authorized sess) true)
+            (handle-redirect conn "/"))
+          (handle-not-authorized conn))
+      (not (.authorized sess))
+        (let [callback-url (str (conf/canonical-host) "/auth")]
+          (handle-redirect conn (str (conf/proxy-url) "?" "callback_url=" (js/encodeURI callback-url))))
+      :authorized
+        (handle-core conn))))
+
+(defn handle-https [{:keys [conn-id headers] :as conn}]
+  (log {:fn "handle-https" :at "start" :conn-id conn-id})
+  (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
+    (handle-redirect conn (conf/canonical-host))
+    (handle-openid conn)))
+
+(defn handle-favicon [{:keys [conn-id method path] :as conn}]
+  (log {:fn "handle-favicon" :at "start" :conn-id conn-id})
+  (if (= ["GET" "/favicon.ico"] [method path])
+    (handle-not-found conn)
+    (handle-https conn)))
+
 (defn parse-req [req]
   (let [url-parsed (.parse url (.url req) true)]
     {:method (.method req)
      :path (.pathname url-parsed)
      :query-params (js->clj (.query url-parsed))
      :headers (js->clj (.headers req))}))
-
-(defn handle-force-https [{:keys [headers] :as conn}]
-  (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
-    (write-res conn 302 {"Location" (conf/canonical-host)} "You are being redirected.")
-    (handle-core conn)))
 
 (def handle
   (let [cp (.. connect (cookieParser))
@@ -99,7 +125,8 @@
           (let [conn-id (node-uuid)
                {:keys [method path query-params headers]} (parse-req req)
                 conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
-            (handle-force-https conn)))))))))
+            (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
+            (handle-favicon conn)))))))))
 
 (defn listen [handle-fn port callback]
   (log {:fn "listen" :at "start" :port port})
