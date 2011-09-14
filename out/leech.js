@@ -7421,6 +7421,9 @@ leech.conf.aorta_urls = function() {
 leech.conf.redis_url = function() {
   return leech.conf.env_BANG_.call(null, "REDIS_URL")
 };
+leech.conf.leech_log_QMARK_ = function() {
+  return cljs.core.boolean$.call(null, leech.conf.env.call(null, "LEECH_LOG"))
+};
 leech.web = {};
 leech.web.redis = cljs.nodejs.require.call(null, "redis-url");
 leech.web.http = cljs.nodejs.require.call(null, "http");
@@ -7837,7 +7840,7 @@ leech.tail.colored = function(a, b) {
   return cljs.core.str.call(null, leech.tail.color_codes.call(null, a), b, leech.tail.color_codes.call(null, "\ufdd0'default"))
 };
 leech.tail.log = function(a) {
-  return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"tail"}), a))
+  return cljs.core.truth_(leech.conf.leech_log_QMARK_.call(null)) ? leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"tail"}), a)) : null
 };
 leech.tail.start_traps = function() {
   leech.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-traps", "\ufdd0'at":"start"}));

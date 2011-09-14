@@ -17,3 +17,4 @@
 (defn port [] (js/parseInt (env! "PORT")))
 (defn aorta-urls [] (str/split (env! "AORTA_URLS") #","))
 (defn redis-url [] (env! "REDIS_URL"))
+(defn leech-log? [] (boolean (env "LEECH_LOG")))

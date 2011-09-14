@@ -46,7 +46,8 @@
   (str (color-codes color) text (color-codes :default)))
 
 (defn log [data]
-  (util/log (merge {:ns "tail"} data)))
+  (when (conf/leech-log?)
+    (util/log (merge {:ns "tail"} data))))
 
 (defn start-traps []
   (log {:fn "start-traps" :at "start"})
