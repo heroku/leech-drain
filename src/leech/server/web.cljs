@@ -39,19 +39,24 @@
       (write-res conn 200 {"Content-Type" "text/html"} c)))
   (log {:fn "handle-static" :at "finish"}))
 
-(defn handle-search [{:keys [conn-id req res] :as conn}]
-  (log {:fn "handle-search" :at "start" :conn-id conn-id})
-  (let [search-id (node-uuid)
-        query (.. req body query)
-        events-key (str "searches." search-id ".events")
-        search-data {:search-id search-id :query query :events-key events-key :target :list}
-        search-str (pr-str search-data)]
-    (.readFile fs "./public/index.html" (fn [e c]
-      (log {:fn "handle-search" :at "read" :conn-id conn-id})
-      (let [cs (string/replace-first (str c) "LEECH_SEARCH_ID" search-id)]
-        (write-res conn 200 {"Content-Type" "text/html"} cs)
-        (log {:fh "handle-search" :at "sent" :conn-id conn-id}))))
-    (log {:fn "handle-search" :at "finish" :conn-id conn-id})))
+(defn handle-search [{:keys [conn-id req res query-params] :as conn}]
+  (log {:fn "handle-search" :at "start" :conn-id conn-id :query-params query-params})
+  (write-res conn 200 {"Content-Type" "application/json"} (util/json-generate [{"line" "wat an event"}]))
+  (log {:fn "handle-search" :at "finish" :conn-id conn-id}))
+
+; (defn handle-search [{:keys [conn-id req res] :as conn}]
+;   (log {:fn "handle-search" :at "start" :conn-id conn-id})
+;   (let [search-id (node-uuid)
+;         query (.. req body query)
+;         events-key (str "searches." search-id ".events")
+;         search-data {:search-id search-id :query query :events-key events-key :target :list}
+;         search-str (pr-str search-data)]
+;     (.readFile fs "./public/index.html" (fn [e c]
+;       (log {:fn "handle-search" :at "read" :conn-id conn-id})
+;       (let [cs (string/replace-first (str c) "LEECH_SEARCH_ID" search-id)]
+;         (write-res conn 200 {"Content-Type" "text/html"} cs)
+;         (log {:fh "handle-search" :at "sent" :conn-id conn-id}))))
+;     (log {:fn "handle-search" :at "finish" :conn-id conn-id})))
 
 ;(.. redis-client
 ;  (multi)
@@ -71,14 +76,17 @@
   (log {:fn "handle-events" :at "finish" :conn-id conn-id}))
 
 (defn parse-req [req]
-  {:method (.method req)
-   :path   (.pathname (.parse url (.url req)))})
+  (let [url-parsed (.parse url (.url req) true)]
+    {:method (.method req)
+     :path (.pathname url-parsed)
+     :query-params (js->clj (.query url-parsed))
+     :headers (js->clj (.headers req))}))
 
 (defn handle-core [req res e]
   (let [conn-id (node-uuid)
-        {:keys [method path]} (parse-req req)
-        conn {:conn-id conn-id :req req :res res :method method :path path}]
-    (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path :e e})
+        {:keys [method path query-params]} (parse-req req)
+        conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params}]
+    (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
     (cond
       (and (= "GET" method) (= "/" path))
         (handle-static conn "index.html")
@@ -86,10 +94,8 @@
         (handle-static conn "leech.css")
       (and (= "GET" method) (= "/leech.js" path))
         (handle-static conn "leech.js")
-      (and (= "POST" method) (= "/searches" path))
+      (and (= "GET" method) (= "/search" path))
         (handle-search conn)
-      (and (= "GET" method) (util/re-match? #"/searches/[0-9a-z-]+/events" path))
-        (handle-events conn)
       :else
         (handle-not-found conn))
    (log {:fn "handle" :at "finish" :conn-id conn-id})))
