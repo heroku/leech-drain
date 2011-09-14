@@ -1,6 +1,7 @@
 (ns leech.server.web
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
+            [clojure.string :as string]
             [leech.server.conf :as conf]
             [leech.server.util :as util]))
 
@@ -45,7 +46,11 @@
         events-key (str "searches." search-id ".events")
         search-data {:search-id search-id :query query :events-key events-key :target :list}
         search-str (pr-str search-data)]
-    (write-res conn 200 {"Content-Type" "text/plain"} search-str)
+    (.readFile fs "./public/index.html" (fn [e c]
+      (log {:fn "handle-search" :at "read" :conn-id conn-id})
+      (let [cs (string/replace-first (str c) "LEECH_SEARCH_ID" search-id)]
+        (write-res conn 200 {"Content-Type" "text/html"} cs)
+        (log {:fh "handle-search" :at "sent" :conn-id conn-id}))))
     (log {:fn "handle-search" :at "finish" :conn-id conn-id})))
 
 ;(.. redis-client

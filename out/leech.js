@@ -7465,12 +7465,18 @@ leech.server.web.handle_static = function(a, b) {
   return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"handle-static", "\ufdd0'at":"finish"}))
 };
 leech.server.web.handle_search = function(a) {
-  a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a;
-  cljs.core.get.call(null, a, "\ufdd0'res");
-  var b = cljs.core.get.call(null, a, "\ufdd0'req"), c = cljs.core.get.call(null, a, "\ufdd0'conn-id");
+  var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a;
+  cljs.core.get.call(null, b, "\ufdd0'res");
+  var a = cljs.core.get.call(null, b, "\ufdd0'req"), c = cljs.core.get.call(null, b, "\ufdd0'conn-id");
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"start", "\ufdd0'conn-id":c}));
-  var d = leech.server.web.node_uuid.call(null), b = b.body.query, e = cljs.core.str.call(null, "searches.", d, ".events"), d = cljs.core.ObjMap.fromObject(["\ufdd0'search-id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'target"], {"\ufdd0'search-id":d, "\ufdd0'query":b, "\ufdd0'events-key":e, "\ufdd0'target":"\ufdd0'list"}), d = cljs.core.pr_str.call(null, d);
-  leech.server.web.write_res.call(null, a, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"text/plain"}), d);
+  var d = leech.server.web.node_uuid.call(null), a = a.body.query, e = cljs.core.str.call(null, "searches.", d, ".events"), a = cljs.core.ObjMap.fromObject(["\ufdd0'search-id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'target"], {"\ufdd0'search-id":d, "\ufdd0'query":a, "\ufdd0'events-key":e, "\ufdd0'target":"\ufdd0'list"});
+  cljs.core.pr_str.call(null, a);
+  leech.server.web.fs.readFile("./public/index.html", function(a, e) {
+    leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"read", "\ufdd0'conn-id":c}));
+    var h = clojure.string.replace_first.call(null, cljs.core.str.call(null, e), "LEECH_SEARCH_ID", d);
+    leech.server.web.write_res.call(null, b, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"text/html"}), h);
+    return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fh", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fh":"handle-search", "\ufdd0'at":"sent", "\ufdd0'conn-id":c}))
+  });
   return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"finish", "\ufdd0'conn-id":c}))
 };
 leech.server.web.handle_events = function(a) {

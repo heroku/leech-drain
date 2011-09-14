@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-set -x
-
-cljsc src/leech/client '{:optimizations :simple :pretty-print true}' > public/leech.js
-rm -rf out/cljs out/clojure out/leech
