@@ -101,9 +101,11 @@ body {
   color: #FF73FD; }
 
 #results p.codex {
-  color: #FFFFB6}
+  color: #FFFFB6; }
+#results p.slugc {
+  color: #FFFFB6; }
 #results p.gitproxy {
-  color: #FFFFB6}
+  color: #FFFFB6; }
 
 #results p.core {
   color: #A8FF60; }

@@ -22,6 +22,7 @@
   {"runtime"   :magenta
    "psmgr"     :magenta
    "codex"     :yellow
+   "slugc"     :yellow
    "gitproxy"  :yellow
    "core"      :green
    "memcache"  :green
