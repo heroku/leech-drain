@@ -93,7 +93,7 @@
                      (.publish redis-client events-key event-serialized)))))))))
   (log {:fn "start-bleeders" :at "finish"}))
 
-(defn start [& _]
+(defn start []
   (log {:fn "start" :at "start"})
   (let [receive-watch (watch/init)
         publish-watch (watch/init)
