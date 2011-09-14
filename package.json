@@ -2,6 +2,7 @@
   "name": "leech",
   "version": "0.0.1",
   "dependencies": {
+    "connect": "1.6.1",
     "node-uuid": "1.2.0",
     "isodate": "0.0.2",
     "redis": "0.6.7",
