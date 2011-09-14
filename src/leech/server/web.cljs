@@ -41,34 +41,22 @@
 
 (defn handle-search [{:keys [conn-id req res query-params] :as conn}]
   (log {:fn "handle-search" :at "start" :conn-id conn-id :query-params query-params})
-  (write-res conn 200 {"Content-Type" "application/json"} (util/json-generate [{"line" "wat an event"}]))
-  (log {:fn "handle-search" :at "finish" :conn-id conn-id}))
-
-; (defn handle-search [{:keys [conn-id req res] :as conn}]
-;   (log {:fn "handle-search" :at "start" :conn-id conn-id})
-;   (let [search-id (node-uuid)
-;         query (.. req body query)
-;         events-key (str "searches." search-id ".events")
-;         search-data {:search-id search-id :query query :events-key events-key :target :list}
-;         search-str (pr-str search-data)]
-;     (.readFile fs "./public/index.html" (fn [e c]
-;       (log {:fn "handle-search" :at "read" :conn-id conn-id})
-;       (let [cs (string/replace-first (str c) "LEECH_SEARCH_ID" search-id)]
-;         (write-res conn 200 {"Content-Type" "text/html"} cs)
-;         (log {:fh "handle-search" :at "sent" :conn-id conn-id}))))
-;     (log {:fn "handle-search" :at "finish" :conn-id conn-id})))
-
-;(.. redis-client
-;  (multi)
-;  (zadd searches (util/millis) search-str)
-;  (lrange events-key 0 100000)
-;  (ltrim events-key 100000 -1)
-;  (exec (fn [err [_ events-serialized _]]
-;    (log {:fn "handle-search" :at "execed" :conn-id conn-id :search-id search-id :err err :events-count (count events-serialized)})
-;    (let [events (map reader/read-string events-serialized)]
-;      (write-res conn 200 {"Content-Type" "application/clj"} (pr-str {:events events})))
-;    (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id}))))
-;(log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id})))
+  (let [{:strs [search-id query]} query-params
+        events-key (str "searches." search-id ".events")
+        search-data {:search-id search-id :query query :events-key events-key :target :list}
+        search-str (pr-str search-data)]
+    (.. (deref redis-client)
+      (multi)
+      (zadd "searches" (util/millis) search-str)
+      (lrange events-key 0 100000)
+      (ltrim events-key 100000 -1)
+      (exec (fn [err res-js]
+        (let [res (js->clj res-js)]
+          (log {:fn "handle-search" :at "execed" :conn-id conn-id :search-id search-id})
+          (let [events (map reader/read-string (second res))]
+            (write-res conn 200 {"Content-Type" "application/json"} (util/json-generate events)))
+          (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id})))))
+    (log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id})))
 
 (defn handle-events [{:keys [conn-id res] :as conn}]
   (log {:fn "handle-events" :at "start" :conn-id conn-id})
@@ -120,8 +108,11 @@
   (log {:fn "close" :at "finish"}))
 
 (defn start []
-  (let [port (conf/port)]
-    (log {:fn "start" :at "start" :port port})
+  (log {:fn "start" :at "start"})
+  (let [rc (.createClient redis (conf/redis-url))
+        port (conf/port)]
+    (swap! redis-client (constantly rc))
+    (log {:fn "start" :at "listen" :port port})
     (listen handle port (fn [server]
       (log {:fn "start" :at "listening"})
       (doseq [signal ["TERM" "INT"]]

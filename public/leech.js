@@ -9,7 +9,7 @@ function uuid() {
 }
 
 function leechInflate(ev) {
-  return "<p class=\"runtime\">" + ev.line + "</p>";
+  return "<p class=\"" + ev.component + "\">" + ev.line + "</p>";
 }
 
 function leechApply(evs) {

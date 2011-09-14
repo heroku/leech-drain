@@ -95,10 +95,50 @@ body {
   margin: 0.5em;
 }
 
-#results p.api {
-  color: #A8FF60;
-}
-
+#results p.psmgr {
+  color: #FF73FD; }
 #results p.runtime {
-  color: #FF73FD;
-}
+  color: #FF73FD; }
+
+#results p.codex {
+  color: #FFFFB6}
+#results p.gitproxy {
+  color: #FFFFB6}
+
+#results p.core {
+  color: #A8FF60; }
+#results p.balrog {
+  color: #A8FF60; }
+#results p.memcache {
+  color: #A8FF60; }
+
+#results p.hermes {
+  color: #96CBFE; }
+#results p.varnish {
+  color: #96CBFE; }
+#results p.nginx {
+  color: #96CBFE; }
+#results p.face {
+  color: #96CBFE; }
+#results p.logplex {
+  color: #96CBFE; }
+#results p.apollo {
+  color: #96CBFE; }
+
+#results p.shen {
+  color: #FF6C60; }
+#results p.pgmonitor {
+  color: #FF6C60; }
+
+#results p.su {
+  color: #C6C5FE; }
+#results p.syslog-ng {
+  color: #C6C5FE; }
+#results p.syslog {
+  color: #C6C5FE; }
+#results p.slapd {
+  color: #C6C5FE; }
+#results p.kernel {
+  color: #C6C5FE; }
+#results p.heroku {
+  color: #C6C5FE; }

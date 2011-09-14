@@ -7465,13 +7465,21 @@ leech.server.web.handle_static = function(a, b) {
   return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"handle-static", "\ufdd0'at":"finish"}))
 };
 leech.server.web.handle_search = function(a) {
-  var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'query-params");
-  cljs.core.get.call(null, a, "\ufdd0'res");
-  cljs.core.get.call(null, a, "\ufdd0'req");
-  var c = cljs.core.get.call(null, a, "\ufdd0'conn-id");
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'query-params"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"start", "\ufdd0'conn-id":c, "\ufdd0'query-params":b}));
-  leech.server.web.write_res.call(null, a, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/json"}), leech.server.util.json_generate.call(null, cljs.core.Vector.fromArray([cljs.core.ObjMap.fromObject(["line"], {line:"wat an event"})])));
-  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"finish", "\ufdd0'conn-id":c}))
+  var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'query-params");
+  cljs.core.get.call(null, b, "\ufdd0'res");
+  cljs.core.get.call(null, b, "\ufdd0'req");
+  var c = cljs.core.get.call(null, b, "\ufdd0'conn-id");
+  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'query-params"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"start", "\ufdd0'conn-id":c, "\ufdd0'query-params":a}));
+  var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, a, "query"), e = cljs.core.get.call(null, a, "search-id"), a = cljs.core.str.call(null, "searches.", e, ".events"), d = cljs.core.ObjMap.fromObject(["\ufdd0'search-id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'target"], {"\ufdd0'search-id":e, "\ufdd0'query":d, "\ufdd0'events-key":a, "\ufdd0'target":"\ufdd0'list"}), d = cljs.core.pr_str.call(null, 
+  d);
+  cljs.core.deref.call(null, leech.server.web.redis_client).multi().zadd("searches", leech.server.util.millis.call(null), d).lrange(a, 0, 1E5).ltrim(a, 1E5, -1).exec(function(a, d) {
+    var h = cljs.core.js__GT_clj.call(null, d);
+    leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'search-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"execed", "\ufdd0'conn-id":c, "\ufdd0'search-id":e}));
+    h = cljs.core.map.call(null, cljs.reader.read_string, cljs.core.second.call(null, h));
+    leech.server.web.write_res.call(null, b, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/json"}), leech.server.util.json_generate.call(null, h));
+    return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'search-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"written", "\ufdd0'conn-id":c, "\ufdd0'search-id":e}))
+  });
+  return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'search-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"finish", "\ufdd0'conn-id":c, "\ufdd0'search-id":e}))
 };
 leech.server.web.handle_events = function(a) {
   var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'res"), b = cljs.core.get.call(null, b, "\ufdd0'conn-id");
@@ -7526,23 +7534,25 @@ leech.server.web.close = function() {
   return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"close", "\ufdd0'at":"finish"}))
 };
 leech.server.web.start = function() {
-  var a = leech.server.conf.port.call(null);
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'port"], {"\ufdd0'fn":"start", "\ufdd0'at":"start", "\ufdd0'port":a}));
-  leech.server.web.listen.call(null, leech.server.web.handle, a, function(a) {
+  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"start"}));
+  var a = leech.server.web.redis.createClient(leech.server.conf.redis_url.call(null)), b = leech.server.conf.port.call(null);
+  cljs.core.swap_BANG_.call(null, leech.server.web.redis_client, cljs.core.constantly.call(null, a));
+  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'port"], {"\ufdd0'fn":"start", "\ufdd0'at":"listen", "\ufdd0'port":b}));
+  leech.server.web.listen.call(null, leech.server.web.handle, b, function(a) {
     leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"listening"}));
-    for(var c = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
-      if(cljs.core.truth_(c)) {
-        var d = cljs.core.first.call(null, c);
-        leech.server.util.trap.call(null, d, function() {
+    for(var b = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
+      if(cljs.core.truth_(b)) {
+        var e = cljs.core.first.call(null, b);
+        leech.server.util.trap.call(null, e, function() {
           return function() {
-            leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"catch", "\ufdd0'signal":d}));
+            leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"catch", "\ufdd0'signal":e}));
             leech.server.web.close.call(null, a);
             leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'status"], {"\ufdd0'fn":"start", "\ufdd0'at":"exit", "\ufdd0'status":0}));
             return leech.server.util.exit.call(null, 0)
           }
-        }(c));
-        leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"trapping", "\ufdd0'signal":d}));
-        c = cljs.core.next.call(null, c)
+        }(b));
+        leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"trapping", "\ufdd0'signal":e}));
+        b = cljs.core.next.call(null, b)
       }else {
         return null
       }
