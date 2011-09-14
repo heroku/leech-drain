@@ -41,7 +41,7 @@
 (defn start-watches [searches-a receive-watch publish-watch]
   (log {:fn "start-watches" :at "start"})
   (util/set-interval 0 1000 (fn []
-    (log {:fn "start-watches" :at "tick"})
+    ;(log {:fn "start-watches" :at "tick"})
     (let [[received-count receive-rate] (watch/tick receive-watch)
           [published-count publish-rate] (watch/tick publish-watch)]
       (log {:fn "start-watches" :at "watch-global"
@@ -58,11 +58,11 @@
   (.on redis-client "ready" (fn []
     (log {:fn "start-searches" :at "readying"})
     (util/set-interval 0 100 (fn []
-      (log {:fn "start-searches" :at "tick"})
+      ;(log {:fn "start-searches" :at "tick"})
       (.zrangebyscore redis-client "searches" (- (util/millis) 3000) (+ (util/millis) 3000) (fn [err res]
         (let [searches-data (map reader/read-string res)
               changed (not= (map :search-id (deref searches-a)) (map :search-id searches-data))]
-          (log {:fn "start-searches" :event "poll" :changed changed :searches-count (count searches-data)})
+          ;(log {:fn "start-searches" :event "poll" :changed changed :searches-count (count searches-data)})
           (when changed
             (let [searches (map
                              (fn [{:keys [search-id query target events-key]}]

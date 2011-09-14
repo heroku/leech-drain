@@ -7487,7 +7487,7 @@ leech.server.web.handle_search = function(a) {
   cljs.core.get.call(null, b, "\ufdd0'res");
   cljs.core.get.call(null, b, "\ufdd0'req");
   var c = cljs.core.get.call(null, b, "\ufdd0'conn-id");
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'query-params"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"start", "\ufdd0'conn-id":c, "\ufdd0'query-params":a}));
+  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-search", "\ufdd0'at":"start", "\ufdd0'conn-id":c}));
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, a, "query"), e = cljs.core.get.call(null, a, "search-id"), a = cljs.core.str.call(null, "searches.", e, ".events"), d = cljs.core.ObjMap.fromObject(["\ufdd0'search-id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'target"], {"\ufdd0'search-id":e, "\ufdd0'query":d, "\ufdd0'events-key":a, "\ufdd0'target":"\ufdd0'list"}), d = cljs.core.pr_str.call(null, 
   d);
   cljs.core.deref.call(null, leech.server.web.redis_client).multi().zadd("searches", leech.server.util.millis.call(null), d).lrange(a, 0, 1E5).ltrim(a, 1E5, -1).exec(function(a, d) {
@@ -7797,7 +7797,7 @@ leech.server.receive.redis = cljs.nodejs.require.call(null, "redis-url");
 leech.server.receive.log = function(a) {
   return leech.server.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"receive"}), a))
 };
-leech.server.receive.max_match_rate = 50;
+leech.server.receive.max_match_rate = 25;
 leech.server.receive.compile_pred = function(a) {
   a = leech.server.parse.parse_message_attrs.call(null, a);
   return cljs.core.reduce.call(null, function(a, c) {
@@ -7844,7 +7844,6 @@ leech.server.receive.start_traps = function() {
 leech.server.receive.start_watches = function(a, b, c) {
   leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-watches", "\ufdd0'at":"start"}));
   leech.server.util.set_interval.call(null, 0, 1E3, function() {
-    leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-watches", "\ufdd0'at":"tick"}));
     var d = leech.server.watch.tick.call(null, b), e = cljs.core.nth.call(null, d, 0, null), d = cljs.core.nth.call(null, d, 1, null), f = leech.server.watch.tick.call(null, c), g = cljs.core.nth.call(null, f, 0, null), f = cljs.core.nth.call(null, f, 1, null);
     leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'at,\ufdd0'received-count,\ufdd0'receive-rate,\ufdd0'published-count,\ufdd0'publish-rate".split(","), {"\ufdd0'fn":"start-watches", "\ufdd0'at":"watch-global", "\ufdd0'received-count":e, "\ufdd0'receive-rate":d, "\ufdd0'published-count":g, "\ufdd0'publish-rate":f}));
     for(e = cljs.core.seq.call(null, cljs.core.deref.call(null, a));;) {
@@ -7863,10 +7862,8 @@ leech.server.receive.start_searches = function(a, b) {
   b.on("ready", function() {
     leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"readying"}));
     leech.server.util.set_interval.call(null, 0, 100, function() {
-      leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"tick"}));
       return b.zrangebyscore("searches", cljs.core._.call(null, leech.server.util.millis.call(null), 3E3), cljs.core._PLUS_.call(null, leech.server.util.millis.call(null), 3E3), function(b, d) {
         var e = cljs.core.map.call(null, cljs.reader.read_string, d), f = cljs.core.not_EQ_.call(null, cljs.core.map.call(null, "\ufdd0'search-id", cljs.core.deref.call(null, a)), cljs.core.map.call(null, "\ufdd0'search-id", e));
-        leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'changed", "\ufdd0'searches-count"], {"\ufdd0'fn":"start-searches", "\ufdd0'event":"poll", "\ufdd0'changed":f, "\ufdd0'searches-count":cljs.core.count.call(null, e)}));
         return cljs.core.truth_(f) ? (e = cljs.core.map.call(null, function(a) {
           var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'events-key"), c = cljs.core.get.call(null, b, "\ufdd0'target"), d = cljs.core.get.call(null, b, "\ufdd0'query"), b = cljs.core.get.call(null, b, "\ufdd0'search-id"), e = leech.server.watch.init.call(null), f = leech.server.receive.compile_pred.call(null, d);
           return cljs.core.ObjMap.fromObject("\ufdd0'search-id,\ufdd0'query,\ufdd0'target,\ufdd0'events-key,\ufdd0'match-watch,\ufdd0'match-pred".split(","), {"\ufdd0'search-id":b, "\ufdd0'query":d, "\ufdd0'target":c, "\ufdd0'events-key":a, "\ufdd0'match-watch":e, "\ufdd0'match-pred":f})

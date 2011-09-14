@@ -43,7 +43,7 @@
   (log {:fn "handle-static" :at "finish"}))
 
 (defn handle-search [{:keys [conn-id req res query-params] :as conn}]
-  (log {:fn "handle-search" :at "start" :conn-id conn-id :query-params query-params})
+  (log {:fn "handle-search" :at "start" :conn-id conn-id})
   (let [{:strs [search-id query]} query-params
         events-key (str "searches." search-id ".events")
         search-data {:search-id search-id :query query :events-key events-key :target :list}
