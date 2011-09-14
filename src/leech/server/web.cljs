@@ -95,10 +95,11 @@
         s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :cookie {:maxAge 60000}})))]
     (fn [req res]
       (cp req res (fn [_]
+        (s req res (fn [_]
           (let [conn-id (node-uuid)
                {:keys [method path query-params headers]} (parse-req req)
                 conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
-            (handle-force-https conn)))))))
+            (handle-force-https conn)))))))))
 
 (defn listen [handle-fn port callback]
   (log {:fn "listen" :at "start" :port port})

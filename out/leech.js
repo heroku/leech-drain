@@ -7532,13 +7532,14 @@ leech.server.web.handle_force_https = function(a) {
   }()) ? leech.server.web.write_res.call(null, a, 302, cljs.core.ObjMap.fromObject(["Location"], {Location:leech.server.conf.canonical_host.call(null)}), "You are being redirected.") : leech.server.web.handle_core.call(null, a)
 };
 leech.server.web.handle = function() {
-  var a = leech.server.web.connect.cookieParser();
-  leech.server.web.connect.session(leech.server.util.clj__GT_js.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'secret", "\ufdd0'cookie"], {"\ufdd0'secret":leech.server.conf.session_secret.call(null), "\ufdd0'cookie":cljs.core.ObjMap.fromObject(["\ufdd0'maxAge"], {"\ufdd0'maxAge":6E4})})));
-  return function(b, c) {
-    return a.call(null, b, c, function() {
-      var a = leech.server.web.node_uuid.call(null), e = leech.server.web.parse_req.call(null, b), f = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, e)) ? cljs.core.apply.call(null, cljs.core.hash_map, e) : e, e = cljs.core.get.call(null, f, "\ufdd0'headers"), g = cljs.core.get.call(null, f, "\ufdd0'query-params"), h = cljs.core.get.call(null, f, "\ufdd0'path"), f = cljs.core.get.call(null, f, "\ufdd0'method"), a = cljs.core.ObjMap.fromObject("\ufdd0'conn-id,\ufdd0'req,\ufdd0'res,\ufdd0'method,\ufdd0'path,\ufdd0'query-params,\ufdd0'headers".split(","), 
-      {"\ufdd0'conn-id":a, "\ufdd0'req":b, "\ufdd0'res":c, "\ufdd0'method":f, "\ufdd0'path":h, "\ufdd0'query-params":g, "\ufdd0'headers":e});
-      return leech.server.web.handle_force_https.call(null, a)
+  var a = leech.server.web.connect.cookieParser(), b = leech.server.web.connect.session(leech.server.util.clj__GT_js.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'secret", "\ufdd0'cookie"], {"\ufdd0'secret":leech.server.conf.session_secret.call(null), "\ufdd0'cookie":cljs.core.ObjMap.fromObject(["\ufdd0'maxAge"], {"\ufdd0'maxAge":6E4})})));
+  return function(c, d) {
+    return a.call(null, c, d, function() {
+      return b.call(null, c, d, function() {
+        var a = leech.server.web.node_uuid.call(null), b = leech.server.web.parse_req.call(null, c), g = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, b)) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b, b = cljs.core.get.call(null, g, "\ufdd0'headers"), h = cljs.core.get.call(null, g, "\ufdd0'query-params"), i = cljs.core.get.call(null, g, "\ufdd0'path"), g = cljs.core.get.call(null, g, "\ufdd0'method"), a = cljs.core.ObjMap.fromObject("\ufdd0'conn-id,\ufdd0'req,\ufdd0'res,\ufdd0'method,\ufdd0'path,\ufdd0'query-params,\ufdd0'headers".split(","), 
+        {"\ufdd0'conn-id":a, "\ufdd0'req":c, "\ufdd0'res":d, "\ufdd0'method":g, "\ufdd0'path":i, "\ufdd0'query-params":h, "\ufdd0'headers":b});
+        return leech.server.web.handle_force_https.call(null, a)
+      })
     })
   }
 }();
