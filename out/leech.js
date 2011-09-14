@@ -7784,7 +7784,7 @@ leech.receive.start_searches = function(a, b) {
     leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"readying"}));
     leech.util.set_interval.call(null, 0, 100, function() {
       leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"tick"}));
-      return b.zrangebyscore("searches", cljs.core._.call(null, leech.util.millis.call(null), 5E3), cljs.core._PLUS_.call(null, leech.util.millis.call(null), 5E3), function(b, d) {
+      return b.zrangebyscore("searches", cljs.core._.call(null, leech.util.millis.call(null), 3E3), cljs.core._PLUS_.call(null, leech.util.millis.call(null), 3E3), function(b, d) {
         var e = cljs.core.map.call(null, cljs.reader.read_string, d), f = cljs.core.not_EQ_.call(null, cljs.core.map.call(null, "\ufdd0'search-id", cljs.core.deref.call(null, a)), cljs.core.map.call(null, "\ufdd0'search-id", e));
         leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'changed", "\ufdd0'searches-count"], {"\ufdd0'fn":"start-searches", "\ufdd0'event":"poll", "\ufdd0'changed":f, "\ufdd0'searches-count":cljs.core.count.call(null, e)}));
         return cljs.core.truth_(f) ? (e = cljs.core.map.call(null, function(a) {

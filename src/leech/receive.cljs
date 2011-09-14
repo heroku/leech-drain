@@ -59,7 +59,7 @@
     (log {:fn "start-searches" :at "readying"})
     (util/set-interval 0 100 (fn []
       (log {:fn "start-searches" :at "tick"})
-      (.zrangebyscore redis-client "searches" (- (util/millis) 5000) (+ (util/millis) 5000) (fn [err res]
+      (.zrangebyscore redis-client "searches" (- (util/millis) 3000) (+ (util/millis) 3000) (fn [err res]
         (let [searches-data (map reader/read-string res)
               changed (not= (map :search-id (deref searches-a)) (map :search-id searches-data))]
           (log {:fn "start-searches" :event "poll" :changed changed :searches-count (count searches-data)})
