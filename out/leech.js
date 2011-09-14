@@ -7806,16 +7806,8 @@ leech.receive.start_receivers = function(a, b, c, d) {
         var i = cljs.core.first.call(null, h), j = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, i)) ? cljs.core.apply.call(null, cljs.core.hash_map, i) : i, i = cljs.core.get.call(null, j, "\ufdd0'target"), k = cljs.core.get.call(null, j, "\ufdd0'match-watch"), l = cljs.core.get.call(null, j, "\ufdd0'match-pred"), j = cljs.core.get.call(null, j, "\ufdd0'events-key");
         if(cljs.core.truth_(l.call(null, g)) && (leech.watch.hit.call(null, k), k = leech.watch.rate.call(null, k), cljs.core.truth_(cljs.core._LT_.call(null, k, leech.receive.max_match_rate)))) {
           leech.watch.hit.call(null, d);
-          k = cljs.core.pr_str.call(null, g);
-          leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'target", "\ufdd0'event"], {"\ufdd0'fn":"start-receivers", "\ufdd0'at":"match", "\ufdd0'target":i, "\ufdd0'event":g}));
-          l = i;
-          if(cljs.core.truth_(cljs.core._EQ_.call(null, "\ufdd0'list", l))) {
-            b.rpush(j, k)
-          }else {
-            throw new java.lang.IllegalArgumentException(cljs.core.str.call(null, "No matching clause: ", l));
-          }
-          b.publish(j, k);
-          leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'target"], {"\ufdd0'fn":"start-receivers", "\ufdd0'at":"unexpected-target", "\ufdd0'target":i}))
+          var k = cljs.core.pr_str.call(null, g), l = cljs.core._EQ_, m = i;
+          cljs.core.truth_(l.call(null, "\ufdd0'list", m)) ? b.rpush(j, k) : cljs.core.truth_(l.call(null, "\ufdd0'publish", m)) ? b.publish(j, k) : leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'target"], {"\ufdd0'fn":"start-receivers", "\ufdd0'at":"unexpected-target", "\ufdd0'target":i}))
         }
         h = cljs.core.next.call(null, h)
       }else {

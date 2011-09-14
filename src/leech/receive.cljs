@@ -86,13 +86,12 @@
              (when (< match-rate max-match-rate)
                (watch/hit publish-watch)
                (let [event-serialized (pr-str event-parsed)]
-                 (log {:fn "start-receivers" :at "match" :target target :event event-parsed})
                  (condp = target
                    :list
-                     (.rpush redis-client events-key event-serialized))
+                     (.rpush redis-client events-key event-serialized)
                    :publish
                      (.publish redis-client events-key event-serialized)
-                   (log {:fn "start-receivers" :at "unexpected-target" :target target})))))))))
+                   (log {:fn "start-receivers" :at "unexpected-target" :target target}))))))))))
   (log {:fn "start-receivers" :at "finish"}))
 
 (defn start []
