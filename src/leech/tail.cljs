@@ -58,16 +58,17 @@
     (log {:fn "start-traps" :at "trapping" :signal signal}))
   (log {:fn "start-traps" :at "finish"}))
 
-(defn start-search [search-client search-str]
+(defn start-search [search-client {:keys [search-id] :as search-data}]
   (log {:fn "start-search" :at "start"})
-  (.on search-client "ready" (fn []
-    (log {:fn "start-search" :at "readying"})
-    (util/set-interval 0 1000 (fn []
-      (log {:fn "start-search" :at "tick"})
-      (.zadd search-client "searches" (util/millis) search-str (fn [e r]
-        (log {:fn "start-search" :at "post"})))))
-    (log {:fn "start" :at "ready" :search-id search-id})))
-  (log {:fn "start-search" :at "finish"}))
+  (let [search-str (pr-str search-data)]
+    (.on search-client "ready" (fn []
+      (log {:fn "start-search" :at "readying"})
+      (util/set-interval 0 1000 (fn []
+        (log {:fn "start-search" :at "tick"})
+        (.zadd search-client "searches" (util/millis) search-str (fn [e r]
+          (log {:fn "start-search" :at "post" :e e :r r})))))
+      (log {:fn "start" :at "ready" :search-id search-id})))
+    (log {:fn "start-search" :at "finish"})))
 
 (defn start-stream [events-client events-key]
   (log {:fn "start-stream" :at "start"})
@@ -89,11 +90,10 @@
         query (str/join " " (drop 3 (util/argv)))
         events-key (str "searches." search-id ".events")
         search-data {:search-id search-id :query query :events-key events-key :target :publish}
-        search-str (pr-str search-data)
         search-client (.createClient redis (conf/redis-url))
         events-client (.createClient redis (conf/redis-url))]
     (start-traps)
-    (start-search search-client search-str)
+    (start-search search-client search-data)
     (start-stream events-client events-key)
     (log {:fn "start" :at "finish"})))
 
