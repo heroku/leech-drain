@@ -74,8 +74,8 @@
     (log {:fn "start-searches" :at "ready"})))
   (log {:fn "start-searches" :at "finish"}))
 
-(defn start-bleeders [searches-a redis-client receive-watch publish-watch]
-  (log {:fn "start-bleeders" :at "start"})
+(defn start-receivers [searches-a redis-client receive-watch publish-watch]
+  (log {:fn "start-receivers" :at "start"})
   (io/start-bleeders (conf/aorta-urls) (fn [host line]
      (watch/hit receive-watch)
      (let [event-parsed (parse/parse-line line)]
@@ -91,7 +91,7 @@
                      (.rpush redis-client events-key event-serialized))
                    :pubsub
                      (.publish redis-client events-key event-serialized)))))))))
-  (log {:fn "start-bleeders" :at "finish"}))
+  (log {:fn "start-receivers" :at "finish"}))
 
 (defn start []
   (log {:fn "start" :at "start"})

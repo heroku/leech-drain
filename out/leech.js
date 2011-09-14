@@ -7797,8 +7797,8 @@ leech.receive.start_searches = function(a, b) {
   });
   return leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"finish"}))
 };
-leech.receive.start_bleeders = function(a, b, c, d) {
-  leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-bleeders", "\ufdd0'at":"start"}));
+leech.receive.start_receivers = function(a, b, c, d) {
+  leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-receivers", "\ufdd0'at":"start"}));
   leech.io.start_bleeders.call(null, leech.conf.aorta_urls.call(null), function(e, f) {
     leech.watch.hit.call(null, c);
     for(var g = leech.parse.parse_line.call(null, f), h = cljs.core.seq.call(null, cljs.core.deref.call(null, a));;) {
@@ -7820,29 +7820,17 @@ leech.receive.start_bleeders = function(a, b, c, d) {
       }
     }
   });
-  return leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-bleeders", "\ufdd0'at":"finish"}))
+  return leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-receivers", "\ufdd0'at":"finish"}))
 };
 leech.receive.start = function() {
-  var a = function() {
-    leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"start"}));
-    var a = leech.watch.init.call(null), b = leech.watch.init.call(null), e = cljs.core.atom.call(null, null), f = leech.receive.redis.createClient(leech.conf.redis_url.call(null));
-    leech.receive.start_traps.call(null);
-    leech.receive.start_watches.call(null, e, a, b);
-    leech.receive.start_searches.call(null, e, f);
-    leech.receive.start_receivers.call(null, e, f, a, b);
-    return leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"finish"}))
-  }, b = function(b) {
-    var d = null;
-    goog.isDef(b) && (d = cljs.core.array_seq(Array.prototype.slice.call(arguments, 0), 0));
-    return a.call(this, d)
-  };
-  b.cljs$lang$maxFixedArity = 0;
-  b.cljs$lang$applyTo = function(b) {
-    b = cljs.core.seq(b);
-    return a.call(this, b)
-  };
-  return b
-}();
+  leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"start"}));
+  var a = leech.watch.init.call(null), b = leech.watch.init.call(null), c = cljs.core.atom.call(null, null), d = leech.receive.redis.createClient(leech.conf.redis_url.call(null));
+  leech.receive.start_traps.call(null);
+  leech.receive.start_watches.call(null, c, a, b);
+  leech.receive.start_searches.call(null, c, d);
+  leech.receive.start_receivers.call(null, c, d, a, b);
+  return leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"finish"}))
+};
 leech.util.main.call(null, "receive", leech.receive.start);
 leech.tail = {};
 leech.tail.redis = cljs.nodejs.require.call(null, "redis-url");
