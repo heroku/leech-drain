@@ -67,7 +67,7 @@
       (aset raw-obj "component" (get m 5))
       (aset raw-obj "pid" (parse-long (get m 7)))
       (aset raw-obj "slot" (get m 8))
-      (aset raw-obj "ion_id" (parse-long (get m 9)))
+      (aset raw-obj "instance_id" (parse-long (get m 9)))
       (aset raw-obj "cloud" (get m 10))
       (aset raw-obj "line" l)
       (ObjMap. nil (js-keys raw-obj) raw-obj))))
@@ -86,7 +86,7 @@
      "line" l}))
 
 (def nginx-access-re
-     ;timestamp_src                              ;host      ;facility    ;level           ;slot        ;ion_id ;cloud           ;http_host                                                              ;http_method,_url,_version      ;http_status,_bytes,_referrer,_user_agent,_domain
+     ;timestamp_src                              ;host      ;facility    ;level           ;slot        ;instance_id ;cloud           ;http_host                                                              ;http_method,_url,_version      ;http_status,_bytes,_referrer,_user_agent,_domain
   #"^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d-\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) nginx - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - ([0-9\.]+) - - \[\d\d/[a-zA-z]{3}/\d\d\d\d:\d\d:\d\d:\d\d -\d\d00\] \"([a-zA-Z]+) (\S+) HTTP/(...)\" (\d+) (\d+) \"([^\"]+)\" \"([^\"]+)\" (\S+)$")
 
 (defn parse-nginx-access-line [l]
@@ -98,7 +98,7 @@
      "level" (get m 4)
      "component" "nginx"
      "slot" (get m 5)
-     "ion_id" (parse-long (get m 6))
+     "instance_id" (parse-long (get m 6))
      "cloud" (get m 7)
      "http_host" (get m 8)
      "http_method" (get m 9)
@@ -123,7 +123,7 @@
      "level" (get m 4)
      "component" "nginx"
      "slot" (get m 5)
-     "ion_id" (parse-long (get m 6))
+     "instance_id" (parse-long (get m 6))
      "cloud" (get m 7)
      "message" (get m 8)
      "line" l}))
@@ -141,7 +141,7 @@
      "component" "varnish"
      "pid" (parse-long (get m 5))
      "slot" (get m 6)
-     "ion_id" (parse-long (get m 7))
+     "instance_id" (parse-long (get m 7))
      "cloud" (get m 8)
      "http_status" (parse-long (get m 9))
      "line" l}))

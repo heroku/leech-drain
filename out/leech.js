@@ -7657,7 +7657,7 @@ leech.parse.parse_standard_line = function(a) {
     c.component = cljs.core.get.call(null, b, 5);
     c.pid = leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 7));
     c.slot = cljs.core.get.call(null, b, 8);
-    c.ion_id = leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 9));
+    c.instance_id = leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 9));
     c.cloud = cljs.core.get.call(null, b, 10);
     c.line = a;
     return new cljs.core.ObjMap(null, cljs.core.js_keys.call(null, c), c)
@@ -7673,21 +7673,21 @@ leech.parse.parse_raw_line = function(a) {
 leech.parse.nginx_access_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d-\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) nginx - ([a-z4-6-]+)?\.(\d+)@([a-z.]+\.com) - ([0-9\.]+) - - \[\d\d\/[a-zA-z]{3}\/\d\d\d\d:\d\d:\d\d:\d\d -\d\d00\] \"([a-zA-Z]+) (\S+) HTTP\/(...)\" (\d+) (\d+) \"([^\"]+)\" \"([^\"]+)\" (\S+)$/;
 leech.parse.parse_nginx_access_line = function(a) {
   var b = cljs.core.re_matches.call(null, leech.parse.nginx_access_re, a);
-  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("http_version,facility,level,host,http_user_agent,http_status,ion_id,http_bytes,line,cloud,http_referrer,http_method,http_url,http_domain,timestamp_src,component,slot,event_type,http_host".split(","), {http_version:cljs.core.get.call(null, b, 11), facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), host:cljs.core.get.call(null, b, 2), http_user_agent:cljs.core.get.call(null, b, 15), http_status:leech.parse.parse_long.call(null, 
-  cljs.core.get.call(null, b, 12)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 6)), http_bytes:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 13)), line:a, cloud:cljs.core.get.call(null, b, 7), http_referrer:cljs.core.get.call(null, b, 14), http_method:cljs.core.get.call(null, b, 9), http_url:cljs.core.get.call(null, b, 10), http_domain:cljs.core.get.call(null, b, 16), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), component:"nginx", 
-  slot:cljs.core.get.call(null, b, 5), event_type:"nginx_access", http_host:cljs.core.get.call(null, b, 8)}) : null
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("http_version,facility,level,instance_id,host,http_user_agent,http_status,http_bytes,line,cloud,http_referrer,http_method,http_url,http_domain,timestamp_src,component,slot,event_type,http_host".split(","), {http_version:cljs.core.get.call(null, b, 11), facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), instance_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 6)), host:cljs.core.get.call(null, b, 
+  2), http_user_agent:cljs.core.get.call(null, b, 15), http_status:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 12)), http_bytes:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 13)), line:a, cloud:cljs.core.get.call(null, b, 7), http_referrer:cljs.core.get.call(null, b, 14), http_method:cljs.core.get.call(null, b, 9), http_url:cljs.core.get.call(null, b, 10), http_domain:cljs.core.get.call(null, b, 16), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, 
+  b, 1)), component:"nginx", slot:cljs.core.get.call(null, b, 5), event_type:"nginx_access", http_host:cljs.core.get.call(null, b, 8)}) : null
 };
 leech.parse.nginx_error_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d-\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) nginx - ([a-z4-6]+)?\.(\d+)@([a-z.]+\.com) - .* \[error\] (.*)$/;
 leech.parse.parse_nginx_error_line = function(a) {
   var b = cljs.core.re_matches.call(null, leech.parse.nginx_error_re, a);
-  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("facility,level,message,host,ion_id,line,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), message:cljs.core.get.call(null, b, 8), host:cljs.core.get.call(null, b, 2), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 6)), line:a, cloud:cljs.core.get.call(null, b, 7), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, 
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("facility,level,instance_id,message,host,line,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), instance_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 6)), message:cljs.core.get.call(null, b, 8), host:cljs.core.get.call(null, b, 2), line:a, cloud:cljs.core.get.call(null, b, 7), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, 
   b, 1)), component:"nginx", slot:cljs.core.get.call(null, b, 5), event_type:"nginx_error"}) : null
 };
 leech.parse.varnish_access_re = /^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[\-+]\d\d:00) ([0-9\.]+) ([a-z0-7]+)\.([a-z]+) varnish\[(\d+)\] - ([a-z4-6\-]+)?\.(\d+)@([a-z.]+\.com) - [0-9\.]+ - - .*\" (\d\d\d) .*$/;
 leech.parse.parse_varnish_access_line = function(a) {
   var b = cljs.core.re_matches.call(null, leech.parse.varnish_access_re, a);
-  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("facility,level,host,http_status,pid,ion_id,line,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), host:cljs.core.get.call(null, b, 2), http_status:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 9)), pid:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 5)), ion_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 
-  7)), line:a, cloud:cljs.core.get.call(null, b, 8), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), component:"varnish", slot:cljs.core.get.call(null, b, 6), event_type:"varnish_access"}) : null
+  return cljs.core.truth_(b) ? cljs.core.ObjMap.fromObject("facility,level,instance_id,host,http_status,pid,line,cloud,timestamp_src,component,slot,event_type".split(","), {facility:cljs.core.get.call(null, b, 3), level:cljs.core.get.call(null, b, 4), instance_id:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 7)), host:cljs.core.get.call(null, b, 2), http_status:leech.parse.parse_long.call(null, cljs.core.get.call(null, b, 9)), pid:leech.parse.parse_long.call(null, cljs.core.get.call(null, 
+  b, 5)), line:a, cloud:cljs.core.get.call(null, b, 8), timestamp_src:leech.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), component:"varnish", slot:cljs.core.get.call(null, b, 6), event_type:"varnish_access"}) : null
 };
 leech.parse.log = function(a) {
   return leech.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"parse"}), a))
