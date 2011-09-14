@@ -1,7 +1,7 @@
-(ns leech.conf
+(ns leech.server.conf
   (:require [cljs.nodejs :as node]
             [clojure.string :as str]
-            [leech.util :as util]))
+            [leech.server.util :as util]))
 
 (defn env
   "Returns the value of the environment variable k."

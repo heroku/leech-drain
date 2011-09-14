@@ -1,12 +1,12 @@
-(ns leech.receive
+(ns leech.server.receive
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
             [clojure.string :as str]
-            [leech.conf :as conf]
-            [leech.util :as util]
-            [leech.watch :as watch]
-            [leech.io :as io]
-            [leech.parse :as parse]))
+            [leech.server.conf :as conf]
+            [leech.server.util :as util]
+            [leech.server.watch :as watch]
+            [leech.server.io :as io]
+            [leech.server.parse :as parse]))
 
 (def redis (node/require "redis-url"))
 

@@ -1,7 +1,7 @@
-(ns leech.parse
+(ns leech.server.parse
   (:require [cljs.nodejs :as node]
             [clojure.string :as str]
-            [leech.util :as util]))
+            [leech.server.util :as util]))
 
 (def isodate (node/require "isodate"))
 

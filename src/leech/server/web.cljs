@@ -1,8 +1,8 @@
-(ns leech.web
+(ns leech.server.web
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
-            [leech.conf :as conf]
-            [leech.util :as util]))
+            [leech.server.conf :as conf]
+            [leech.server.util :as util]))
 
 (def url (node/require "url"))
 (def fs (node/require "fs"))
@@ -31,9 +31,9 @@
 (defn handle-static [{:keys [conn-id] :as conn} asset]
   (log {:fn "handle-static" :at "start" :conn-id conn-id :asset asset})
   (.readFile fs (str "./public/" asset) (fn [e c]
-    (log {:fn "handle-index" :at "read"})
+    (log {:fn "handle-static" :at "read"})
       (write-res conn 200 {"Content-Type" "text/html"} c)))
-  (log {:fn "handle-index" :at "finish"}))
+  (log {:fn "handle-static" :at "finish"}))
 
 (defn handle-search [redis-client {:keys [conn-id res] :as conn}]
   (let [search-id  s
@@ -54,23 +54,31 @@
         (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id}))))
     (log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id})))
 
+(defn handle-events [redis-client {:keys [conn-id res] :as conn}]
+  (log {:fn "handle-events" :at "start" :conn-id conn-id}))
+
 (defn parse-req [req]
   {:method (.method req)
    :path   (.pathname (.parse url (.url req)))})
 
 (defn handle [redis-client req res]
   (let [conn-id (node-uuid)
-        conn {:conn-id conn-id :req req :res res}
-        {:keys [method path]} (parse-req req)]
+        {:keys [method path]} (parse-req req)
+        conn {:conn-id conn-id :req req :res res :method method :path path}]
     (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
-    (condp = [method path]
-      ["GET" "/"]
+    (cond
+      (and (= "GET" method) (= "/" path))
         (handle-static conn "index.html")
-      ["GET" "/pulse.css"]
-        (handle-static conn "pulse.css")
-      ["POST" "/searches"]
+      (and (= "GET" method) (= "/leech.css" path))
+        (handle-static conn "leech.css")
+      (and (= "GET" method) (= "/leech.js" path))
+        (handle-static conn "leech.js")
+      (and (= "POST" method) (= "/searches" path))
         (handle-search redis-client conn)
-      (handle-not-found conn))
+      (and (= "GET" method) (util/re-match? #"/searches/[0-9a-z-]+/events" path))
+        (handle-events redis-client conn)
+      :else
+        (handle-not-found conn))
    (log {:fn "handle" :at "finish" :conn-id conn-id})))
 
 (defn listen [handle-fn port callback]

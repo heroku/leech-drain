@@ -1,4 +1,4 @@
-(ns leech.split
+(ns leech.server.split
   (:require [clojure.string :as str]))
 
 (defn init []

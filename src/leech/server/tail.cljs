@@ -1,10 +1,10 @@
-(ns leech.tail
+(ns leech.server.tail
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
             [clojure.string :as str]
-            [leech.util :as util]
-            [leech.conf :as conf]
-            [leech.parse :as parse]))
+            [leech.server.util :as util]
+            [leech.server.conf :as conf]
+            [leech.server.parse :as parse]))
 
 (def redis (node/require "redis-url"))
 (def node-uuid (node/require "node-uuid"))

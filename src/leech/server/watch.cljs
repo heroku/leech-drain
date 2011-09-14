@@ -1,5 +1,5 @@
-(ns leech.watch
-  (:require [leech.util :as util]))
+(ns leech.server.watch
+  (:require [leech.server.util :as util]))
 
 (defn init []
   [(atom 0) (atom 0)])

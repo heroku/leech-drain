@@ -1,7 +1,7 @@
-(ns leech.io
+(ns leech.server.io
   (:require [cljs.nodejs :as node]
-            [leech.util :as util]
-            [leech.split :as split]))
+            [leech.server.util :as util]
+            [leech.server.split :as split]))
 
 (def net (node/require "net"))
 

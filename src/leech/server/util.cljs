@@ -1,4 +1,4 @@
-(ns leech.util
+(ns leech.server.util
   (:require [cljs.nodejs :as node]
             [clojure.string :as string]))
 
