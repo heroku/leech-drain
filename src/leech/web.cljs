@@ -90,17 +90,16 @@
   (let [port (conf/port)]
     (log {:fn "start" :at "start" :port port})
     (let [redis-client (.createClient redis (conf/redis-url))]
-      (.on redis-client "ready" (fn []
-        (log {:fn "start" :at "connected"})
-        (listen (partial handle redis-client) port (fn [server]
-          (log {:fn "start" :at "listening"})
-          (doseq [signal ["TERM" "INT"]]
-            (util/trap signal (fn []
-              (log {:fn "start" :at "catch" :signal signal})
-              (close server)
-              (log {:fn "start" :at "exit" :status 0})
-              (util/exit 0)))
-            (log {:fn "start" :at "trapping" :signal signal})))))))
-    (log {:fn "start" :at "finish"})))
+      (log {:fn "start" :at "listen"})
+      (listen (partial handle redis-client) port (fn [server]
+        (log {:fn "start" :at "listening"})
+        (doseq [signal ["TERM" "INT"]]
+          (util/trap signal (fn []
+            (log {:fn "start" :at "catch" :signal signal})
+            (close server)
+            (log {:fn "start" :at "exit" :status 0})
+            (util/exit 0)))
+          (log {:fn "start" :at "trapping" :signal signal}))))
+    (log {:fn "start" :at "finish"}))))
 
 (util/main "web" start)

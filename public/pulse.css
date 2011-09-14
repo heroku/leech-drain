@@ -51,17 +51,54 @@ body {
 	font-family: 'Helvetica Neue';
 	color: white;
 	background-color: #1C1C1C;
-	padding-top: 50px;
 	text-align: center;
 }
 
-#query-box {
+#contents {
+  padding-top: 0;
+  max-height: 100%;
+}
+
+#query {
+  padding-top: 2em;
+  text-align: center;
+  margin-left: 1em;
+}
+
+#query form {
+  margin-left: 0.25em;
+}
+
+#query input {
   background-color: #1C1C1C;
   border-color: #3E3E3E;
   color: white;
-  width: 30em;
+  width: 60%;
   border-radius: 0.25em;
   padding: 0.25em;
   font-size: 2em;
   font-family: "Monaco", "Courier";
+}
+
+#results {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin: auto;
+  text-align: left;
+  margin-left: 1em;
+  margin-right: 1em;
+  font-family: "Monaco", "Courier";
+  line-height: 1.25em;
+}
+
+#results p {
+  margin: 0.5em;
+}
+
+#results p.api {
+  color: #A8FF60;
+}
+
+#results p.runtime {
+  color: #FF73FD;
 }

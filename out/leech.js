@@ -7507,28 +7507,26 @@ leech.web.start = function() {
   var a = leech.conf.port.call(null);
   leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'port"], {"\ufdd0'fn":"start", "\ufdd0'at":"start", "\ufdd0'port":a}));
   var b = leech.web.redis.createClient(leech.conf.redis_url.call(null));
-  b.on("ready", function() {
-    leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"connected"}));
-    return leech.web.listen.call(null, cljs.core.partial.call(null, leech.web.handle, b), a, function(a) {
-      leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"listening"}));
-      for(var b = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
-        if(cljs.core.truth_(b)) {
-          var e = cljs.core.first.call(null, b);
-          leech.util.trap.call(null, e, function() {
-            return function() {
-              leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"catch", "\ufdd0'signal":e}));
-              leech.web.close.call(null, a);
-              leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'status"], {"\ufdd0'fn":"start", "\ufdd0'at":"exit", "\ufdd0'status":0}));
-              return leech.util.exit.call(null, 0)
-            }
-          }(b));
-          leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"trapping", "\ufdd0'signal":e}));
-          b = cljs.core.next.call(null, b)
-        }else {
-          return null
-        }
+  leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"listen"}));
+  leech.web.listen.call(null, cljs.core.partial.call(null, leech.web.handle, b), a, function(a) {
+    leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"listening"}));
+    for(var b = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));;) {
+      if(cljs.core.truth_(b)) {
+        var e = cljs.core.first.call(null, b);
+        leech.util.trap.call(null, e, function() {
+          return function() {
+            leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"catch", "\ufdd0'signal":e}));
+            leech.web.close.call(null, a);
+            leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'status"], {"\ufdd0'fn":"start", "\ufdd0'at":"exit", "\ufdd0'status":0}));
+            return leech.util.exit.call(null, 0)
+          }
+        }(b));
+        leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start", "\ufdd0'at":"trapping", "\ufdd0'signal":e}));
+        b = cljs.core.next.call(null, b)
+      }else {
+        return null
       }
-    })
+    }
   });
   return leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"finish"}))
 };
