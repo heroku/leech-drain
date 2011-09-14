@@ -26,7 +26,7 @@
         (log {:fn "bleed" :event "error" :name (.name e) :message (.message e)})))
       (.on conn "close" (fn [had-e]
         (log {:fn "bleed" :event "close" :had-error had-e})
-        (util/set-timeout 100 (fn []
+        (util/set-timeout 250 (fn []
           (bleed aorta-url handler)))))
       (.setEncoding conn "UTF-8")
       (.write conn (str auth "\n"))

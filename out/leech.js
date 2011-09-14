@@ -7754,7 +7754,7 @@ leech.server.io.bleed = function bleed(b, c) {
   });
   e.on("close", function(d) {
     leech.server.io.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event", "\ufdd0'had-error"], {"\ufdd0'fn":"bleed", "\ufdd0'event":"close", "\ufdd0'had-error":d}));
-    return leech.server.util.set_timeout.call(null, 100, function() {
+    return leech.server.util.set_timeout.call(null, 250, function() {
       return bleed.call(null, b, c)
     })
   });
@@ -7849,7 +7849,7 @@ leech.server.receive.start_searches = function(a, b) {
   leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"start"}));
   b.on("ready", function() {
     leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-searches", "\ufdd0'at":"readying"}));
-    leech.server.util.set_interval.call(null, 0, 100, function() {
+    leech.server.util.set_interval.call(null, 0, 250, function() {
       return b.zrangebyscore("searches", cljs.core._.call(null, leech.server.util.millis.call(null), 3E3), cljs.core._PLUS_.call(null, leech.server.util.millis.call(null), 3E3), function(b, d) {
         var e = cljs.core.map.call(null, cljs.reader.read_string, d), f = cljs.core.not_EQ_.call(null, cljs.core.map.call(null, "\ufdd0'search-id", cljs.core.deref.call(null, a)), cljs.core.map.call(null, "\ufdd0'search-id", e));
         return cljs.core.truth_(f) ? (e = cljs.core.map.call(null, function(a) {
