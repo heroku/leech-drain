@@ -78,12 +78,6 @@
       (handle-not-found conn))
   (log {:fn "handle-core" :at "finish" :conn-id conn-id}))
 
-(defn wrap-force-https [handler]
-  (fn [{:keys [headers server-name uri] :as req}]
-    (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
-      (redirect (format "https://%s%s" server-name uri))
-      (handler req))))
-
 (defn parse-req [req]
   (let [url-parsed (.parse url (.url req) true)]
     {:method (.method req)
@@ -91,15 +85,17 @@
      :query-params (js->clj (.query url-parsed))
      :headers (js->clj (.headers req))}))
 
+(defn wrap-force-https [next]
+  (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
+    (write-res conn 302 {"Location" (conf/canonical-host)} "You are being redirected.")
+    (next conn)))
+
 (def handle
   (fn [req res]
     (let [conn-id (node-uuid)
          {:keys [method path query-params headers]} (parse-req req)
           conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
-      (prn headers)
-      (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
-        (write-res conn 302 {"Location" (conf/canonical-host)} "You are being redirected.")
-        (handle-core conn)))))
+      (wrap-force-https handle-core))))
 
 (defn listen [handle-fn port callback]
   (log {:fn "listen" :at "start" :port port})
