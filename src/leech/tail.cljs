@@ -88,12 +88,13 @@
   (let [search-id (node-uuid)
         query (str/join " " (drop 3 (util/argv)))
         events-key (str "searches." search-id ".events")
-        search-data {:id search-id :query query :events-key events-key :target :publish}
+        search-data {:search-id search-id :query query :events-key events-key :target :publish}
         search-str (pr-str search-data)
         search-client (.createClient redis (conf/redis-url))
         events-client (.createClient redis (conf/redis-url))]
     (start-traps)
-    (start-stream)
+    (start-search search-client search-str)
+    (start-stream events-client events-key)
     (log {:fn "start" :at "finish"})))
 
 (util/main "tail" start)

@@ -47,9 +47,9 @@
       (log {:fn "start-watches" :at "watch-global"
             :received-count received-count :receive-rate receive-rate
             :published-count published-count :publish-rate publish-rate}))
-    (doseq [{:keys [id match-watch]} (deref searches-a)]
+    (doseq [{:keys [search-id match-watch]} (deref searches-a)]
       (let [[matched-count match-rate] (watch/tick match-watch)]
-        (log {:fn "start-watches" :at "watch-search" :search-id id
+        (log {:fn "start-watches" :at "watch-search" :search-id search-id
               :matched-count matched-count :match-rate match-rate})))))
   (log {:fn "start-watches" :event "finish"}))
 
@@ -61,14 +61,14 @@
       (log {:fn "start-searches" :at "tick"})
       (.zrangebyscore redis-client "searches" (- (util/millis) 5000) (+ (util/millis) 5000) (fn [err res]
         (let [searches-data (map reader/read-string res)
-              changed (not= (map :id (deref searches-a)) (map :id searches-data))]
+              changed (not= (map :search-id (deref searches-a)) (map :search-id searches-data))]
           (log {:fn "start-searches" :event "poll" :changed changed :searches-count (count searches-data)})
           (when changed
             (let [searches (map
-                             (fn [{:keys [id query target events-key]}]
+                             (fn [{:keys [search-id query target events-key]}]
                                (let [match-watch (watch/init)
                                      match-pred (compile-pred query)]
-                                 {:id id :query query :target target :events-key events-key :match-watch match-watch :match-pred match-pred}))
+                                 {:search-id search-id :query query :target target :events-key events-key :match-watch match-watch :match-pred match-pred}))
                             searches-data)]
               (swap! searches-a (constantly searches)))))))))
     (log {:fn "start-searches" :at "ready"})))
