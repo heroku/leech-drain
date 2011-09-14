@@ -7548,14 +7548,14 @@ leech.server.web.parse_req = function(a) {
   return cljs.core.ObjMap.fromObject(["\ufdd0'method", "\ufdd0'path", "\ufdd0'query-params", "\ufdd0'headers"], {"\ufdd0'method":a.method, "\ufdd0'path":b.pathname, "\ufdd0'query-params":cljs.core.js__GT_clj.call(null, b.query), "\ufdd0'headers":cljs.core.js__GT_clj.call(null, a.headers)})
 };
 leech.server.web.handle = function() {
-  var a = leech.server.web.connect.session.Cookie, b = leech.server.web.connect.cookieParser(), c = leech.server.web.connect.session(leech.server.util.clj__GT_js.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'secret", "\ufdd0'store"], {"\ufdd0'secret":leech.server.conf.session_secret.call(null), "\ufdd0'store":a.call(null)})));
-  return function(a, e) {
-    return b.call(null, a, e, function() {
-      return c.call(null, a, e, function() {
-        var b = leech.server.web.node_uuid.call(null), c = leech.server.web.parse_req.call(null, a), h = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, c)) ? cljs.core.apply.call(null, cljs.core.hash_map, c) : c, i = cljs.core.get.call(null, h, "\ufdd0'headers"), j = cljs.core.get.call(null, h, "\ufdd0'query-params"), c = cljs.core.get.call(null, h, "\ufdd0'path"), h = cljs.core.get.call(null, h, "\ufdd0'method"), i = cljs.core.ObjMap.fromObject("\ufdd0'conn-id,\ufdd0'req,\ufdd0'res,\ufdd0'method,\ufdd0'path,\ufdd0'query-params,\ufdd0'headers".split(","), 
-        {"\ufdd0'conn-id":b, "\ufdd0'req":a, "\ufdd0'res":e, "\ufdd0'method":h, "\ufdd0'path":c, "\ufdd0'query-params":j, "\ufdd0'headers":i});
-        leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'method", "\ufdd0'path"], {"\ufdd0'fn":"handle", "\ufdd0'at":"start", "\ufdd0'conn-id":b, "\ufdd0'method":h, "\ufdd0'path":c}));
-        return leech.server.web.handle_favicon.call(null, i)
+  var a = leech.server.web.connect.cookieParser(), b = leech.server.web.connect.session(leech.server.util.clj__GT_js.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'secret"], {"\ufdd0'secret":leech.server.conf.session_secret.call(null)})));
+  return function(c, d) {
+    return a.call(null, c, d, function() {
+      return b.call(null, c, d, function() {
+        var a = leech.server.web.node_uuid.call(null), b = leech.server.web.parse_req.call(null, c), g = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, b)) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b, h = cljs.core.get.call(null, g, "\ufdd0'headers"), i = cljs.core.get.call(null, g, "\ufdd0'query-params"), b = cljs.core.get.call(null, g, "\ufdd0'path"), g = cljs.core.get.call(null, g, "\ufdd0'method"), h = cljs.core.ObjMap.fromObject("\ufdd0'conn-id,\ufdd0'req,\ufdd0'res,\ufdd0'method,\ufdd0'path,\ufdd0'query-params,\ufdd0'headers".split(","), 
+        {"\ufdd0'conn-id":a, "\ufdd0'req":c, "\ufdd0'res":d, "\ufdd0'method":g, "\ufdd0'path":b, "\ufdd0'query-params":i, "\ufdd0'headers":h});
+        leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'method", "\ufdd0'path"], {"\ufdd0'fn":"handle", "\ufdd0'at":"start", "\ufdd0'conn-id":a, "\ufdd0'method":g, "\ufdd0'path":b}));
+        return leech.server.web.handle_favicon.call(null, h)
       })
     })
   }

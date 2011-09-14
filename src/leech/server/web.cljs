@@ -118,9 +118,8 @@
      :headers (js->clj (.headers req))}))
 
 (def handle
-  (let [cs (.. connect session Cookie)
-        cp (.. connect (cookieParser))
-        s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :store (cs)})))]
+  (let [cp (.. connect (cookieParser))
+        s  (.. connect (session (util/clj->js {:secret (conf/session-secret)})))]
     (fn [req res]
       (cp req res (fn [_]
         (s req res (fn [_]
