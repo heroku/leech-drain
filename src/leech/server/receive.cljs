@@ -13,7 +13,7 @@
 (defn log [data]
   (util/log (merge {:ns "receive"} data)))
 
-(def max-match-rate 50)
+(def max-match-rate 25)
 
 (defn compile-pred [query]
   (let [crits (parse/parse-message-attrs query)]
