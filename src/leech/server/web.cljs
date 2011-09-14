@@ -83,7 +83,7 @@
 
 (defn handle-openid [{:keys [conn-id method path query-params req] :as conn}]
   (let [sess (.session req)]
-    (log {:fn "handle-openid" :at "start" :conn-id conn-id :session (js->clj sess)})
+    (log {:fn "handle-openid" :at "start" :conn-id conn-id})
     (cond
       (= ["GET" "/auth"] [method path])
         (if (= (conf/proxy-secret) (get query-params "proxy_secret"))
@@ -117,8 +117,9 @@
      :headers (js->clj (.headers req))}))
 
 (def handle
-  (let [cp (.. connect (cookieParser))
-        s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :cookie {:maxAge 60000}})))]
+  (let [cs (.. connect session (Cookie))
+        cp (.. connect (cookieParser))
+        s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :cookie {:maxAge 60000} :store cs})))]
     (fn [req res]
       (cp req res (fn [_]
         (s req res (fn [_]
