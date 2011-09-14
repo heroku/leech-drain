@@ -7440,9 +7440,6 @@ leech.web.write_res = function(a, b, c, d) {
   a.write(d);
   return a.end()
 };
-leech.web.authorized_QMARK_ = function() {
-  return!0
-};
 leech.web.handle_not_found = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'conn-id");
   leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-not-found", "\ufdd0'at":"start", "\ufdd0'conn-id":b}));
@@ -7455,12 +7452,12 @@ leech.web.handle_not_authorized = function(a) {
   leech.web.write_res.call(null, a, 403, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"application/clj"}), cljs.core.pr_str.call(null, cljs.core.ObjMap.fromObject(["error"], {error:"not authorized"})));
   return leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-not-authorized", "\ufdd0'at":"finish", "\ufdd0'conn-id":b}))
 };
-leech.web.handle_index = function(a) {
-  var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "\ufdd0'conn-id");
-  leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle-index", "\ufdd0'at":"start", "\ufdd0'conn-id":a}));
-  leech.web.fs.readFile("./public/index.html", function(a, d) {
+leech.web.handle_static = function(a, b) {
+  var c = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0'conn-id");
+  leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'asset"], {"\ufdd0'fn":"handle-static", "\ufdd0'at":"start", "\ufdd0'conn-id":d, "\ufdd0'asset":b}));
+  leech.web.fs.readFile(cljs.core.str.call(null, "./public/", b), function(a, b) {
     leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"handle-index", "\ufdd0'at":"read"}));
-    return leech.web.write_res.call(null, b, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"text/html"}), d)
+    return leech.web.write_res.call(null, c, 200, cljs.core.ObjMap.fromObject(["Content-Type"], {"Content-Type":"text/html"}), b)
   });
   return leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"handle-index", "\ufdd0'at":"finish"}))
 };
@@ -7487,8 +7484,7 @@ leech.web.handle = function(a, b, c) {
   leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id", "\ufdd0'method", "\ufdd0'path"], {"\ufdd0'fn":"handle", "\ufdd0'at":"start", "\ufdd0'conn-id":d, "\ufdd0'method":f, "\ufdd0'path":b}));
   e = cljs.core._EQ_;
   b = cljs.core.Vector.fromArray([f, b]);
-  cljs.core.truth_(e.call(null, cljs.core.Vector.fromArray(["GET", "/"]), b)) ? cljs.core.truth_(leech.web.authorized_QMARK_.call(null, c)) ? leech.web.handle_index.call(null, c) : leech.web.handle_not_authorized.call(null, c) : cljs.core.truth_(e.call(null, cljs.core.Vector.fromArray(["POST", "/searches"]), b)) ? cljs.core.truth_(leech.web.authorized_QMARK_.call(null, c)) ? leech.web.handle_search.call(null, a, c) : leech.web.handle_not_authorized.call(null, c) : leech.web.handle_not_found.call(null, 
-  c);
+  cljs.core.truth_(e.call(null, cljs.core.Vector.fromArray(["GET", "/"]), b)) ? leech.web.handle_static.call(null, c, "index.html") : cljs.core.truth_(e.call(null, cljs.core.Vector.fromArray(["GET", "/pulse.css"]), b)) ? leech.web.handle_static.call(null, c, "pulse.css") : cljs.core.truth_(e.call(null, cljs.core.Vector.fromArray(["POST", "/searches"]), b)) ? leech.web.handle_search.call(null, a, c) : leech.web.handle_not_found.call(null, c);
   return leech.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'conn-id"], {"\ufdd0'fn":"handle", "\ufdd0'at":"finish", "\ufdd0'conn-id":d}))
 };
 leech.web.listen = function(a, b, c) {

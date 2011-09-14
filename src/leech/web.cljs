@@ -17,9 +17,6 @@
   (.write res body)
   (. res (end)))
 
-(defn authorized? [conn]
-  true)
-
 (defn handle-not-found [{:keys [conn-id] :as conn}]
   (log {:fn "handle-not-found" :at "start" :conn-id conn-id})
   (write-res conn 404 {"Content-Type" "application/clj"} (pr-str {"error" "not found"}))
@@ -30,9 +27,9 @@
   (write-res conn 403 {"Content-Type" "application/clj"} (pr-str {"error" "not authorized"}))
   (log {:fn "handle-not-authorized" :at "finish" :conn-id conn-id}))
 
-(defn handle-index [{:keys [conn-id] :as conn}]
-  (log {:fn "handle-index" :at "start" :conn-id conn-id})
-  (.readFile fs "./public/index.html" (fn [e c]
+(defn handle-static [{:keys [conn-id] :as conn} asset]
+  (log {:fn "handle-static" :at "start" :conn-id conn-id :asset asset})
+  (.readFile fs (str "./public/" asset) (fn [e c]
     (log {:fn "handle-index" :at "read"})
       (write-res conn 200 {"Content-Type" "text/html"} c)))
   (log {:fn "handle-index" :at "finish"}))
@@ -67,13 +64,11 @@
     (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
     (condp = [method path]
       ["GET" "/"]
-        (if (authorized? conn)
-          (handle-index conn)
-          (handle-not-authorized conn))
+        (handle-static conn "index.html")
+      ["GET" "/pulse.css"]
+        (handle-static conn "pulse.css")
       ["POST" "/searches"]
-        (if (authorized? conn)
-          (handle-search redis-client conn)
-          (handle-not-authorized conn))
+        (handle-search redis-client conn)
       (handle-not-found conn))
    (log {:fn "handle" :at "finish" :conn-id conn-id})))
 
