@@ -7836,8 +7836,9 @@ leech.server.receive.start_watches = function(a, b, c) {
     leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'at,\ufdd0'received-count,\ufdd0'receive-rate,\ufdd0'published-count,\ufdd0'publish-rate".split(","), {"\ufdd0'fn":"start-watches", "\ufdd0'at":"watch-global", "\ufdd0'received-count":e, "\ufdd0'receive-rate":d, "\ufdd0'published-count":g, "\ufdd0'publish-rate":f}));
     for(e = cljs.core.seq.call(null, cljs.core.deref.call(null, a));;) {
       if(cljs.core.truth_(e)) {
-        d = cljs.core.first.call(null, e), d = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, d)) ? cljs.core.apply.call(null, cljs.core.hash_map, d) : d, g = cljs.core.get.call(null, d, "\ufdd0'match-watch"), d = cljs.core.get.call(null, d, "\ufdd0'search-id"), f = leech.server.watch.tick.call(null, g), g = cljs.core.nth.call(null, f, 0, null), f = cljs.core.nth.call(null, f, 1, null), leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'search-id", 
-        "\ufdd0'matched-count", "\ufdd0'match-rate"], {"\ufdd0'fn":"start-watches", "\ufdd0'at":"watch-search", "\ufdd0'search-id":d, "\ufdd0'matched-count":g, "\ufdd0'match-rate":f})), e = cljs.core.next.call(null, e)
+        var d = cljs.core.first.call(null, e), g = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, d)) ? cljs.core.apply.call(null, cljs.core.hash_map, d) : d, f = cljs.core.get.call(null, g, "\ufdd0'match-watch"), d = cljs.core.get.call(null, g, "\ufdd0'query"), g = cljs.core.get.call(null, g, "\ufdd0'search-id"), h = leech.server.watch.tick.call(null, f), f = cljs.core.nth.call(null, h, 0, null), h = cljs.core.nth.call(null, h, 1, null);
+        leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject("\ufdd0'fn,\ufdd0'at,\ufdd0'search-id,\ufdd0'query,\ufdd0'matched-count,\ufdd0'match-rate".split(","), {"\ufdd0'fn":"start-watches", "\ufdd0'at":"watch-search", "\ufdd0'search-id":g, "\ufdd0'query":d, "\ufdd0'matched-count":f, "\ufdd0'match-rate":h}));
+        e = cljs.core.next.call(null, e)
       }else {
         return null
       }

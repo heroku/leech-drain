@@ -46,9 +46,9 @@
       (log {:fn "start-watches" :at "watch-global"
             :received-count received-count :receive-rate receive-rate
             :published-count published-count :publish-rate publish-rate}))
-    (doseq [{:keys [search-id match-watch]} (deref searches-a)]
+    (doseq [{:keys [search-id query match-watch]} (deref searches-a)]
       (let [[matched-count match-rate] (watch/tick match-watch)]
-        (log {:fn "start-watches" :at "watch-search" :search-id search-id
+        (log {:fn "start-watches" :at "watch-search" :search-id search-id :query query
               :matched-count matched-count :match-rate match-rate})))))
   (log {:fn "start-watches" :event "finish"}))
 
