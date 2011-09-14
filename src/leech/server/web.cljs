@@ -83,6 +83,7 @@
 
 (defn handle-openid [{:keys [conn-id method path query-params req] :as conn}]
   (let [sess (.session req)]
+    (prn (js->clj sess))
     (log {:fn "handle-openid" :at "start" :conn-id conn-id})
     (cond
       (= ["GET" "/auth"] [method path])
