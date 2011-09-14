@@ -85,17 +85,20 @@
      :query-params (js->clj (.query url-parsed))
      :headers (js->clj (.headers req))}))
 
-(defn wrap-force-https [next]
+(defn handle-force-https [{:keys [headers] :as conn}]
   (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
     (write-res conn 302 {"Location" (conf/canonical-host)} "You are being redirected.")
-    (next conn)))
+    (handle-core conn)))
 
 (def handle
-  (fn [req res]
-    (let [conn-id (node-uuid)
-         {:keys [method path query-params headers]} (parse-req req)
-          conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
-      (wrap-force-https handle-core))))
+  (let [cp (.. connect (cookieParser))
+        s  (.. connect (session (util/clj->js {:secret (conf/session-secret) :cookie {:maxAge 60000}})))]
+    (fn [req res]
+      (cp req res (fn [_]
+          (let [conn-id (node-uuid)
+               {:keys [method path query-params headers]} (parse-req req)
+                conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
+            (handle-force-https conn)))))))
 
 (defn listen [handle-fn port callback]
   (log {:fn "listen" :at "start" :port port})
