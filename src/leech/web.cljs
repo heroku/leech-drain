@@ -1,5 +1,6 @@
 (ns leech.web
   (:require [cljs.nodejs :as node]
+            [cljs.reader :as reader]
             [leech.conf :as conf]
             [leech.util :as util]))
 
@@ -50,8 +51,8 @@
         (log {:fn "handle-search" :at "execed" :conn-id conn-id :search-id search-id :err err :events-count (count events-serialized)})
         (let [events (map reader/read-string events-serialized)]
           (write-res conn 200 {"Content-Type" "application/clj"} (pr-str {:events events})))
-        (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id})))
-    (log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id}))))
+        (log {:fn "handle-search" :at "written" :conn-id conn-id :search-id search-id}))))
+    (log {:fn "handle-search" :at "finish" :conn-id conn-id :search-id search-id})))
 
 (defn parse-req [req]
   {:method (.method req)
