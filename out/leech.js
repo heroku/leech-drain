@@ -7807,12 +7807,14 @@ leech.receive.start_receivers = function(a, b, c, d) {
         if(cljs.core.truth_(l.call(null, g)) && (leech.watch.hit.call(null, k), k = leech.watch.rate.call(null, k), cljs.core.truth_(cljs.core._LT_.call(null, k, leech.receive.max_match_rate)))) {
           leech.watch.hit.call(null, d);
           k = cljs.core.pr_str.call(null, g);
-          if(cljs.core.truth_(cljs.core._EQ_.call(null, "\ufdd0'list", i))) {
+          l = i;
+          if(cljs.core.truth_(cljs.core._EQ_.call(null, "\ufdd0'list", l))) {
             b.rpush(j, k)
           }else {
-            throw new java.lang.IllegalArgumentException(cljs.core.str.call(null, "No matching clause: ", i));
+            throw new java.lang.IllegalArgumentException(cljs.core.str.call(null, "No matching clause: ", l));
           }
-          b.publish(j, k)
+          b.publish(j, k);
+          leech.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'target"], {"\ufdd0'fn":"start-receivers", "\ufdd0'at":"unexpected-target", "\ufdd0'target":i}))
         }
         h = cljs.core.next.call(null, h)
       }else {

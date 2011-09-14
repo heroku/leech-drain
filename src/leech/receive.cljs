@@ -89,8 +89,9 @@
                  (condp = target
                    :list
                      (.rpush redis-client events-key event-serialized))
-                   :pubsub
-                     (.publish redis-client events-key event-serialized)))))))))
+                   :publish
+                     (.publish redis-client events-key event-serialized)
+                   (log {:fn "start-receivers" :at "unexpected-target" :target target})))))))))
   (log {:fn "start-receivers" :at "finish"}))
 
 (defn start []
