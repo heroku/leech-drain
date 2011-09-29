@@ -7234,7 +7234,7 @@ cljs.reader.read_string = function(a) {
       return cljs.reader.reader_error.call(null, a, "EOF while reading string")
     }else {
       if(cljs.core.truth_(cljs.core._EQ_.call(null, "\\", c))) {
-        b.append(cljs.reader.escape_char.call(null, b, a)), c = cljs.reader.read_char.call(null, a)
+        b = cljs.reader.escape_char.call(null, b, a), c = cljs.reader.read_char.call(null, a)
       }else {
         if(cljs.core.truth_(cljs.core._EQ_.call(null, '"', c))) {
           return b.toString()
@@ -7507,6 +7507,9 @@ leech.server.web.handle_core = function(a) {
     var a = cljs.core._EQ_.call(null, "GET", c);
     return cljs.core.truth_(a) ? cljs.core._EQ_.call(null, "/leech.js", b) : a
   }()) ? leech.server.web.handle_static.call(null, a, "leech.js") : cljs.core.truth_(function() {
+    var a = cljs.core._EQ_.call(null, "GET", c);
+    return cljs.core.truth_(a) ? cljs.core._EQ_.call(null, "/jquery.form.js", b) : a
+  }()) ? leech.server.web.handle_static.call(null, a, "jquery.form.js") : cljs.core.truth_(function() {
     var a = cljs.core._EQ_.call(null, "GET", c);
     return cljs.core.truth_(a) ? cljs.core._EQ_.call(null, "/search", b) : a
   }()) ? leech.server.web.handle_search.call(null, a) : cljs.core.truth_("\ufdd0'else") ? leech.server.web.handle_not_found.call(null, a) : null

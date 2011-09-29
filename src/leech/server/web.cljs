@@ -65,6 +65,8 @@
       (handle-static conn "leech.css")
     (and (= "GET" method) (= "/leech.js" path))
       (handle-static conn "leech.js")
+    (and (= "GET" method) (= "/jquery.form.js" path))
+      (handle-static conn "jquery.form.js")
     (and (= "GET" method) (= "/search" path))
       (handle-search conn)
     :else
