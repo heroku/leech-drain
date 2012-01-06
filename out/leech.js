@@ -7724,7 +7724,7 @@ leech.server.conf.env_BANG_ = function(a) {
   throw cljs.core.str.call(null, "missing key ", a);
 };
 leech.server.conf.deploy = function() {
-  return parseInt.call(null, leech.server.conf.env_BANG_.call(null, "DEPLOY"))
+  return leech.server.conf.env_BANG_.call(null, "DEPLOY")
 };
 leech.server.conf.port = function() {
   return parseInt.call(null, leech.server.conf.env_BANG_.call(null, "PORT"))

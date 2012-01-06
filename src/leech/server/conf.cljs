@@ -13,7 +13,7 @@
   [k]
   (or (env k) (throw (str "missing key " k))))
 
-(defn deploy [] (js/parseInt (env! "DEPLOY")))
+(defn deploy [] (env! "DEPLOY"))
 (defn port [] (js/parseInt (env! "PORT")))
 (defn aorta-urls [] (str/split (env! "AORTA_URLS") #","))
 (defn redis-url [] (env! "REDIS_URL"))
