@@ -7710,7 +7710,7 @@ clojure.string.escape = function(a, b) {
 cljs.nodejs = {};
 cljs.nodejs.require = require;
 cljs.nodejs.process = process;
-cljs.core.string_print = cljs.nodejs.require.call(null, "sys").print;
+cljs.core.string_print = cljs.nodejs.require.call(null, "util").print;
 var leech = {server:{}};
 leech.server.conf = {};
 leech.server.conf.env = function(a) {
@@ -7749,10 +7749,6 @@ leech.server.conf.force_https_QMARK_ = function() {
 };
 leech.server.conf.canonical_host = function() {
   return leech.server.conf.env_BANG_.call(null, "CANONICAL_HOST")
-};
-leech.server.log = {};
-leech.server.log.log = function(a) {
-  return cljs.core.prn.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'app", "\ufdd0'deploy"], {"\ufdd0'app":"leech", "\ufdd0'deploy":leech.server.conf.deploy.call(null)}), a))
 };
 leech.server.util = {};
 leech.server.util.url = cljs.nodejs.require.call(null, "url");
@@ -7834,6 +7830,31 @@ leech.server.util.main = function(a, b) {
     return a
   }() : null
 };
+leech.server.log = {};
+leech.server.log.re_match_QMARK_ = function(a, b) {
+  return cljs.core.boolean$.call(null, a.exec(b))
+};
+leech.server.log.unparse1 = function(a) {
+  var b = cljs.core.nth.call(null, a, 0, null), c = cljs.core.nth.call(null, a, 1, null);
+  return cljs.core.str.call(null, cljs.core.name.call(null, b), "=", cljs.core.truth_(function() {
+    var a = cljs.core.true_QMARK_.call(null, c);
+    return cljs.core.truth_(a) ? a : cljs.core.false_QMARK_.call(null, c)
+  }()) ? c : cljs.core.truth_(cljs.core.keyword_QMARK_.call(null, c)) ? cljs.core.name.call(null, c) : cljs.core.truth_(cljs.core.number_QMARK_.call(null, c)) ? c : cljs.core.truth_(cljs.core.string_QMARK_.call(null, c)) ? cljs.core.truth_(leech.server.log.re_match_QMARK_.call(null, /^[a-zA-Z0-9\:\.\-\_]+$/, c)) ? c : cljs.core.truth_(0 > c.indexOf('"')) ? cljs.core.str.call(null, '"', c, '"') : cljs.core.truth_("\ufdd0'else") ? cljs.core.str.call(null, "'", c, "'") : null : cljs.core.truth_("\ufdd0'else") ? 
+  "?" : null)
+};
+leech.server.log.unparse = function(a) {
+  return clojure.string.join.call(null, " ", cljs.core.map.call(null, leech.server.log.unparse1, a))
+};
+leech.server.log.write = function(a) {
+  return cljs.core.println.call(null, leech.server.log.unparse.call(null, a))
+};
+leech.server.log.log = function(a) {
+  return cljs.core.println.call(null, leech.server.log.unparse.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'app", "\ufdd0'deploy"], {"\ufdd0'app":"leech", "\ufdd0'deploy":leech.server.conf.deploy.call(null)}), a)))
+};
+leech.server.log.start = function() {
+  return leech.server.log.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"start"}))
+};
+leech.server.util.main.call(null, "log", leech.server.log.start);
 leech.server.web = {};
 leech.server.web.url = cljs.nodejs.require.call(null, "url");
 leech.server.web.fs = cljs.nodejs.require.call(null, "fs");
