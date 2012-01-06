@@ -17,8 +17,3 @@
 (defn port [] (js/parseInt (env! "PORT")))
 (defn aorta-urls [] (str/split (env! "AORTA_URLS") #","))
 (defn redis-url [] (env! "REDIS_URL"))
-(defn session-secret [] (env! "SESSION_SECRET"))
-(defn proxy-url [] (env! "PROXY_URL"))
-(defn proxy-secret [] (env! "PROXY_SECRET"))
-(defn force-https? [] (boolean (env "FORCE_HTTPS")))
-(defn canonical-host [] (env! "CANONICAL_HOST"))
