@@ -1,1 +1,1 @@
-receive:  bin/run receive
+drain:  bin/run drain

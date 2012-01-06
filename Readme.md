@@ -9,7 +9,7 @@ The Leech drain component consumes the HTTPS event stream, performs filtering, a
 
 ## ClojureScript and Node.js
 
-The Leech drain is written in ClojureScript, and compiles to Node.js for execution. Leech uses the standard Node.js packagement system `npm` for it's JavaScript dependencies.
+The Leech drain is written in ClojureScript, and compiles to Node.js for execution. Leech uses the standard Node.js package management system `npm` for its JavaScript dependencies.
 
 
 ## Local deploy
@@ -22,14 +22,13 @@ $ foreman start
 ```
 
 
-## Platfrom deploy
+## Platform deploy
 
 ```bash
-$ heroku create leech-production --stack cedar
-$ heroku addons:add redistogo:medium
-$ heroku config:add ...
+$ heroku create leech-drain-production --stack cedar
+$ heroku config:add DEPLOY=production REDIS_URL=... AORTA_URLS=...
 $ git push heroku master
-$ heroku scale receive=16 web=1
+$ heroku scale drain=32
 ```
 
 
@@ -53,31 +52,4 @@ $ ./script/bootstrap
 $ cd ~/repos/leech
 $ bin/compile
 $ git commit -am "update clojurescript"
-```
-
-
-## Viewing filtered event streams
-
-Navigate to the site:
-
-```bash
-$ heroku open
-```
-
-Search using Splunk-like query syntax. For example to see all events from the staging cloud:
-
-```
-cloud=staging.herokudev.com
-```
-
-To see all exceptions in production:
-
-```
-cloud=heroku.com facility=user,local3 level=err
-```
-
-To see all events from a given production instance:
-
-```
-cloud=heroku.com instance_id=12345
 ```

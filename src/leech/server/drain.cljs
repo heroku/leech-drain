@@ -1,4 +1,4 @@
-(ns leech.server.receive
+(ns leech.server.drain
   (:require [cljs.nodejs :as node]
             [cljs.reader :as reader]
             [clojure.string :as str]
@@ -12,7 +12,7 @@
 (def redis (node/require "redis-url"))
 
 (defn log [data]
-  (log/log (merge {:ns "receive"} data)))
+  (log/log (merge {:ns "drain"} data)))
 
 (def max-match-rate 25)
 
@@ -104,4 +104,4 @@
     (start-receivers searches-a redis-client receive-watch publish-watch)
     (log {:fn "start" :at "finish"})))
 
-(util/main "receive" start)
+(util/main "drain" start)
