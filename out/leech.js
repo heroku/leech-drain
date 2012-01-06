@@ -7874,9 +7874,8 @@ leech.server.web.write_res = function(a, b, c, d) {
   return a.end()
 };
 leech.server.web.handle_redirect = function(a, b) {
-  var c = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a;
-  cljs.core.get.call(null, c, "\ufdd0'request-id");
-  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-redirect", "\ufdd0'at":"start", "\ufdd0'request-id":leech.server.web.request}));
+  var c = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0'request-id");
+  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-redirect", "\ufdd0'at":"start", "\ufdd0'request-id":d}));
   return leech.server.web.write_res.call(null, c, 302, cljs.core.ObjMap.fromObject(["Location"], {Location:b}), "You are being redirected.")
 };
 leech.server.web.handle_not_found = function(a) {
@@ -7934,11 +7933,19 @@ leech.server.web.handle_core = function(a) {
 };
 leech.server.web.handle_openid = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'req"), c = cljs.core.get.call(null, a, "\ufdd0'query-params"), d = cljs.core.get.call(null, a, "\ufdd0'path"), e = cljs.core.get.call(null, a, "\ufdd0'method"), f = cljs.core.get.call(null, a, "\ufdd0'request-id"), b = b.session;
+  cljs.core.prn.call(null, "sess1", b);
   leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-openid", "\ufdd0'at":"start", "\ufdd0'request-id":f}));
   if(cljs.core.truth_(cljs.core._EQ_.call(null, cljs.core.Vector.fromArray(["GET", "/auth"]), cljs.core.Vector.fromArray([e, d])))) {
-    return cljs.core.truth_(cljs.core._EQ_.call(null, leech.server.conf.proxy_secret.call(null), cljs.core.get.call(null, c, "proxy_secret"))) ? (b.authorized = !0, leech.server.web.handle_redirect.call(null, a, "/")) : leech.server.web.handle_not_authorized.call(null, a)
+    if(cljs.core.truth_(cljs.core._EQ_.call(null, leech.server.conf.proxy_secret.call(null), cljs.core.get.call(null, c, "proxy_secret")))) {
+      return leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-openid", "\ufdd0'at":"authorize", "\ufdd0'request-id":f})), b.authorized = !0, cljs.core.prn.call(null, "sess2", b), leech.server.web.handle_redirect.call(null, a, "/")
+    }
+    leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-openid", "\ufdd0'at":"not-authorized", "\ufdd0'request-id":f}));
+    return leech.server.web.handle_not_authorized.call(null, a)
   }
-  return cljs.core.truth_(cljs.core.not.call(null, b.authorized)) ? (c = cljs.core.str.call(null, leech.server.conf.canonical_host.call(null), "/auth"), leech.server.web.handle_redirect.call(null, a, cljs.core.str.call(null, leech.server.conf.proxy_url.call(null), "?", "callback_url=", encodeURI.call(null, c)))) : cljs.core.truth_("\ufdd0'authorized") ? leech.server.web.handle_core.call(null, a) : null
+  if(cljs.core.truth_(cljs.core.not.call(null, b.authorized))) {
+    return c = cljs.core.str.call(null, leech.server.conf.canonical_host.call(null), "/auth"), leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-openid", "\ufdd0'at":"proxy", "\ufdd0'request-id":f})), leech.server.web.handle_redirect.call(null, a, cljs.core.str.call(null, leech.server.conf.proxy_url.call(null), "?", "callback_url=", encodeURI.call(null, c)))
+  }
+  return cljs.core.truth_("\ufdd0'authorized") ? (leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-openid", "\ufdd0'at":"authorized", "\ufdd0'request-id":f})), leech.server.web.handle_core.call(null, a)) : null
 };
 leech.server.web.handle_https = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'headers");

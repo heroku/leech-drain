@@ -24,7 +24,7 @@
   (. res (end)))
 
 (defn handle-redirect [{:keys [request-id] :as conn} loc]
-  (log {:fn "handle-redirect" :at "start" :request-id request})
+  (log {:fn "handle-redirect" :at "start" :request-id request-id})
   (write-res conn 302 {"Location" loc} "You are being redirected."))
 
 (defn handle-not-found [{:keys [request-id] :as conn}]
@@ -76,19 +76,27 @@
 
 (defn handle-openid [{:keys [request-id method path query-params req] :as conn}]
   (let [sess (.session req)]
+    (prn "sess1" sess)
     (log {:fn "handle-openid" :at "start" :request-id request-id})
     (cond
       (= ["GET" "/auth"] [method path])
         (if (= (conf/proxy-secret) (get query-params "proxy_secret"))
           (do
+            (log {:fn "handle-openid" :at "authorize" :request-id request-id})
             (set! (.authorized sess) true)
+            (prn "sess2" sess)
             (handle-redirect conn "/"))
-          (handle-not-authorized conn))
+          (do
+            (log {:fn "handle-openid" :at "not-authorized" :request-id request-id})
+            (handle-not-authorized conn)))
       (not (.authorized sess))
         (let [callback-url (str (conf/canonical-host) "/auth")]
+          (log {:fn "handle-openid" :at "proxy" :request-id request-id})
           (handle-redirect conn (str (conf/proxy-url) "?" "callback_url=" (js/encodeURI callback-url))))
       :authorized
-        (handle-core conn))))
+        (do
+          (log {:fn "handle-openid" :at "authorized" :request-id request-id})
+          (handle-core conn)))))
 
 (defn handle-https [{:keys [request-id headers] :as conn}]
   (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
