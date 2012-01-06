@@ -15,46 +15,72 @@ Leech is inspired by [Pulse](https://github.com/heroku/pulse), consumes the same
 Leech is written in ClojureScript, and compiles to Node.js for execution. Leech uses the standard Node.js packagement system `npm` for it's JavaScript dependencies.
 
 
-## Running locally
+## Local deploy
 
-Build:
-
-    $ npm install
-    $ bin/compile
-
-Configure:
-
-    $ cp .env.sample .env
-    $ export $(cat .env)
-
-Run:
-    
-    $ foreman start
+```bash
+$ npm install
+$ cp .env.sample .env
+$ export $(cat .env)
+$ foreman start
+```
 
 
-## Running as Heroku app
+## Platfrom deploy
 
-    $ heroku create leech-production --stack cedar
-    $ heroku addons:add redistogo:medium
-    $ heroku config:add ...
-    $ git push heroku master
-    $ heroku scale receive=16 web=1
+```bash
+$ heroku create leech-production --stack cedar
+$ heroku addons:add redistogo:medium
+$ heroku config:add ...
+$ git push heroku master
+$ heroku scale receive=16 web=1
+```
+
+
+## Updating code
+
+```bash
+$ mate .
+$ npm install
+$ bin/compile
+$ git commit -am "update code"
+```
+
+
+## Updating ClojureScript
+
+```bash
+$ cd ~/repos/clojurescript
+$ git fetch github
+$ git merge github/master
+$ ./script/bootstrap
+$ cd ~/repos/leech
+$ bin/compile
+$ git commit -am "update clojurescript"
+```
 
 
 ## Viewing filtered event streams
 
 Navigate to the site:
 
-    $ heroku open
+```bash
+$ heroku open
+```
 
 Search using Splunk-like query syntax. For example to see all events from the staging cloud:
 
-    cloud=staging.herokudev.com
+```
+cloud=staging.herokudev.com
+```
 
 To see all exceptions in production:
 
-    cloud=heroku.com facility=user,local3 level=err
+```
+cloud=heroku.com facility=user,local3 level=err
+```
 
 To see all events from a given production instance:
 
-    cloud=heroku.com instance_id=12345
+```
+cloud=heroku.com instance_id=12345
+```
