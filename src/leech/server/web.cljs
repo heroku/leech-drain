@@ -23,7 +23,8 @@
   (.write res body)
   (. res (end)))
 
-(defn handle-redirect [conn loc]
+(defn handle-redirect [{:keys [request-id] :as conn} loc]
+  (log {:fn "handle-redirect" :at "start" :request-id request})
   (write-res conn 302 {"Location" loc} "You are being redirected."))
 
 (defn handle-not-found [{:keys [request-id] :as conn}]

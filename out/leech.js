@@ -7874,7 +7874,10 @@ leech.server.web.write_res = function(a, b, c, d) {
   return a.end()
 };
 leech.server.web.handle_redirect = function(a, b) {
-  return leech.server.web.write_res.call(null, a, 302, cljs.core.ObjMap.fromObject(["Location"], {Location:b}), "You are being redirected.")
+  var c = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a;
+  cljs.core.get.call(null, c, "\ufdd0'request-id");
+  leech.server.web.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'request-id"], {"\ufdd0'fn":"handle-redirect", "\ufdd0'at":"start", "\ufdd0'request-id":leech.server.web.request}));
+  return leech.server.web.write_res.call(null, c, 302, cljs.core.ObjMap.fromObject(["Location"], {Location:b}), "You are being redirected.")
 };
 leech.server.web.handle_not_found = function(a) {
   var a = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, b = cljs.core.get.call(null, a, "\ufdd0'request-id");
