@@ -59,7 +59,7 @@
     (log {:fn "start-searches" :at "readying"})
     (util/set-interval 0 250 (fn []
       (.zrangebyscore redis-client "searches" (- (util/millis) 3000) (+ (util/millis) 3000) (fn [err res]
-        (let [searches-data (map #(util/keywordize-keys (util/json-parse %)) res)
+        (let [searches-data (map #(util/keywordize (util/json-parse %)) res)
               changed (not= (map :search-id (deref searches-a)) (map :search-id searches-data))]
           (when changed
             (let [searches (map

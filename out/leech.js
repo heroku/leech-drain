@@ -8123,7 +8123,7 @@ leech.server.drain.start_searches = function(a, b) {
     leech.server.util.set_interval.call(null, 0, 250, function() {
       return b.zrangebyscore("searches", leech.server.util.millis.call(null) - 3E3, leech.server.util.millis.call(null) + 3E3, function(b, d) {
         var e = cljs.core.map.call(null, function(a) {
-          return leech.server.util.keywordize_keys.call(null, leech.server.util.json_parse.call(null, a))
+          return leech.server.util.keywordize.call(null, leech.server.util.json_parse.call(null, a))
         }, d), f = cljs.core.not_EQ_.call(null, cljs.core.map.call(null, "\ufdd0'search-id", cljs.core.deref.call(null, a)), cljs.core.map.call(null, "\ufdd0'search-id", e));
         return cljs.core.truth_(f) ? (e = cljs.core.map.call(null, function(a) {
           var b = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, a)) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, a = cljs.core.get.call(null, b, "events-key"), c = cljs.core.get.call(null, b, "query"), b = cljs.core.get.call(null, b, "search-id"), d = leech.server.watch.init.call(null), e = leech.server.drain.compile_pred.call(null, c);
