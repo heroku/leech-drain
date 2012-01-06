@@ -83,7 +83,7 @@
            (let [match-rate (watch/rate match-watch)]
              (when (< match-rate max-match-rate)
                (watch/hit publish-watch)
-               (let [event-serialized (pr-str event-parsed)]
+               (let [event-serialized (util/json-generate event-parsed)]
                  (.rpush redis-client events-key event-serialized)))))))))
   (log {:fn "start-receivers" :at "finish"}))
 

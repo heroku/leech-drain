@@ -8146,7 +8146,7 @@ leech.server.drain.start_receivers = function(a, b, c, d) {
       cljs.core.get.call(null, j, "\ufdd0'match-pred");
       for(cljs.core.get.call(null, j, "\ufdd0'events-key");;) {
         var i = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, i)) ? cljs.core.apply.call(null, cljs.core.hash_map, i) : i, j = cljs.core.get.call(null, i, "\ufdd0'match-watch"), k = cljs.core.get.call(null, i, "\ufdd0'match-pred"), i = cljs.core.get.call(null, i, "\ufdd0'events-key");
-        cljs.core.truth_(k.call(null, g)) && (leech.server.watch.hit.call(null, j), j = leech.server.watch.rate.call(null, j), cljs.core.truth_(j < leech.server.drain.max_match_rate) && (leech.server.watch.hit.call(null, d), j = cljs.core.pr_str.call(null, g), b.rpush(i, j)));
+        cljs.core.truth_(k.call(null, g)) && (leech.server.watch.hit.call(null, j), j = leech.server.watch.rate.call(null, j), cljs.core.truth_(j < leech.server.drain.max_match_rate) && (leech.server.watch.hit.call(null, d), j = leech.server.util.json_generate.call(null, g), b.rpush(i, j)));
         h = cljs.core.next.call(null, h);
         if(cljs.core.truth_(h)) {
           i = h, h = cljs.core.first.call(null, i), j = i, i = h, h = j
