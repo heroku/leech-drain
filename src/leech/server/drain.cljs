@@ -63,7 +63,7 @@
               changed (not= (map :search-id (deref searches-a)) (map :search-id searches-data))]
           (when changed
             (let [searches (map
-                             (fn [{:strs [search-id query events-key]}]
+                             (fn [{:keys [search-id query events-key]}]
                                (let [match-watch (watch/init)
                                      match-pred (compile-pred query)]
                                  {:search-id search-id :query query :events-key events-key :match-watch match-watch :match-pred match-pred}))
