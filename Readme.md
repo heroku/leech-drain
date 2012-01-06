@@ -5,7 +5,7 @@ Real-time leeching off the Heroku event stream.
 
 ## Overview
 
-Leech provides web-accessible, real-time access to filtered views of the Heroku event stream. This provides instant visibility into specific aspects of the Heroku infrastructure and its operations. Leech replaces manual log tailing and filtering.
+Leech provides web-accessible, real-time filtered views of the Heroku event stream. This provides instant visibility into specific aspects of the Heroku infrastructure and its operations. Leech replaces manual log tailing and filtering.
 
 Leech is inspired by [Pulse](https://github.com/heroku/pulse), consumes the same event stream, and indeed is derived from the original pulse code base.
 
