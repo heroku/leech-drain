@@ -37,7 +37,7 @@
 
 (defn log
   [data]
-  (println (unparse (merge {:app "leech" :deploy (conf/deploy)} data))))
+  (println (unparse (merge {:app "leech-drain" :deploy (conf/deploy)} data))))
 
 (defn start []
   (log {:fn "start" :at "start"}))

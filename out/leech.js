@@ -7875,7 +7875,7 @@ leech.server.log.write = function(a) {
   return cljs.core.println.call(null, leech.server.log.unparse.call(null, a))
 };
 leech.server.log.log = function(a) {
-  return cljs.core.println.call(null, leech.server.log.unparse.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'app", "\ufdd0'deploy"], {"\ufdd0'app":"leech", "\ufdd0'deploy":leech.server.conf.deploy.call(null)}), a)))
+  return cljs.core.println.call(null, leech.server.log.unparse.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'app", "\ufdd0'deploy"], {"\ufdd0'app":"leech-drain", "\ufdd0'deploy":leech.server.conf.deploy.call(null)}), a)))
 };
 leech.server.log.start = function() {
   return leech.server.log.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"start"}))
