@@ -59,14 +59,14 @@
     (log {:fn "start-searches" :at "readying"})
     (util/set-interval 0 250 (fn []
       (.zrangebyscore redis-client "searches" (- (util/millis) 3000) (+ (util/millis) 3000) (fn [err res]
-        (let [searches-data (map reader/read-string res)
+        (let [searches-data (map #(util/keywordize-keys (util/json-parse %)) res)
               changed (not= (map :search-id (deref searches-a)) (map :search-id searches-data))]
           (when changed
             (let [searches (map
-                             (fn [{:keys [search-id query target events-key]}]
+                             (fn [{:strs [search-id query events-key]}]
                                (let [match-watch (watch/init)
                                      match-pred (compile-pred query)]
-                                 {:search-id search-id :query query :target target :events-key events-key :match-watch match-watch :match-pred match-pred}))
+                                 {:search-id search-id :query query :events-key events-key :match-watch match-watch :match-pred match-pred}))
                             searches-data)]
               (swap! searches-a (constantly searches)))))))))
     (log {:fn "start-searches" :at "ready"})))
@@ -77,19 +77,14 @@
   (io/start-bleeders (conf/aorta-urls) (fn [host line]
      (watch/hit receive-watch)
      (let [event-parsed (parse/parse-line line)]
-       (doseq [{:keys [events-key match-pred match-watch target]} (deref searches-a)]
+       (doseq [{:keys [events-key match-pred match-watch]} (deref searches-a)]
          (when (match-pred event-parsed)
            (watch/hit match-watch)
            (let [match-rate (watch/rate match-watch)]
              (when (< match-rate max-match-rate)
                (watch/hit publish-watch)
                (let [event-serialized (pr-str event-parsed)]
-                 (condp = target
-                   :list
-                     (.rpush redis-client events-key event-serialized)
-                   :publish
-                     (.publish redis-client events-key event-serialized)
-                   (log {:fn "start-receivers" :at "unexpected-target" :target target}))))))))))
+                 (.rpush redis-client events-key event-serialized)))))))))
   (log {:fn "start-receivers" :at "finish"}))
 
 (defn start []

@@ -43,6 +43,9 @@
   [line]
   (js->clj (JSON/parse line)))
 
+(defn keywordize [m]
+  (into {} (map (fn [[k v]] [(keyword k) v]) m)))
+
 (defn url-parse
   "Returns a map with parsed data for the given URL."
   [u]
