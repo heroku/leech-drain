@@ -7747,12 +7747,6 @@ leech.server.conf.proxy_secret = function() {
 leech.server.conf.force_https_QMARK_ = function() {
   return cljs.core.boolean$.call(null, leech.server.conf.env.call(null, "FORCE_HTTPS"))
 };
-leech.server.conf.canonical_host = function() {
-  return leech.server.conf.env_BANG_.call(null, "CANONICAL_HOST")
-};
-leech.server.conf.leech_log_QMARK_ = function() {
-  return cljs.core.boolean$.call(null, leech.server.conf.env.call(null, "LEECH_LOG"))
-};
 leech.server.util = {};
 leech.server.util.url = cljs.nodejs.require.call(null, "url");
 leech.server.util.log = function(a) {
