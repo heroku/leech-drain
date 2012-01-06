@@ -1,18 +1,15 @@
-# Leech
-
-Real-time leeching off the Heroku event stream.
-
+# Leech Drain
 
 ## Overview
 
 Leech provides web-accessible, real-time filtered views of the Heroku event stream. This provides instant visibility into specific aspects of the Heroku infrastructure and its operations. Leech replaces manual log tailing and filtering.
 
-Leech is inspired by [Pulse](https://github.com/heroku/pulse), consumes the same event stream, and indeed is derived from the original pulse code base.
+The Leech drain component consumes the HTTPS event stream, performs filtering, and writes the results to Redis for consumption by by the [Leech drain](https://github.com/heroku/leech-drain) component.
 
 
 ## ClojureScript and Node.js
 
-Leech is written in ClojureScript, and compiles to Node.js for execution. Leech uses the standard Node.js packagement system `npm` for it's JavaScript dependencies.
+The Leech drain is written in ClojureScript, and compiles to Node.js for execution. Leech uses the standard Node.js packagement system `npm` for it's JavaScript dependencies.
 
 
 ## Local deploy
