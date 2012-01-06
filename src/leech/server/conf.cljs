@@ -21,3 +21,4 @@
 (defn proxy-url [] (env! "PROXY_URL"))
 (defn proxy-secret [] (env! "PROXY_SECRET"))
 (defn force-https? [] (boolean (env "FORCE_HTTPS")))
+(defn canonical-host [] (env! "CANONICAL_HOST"))

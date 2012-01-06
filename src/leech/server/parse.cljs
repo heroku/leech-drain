@@ -1,7 +1,8 @@
 (ns leech.server.parse
   (:require [cljs.nodejs :as node]
             [clojure.string :as str]
-            [leech.server.util :as util]))
+            [leech.server.util :as util]
+            [leech.server.log :as log]))
 
 (def isodate (node/require "isodate"))
 
@@ -147,7 +148,7 @@
      "line" l}))
 
 (defn log [data]
-  (util/log (merge {:ns "parse"} data)))
+  (log/log (merge {:ns "parse"} data)))
 
 (defn parse-line [l]
   (try*

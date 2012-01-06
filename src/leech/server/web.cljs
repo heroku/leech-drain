@@ -3,6 +3,7 @@
             [cljs.reader :as reader]
             [clojure.string :as string]
             [leech.server.conf :as conf]
+            [leech.server.log :as log]
             [leech.server.util :as util]))
 
 (def url (node/require "url"))
@@ -13,7 +14,7 @@
 (def connect (node/require "connect"))
 
 (defn log [data]
-  (util/log (merge {:ns "web"} data)))
+  (log/log (merge {:ns "web"} data)))
 
 (def redis-client (atom nil))
 

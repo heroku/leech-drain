@@ -1,14 +1,8 @@
 (ns leech.server.util
   (:require [cljs.nodejs :as node]
-            [clojure.string :as string]
-            [leech.server.conf :as conf]))
+            [clojure.string :as string]))
 
 (def url (node/require "url"))
-
-(defn log
-  "Log the given data."
-  [data]
-  (prn (merge {:app "leech" :deploy (conf/deploy)} data)))
 
 (defn millis
   "Returns milliseconds since the epoch."

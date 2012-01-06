@@ -4,6 +4,7 @@
             [clojure.string :as str]
             [leech.server.conf :as conf]
             [leech.server.util :as util]
+            [leech.server.log :as log]
             [leech.server.watch :as watch]
             [leech.server.io :as io]
             [leech.server.parse :as parse]))
@@ -11,7 +12,7 @@
 (def redis (node/require "redis-url"))
 
 (defn log [data]
-  (util/log (merge {:ns "receive"} data)))
+  (log/log (merge {:ns "receive"} data)))
 
 (def max-match-rate 25)
 

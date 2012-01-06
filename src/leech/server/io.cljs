@@ -1,12 +1,13 @@
 (ns leech.server.io
   (:require [cljs.nodejs :as node]
             [leech.server.util :as util]
+            [leech.server.log :as log]
             [leech.server.split :as split]))
 
 (def net (node/require "net"))
 
 (defn log [data]
-  (util/log (merge {:ns "io"} data)))
+  (log/log (merge {:ns "io"} data)))
 
 (declare bleed)
 

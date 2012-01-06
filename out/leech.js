@@ -7747,11 +7747,15 @@ leech.server.conf.proxy_secret = function() {
 leech.server.conf.force_https_QMARK_ = function() {
   return cljs.core.boolean$.call(null, leech.server.conf.env.call(null, "FORCE_HTTPS"))
 };
-leech.server.util = {};
-leech.server.util.url = cljs.nodejs.require.call(null, "url");
-leech.server.util.log = function(a) {
+leech.server.conf.canonical_host = function() {
+  return leech.server.conf.env_BANG_.call(null, "CANONICAL_HOST")
+};
+leech.server.log = {};
+leech.server.log.log = function(a) {
   return cljs.core.prn.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'app", "\ufdd0'deploy"], {"\ufdd0'app":"leech", "\ufdd0'deploy":leech.server.conf.deploy.call(null)}), a))
 };
+leech.server.util = {};
+leech.server.util.url = cljs.nodejs.require.call(null, "url");
 leech.server.util.millis = function() {
   return(new Date).getTime()
 };
@@ -7838,7 +7842,7 @@ leech.server.web.redis = cljs.nodejs.require.call(null, "redis-url");
 leech.server.web.http = cljs.nodejs.require.call(null, "http");
 leech.server.web.connect = cljs.nodejs.require.call(null, "connect");
 leech.server.web.log = function(a) {
-  return leech.server.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"web"}), a))
+  return leech.server.log.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"web"}), a))
 };
 leech.server.web.redis_client = cljs.core.atom.call(null, null);
 leech.server.web.write_res = function(a, b, c, d) {
@@ -8084,7 +8088,7 @@ leech.server.parse.parse_varnish_access_line = function(a) {
   cljs.core.get.call(null, b, 5)), line:a, cloud:cljs.core.get.call(null, b, 8), timestamp_src:leech.server.parse.parse_timestamp.call(null, cljs.core.get.call(null, b, 1)), component:"varnish", slot:cljs.core.get.call(null, b, 6), event_type:"varnish_access"}) : null
 };
 leech.server.parse.log = function(a) {
-  return leech.server.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"parse"}), a))
+  return leech.server.log.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"parse"}), a))
 };
 leech.server.parse.parse_line = function(a) {
   try {
@@ -8126,7 +8130,7 @@ leech.server.split.add = function(a, b, c) {
 leech.server.io = {};
 leech.server.io.net = cljs.nodejs.require.call(null, "net");
 leech.server.io.log = function(a) {
-  return leech.server.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"io"}), a))
+  return leech.server.log.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"io"}), a))
 };
 leech.server.io.bleed = function bleed(b, c) {
   var d = leech.server.util.url_parse.call(null, b), e = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, d)) ? cljs.core.apply.call(null, cljs.core.hash_map, d) : d, d = cljs.core.get.call(null, e, "\ufdd0'auth"), f = cljs.core.get.call(null, e, "\ufdd0'port"), g = cljs.core.get.call(null, e, "\ufdd0'host");
@@ -8183,7 +8187,7 @@ leech.server.io.start_bleeders = function(a, b) {
 leech.server.receive = {};
 leech.server.receive.redis = cljs.nodejs.require.call(null, "redis-url");
 leech.server.receive.log = function(a) {
-  return leech.server.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"receive"}), a))
+  return leech.server.log.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"receive"}), a))
 };
 leech.server.receive.max_match_rate = 25;
 leech.server.receive.compile_pred = function(a) {
@@ -8315,80 +8319,6 @@ leech.server.receive.start = function() {
   return leech.server.receive.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"finish"}))
 };
 leech.server.util.main.call(null, "receive", leech.server.receive.start);
-leech.server.tail = {};
-leech.server.tail.redis = cljs.nodejs.require.call(null, "redis-url");
-leech.server.tail.node_uuid = cljs.nodejs.require.call(null, "node-uuid");
-leech.server.tail.color_codes = cljs.core.ObjMap.fromObject("\ufdd0'red,\ufdd0'green,\ufdd0'yellow,\ufdd0'blue,\ufdd0'magenta,\ufdd0'cyan,\ufdd0'default".split(","), {"\ufdd0'red":"\u001b[31m", "\ufdd0'green":"\u001b[32m", "\ufdd0'yellow":"\u001b[33m", "\ufdd0'blue":"\u001b[34m", "\ufdd0'magenta":"\u001b[35m", "\ufdd0'cyan":"\u001b[36m", "\ufdd0'default":"\u001b[39m"});
-leech.server.tail.component_colors = cljs.core.ObjMap.fromObject("su,pgmonitor,apolo,heroku,hermes,codex,memcache,syslog-ng,logplex,psmgr,varnish,syslog,slugc,runtime,nginx,slapd,gitproxy,kernel,face,balrog,shen,core".split(","), {su:"\ufdd0'cyan", pgmonitor:"\ufdd0'red", apolo:"\ufdd0'blue", heroku:"\ufdd0'cyan", hermes:"\ufdd0'blue", codex:"\ufdd0'yellow", memcache:"\ufdd0'green", "syslog-ng":"\ufdd0'cyan", logplex:"\ufdd0'blue", psmgr:"\ufdd0'magenta", varnish:"\ufdd0'blue", syslog:"\ufdd0'cyan", 
-slugc:"\ufdd0'yellow", runtime:"\ufdd0'magenta", nginx:"\ufdd0'blue", slapd:"\ufdd0'cyan", gitproxy:"\ufdd0'yellow", kernel:"\ufdd0'cyan", face:"\ufdd0'blue", balrog:"\ufdd0'green", shen:"\ufdd0'red", core:"\ufdd0'green"});
-leech.server.tail.colored = function(a, b) {
-  return cljs.core.str.call(null, leech.server.tail.color_codes.call(null, a), b, leech.server.tail.color_codes.call(null, "\ufdd0'default"))
-};
-leech.server.tail.log = function(a) {
-  return cljs.core.truth_(leech.server.conf.leech_log_QMARK_.call(null)) ? leech.server.util.log.call(null, cljs.core.merge.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'ns"], {"\ufdd0'ns":"tail"}), a)) : null
-};
-leech.server.tail.start_traps = function() {
-  leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-traps", "\ufdd0'at":"start"}));
-  var a = cljs.core.seq.call(null, cljs.core.Vector.fromArray(["TERM", "INT"]));
-  if(cljs.core.truth_(a)) {
-    for(var b = cljs.core.first.call(null, a);;) {
-      if(leech.server.util.trap.call(null, b, function(a) {
-        return function() {
-          leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start-traps", "\ufdd0'at":"catch", "\ufdd0'signal":a}));
-          leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'status"], {"\ufdd0'fn":"start-traps", "\ufdd0'at":"exit", "\ufdd0'status":0}));
-          return leech.server.util.exit.call(null, 0)
-        }
-      }(b, a)), leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'signal"], {"\ufdd0'fn":"start-traps", "\ufdd0'at":"trapping", "\ufdd0'signal":b})), b = cljs.core.next.call(null, a), cljs.core.truth_(b)) {
-        a = b, b = cljs.core.first.call(null, a)
-      }else {
-        break
-      }
-    }
-  }
-  return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-traps", "\ufdd0'at":"finish"}))
-};
-leech.server.tail.start_search = function(a, b) {
-  var c = cljs.core.truth_(cljs.core.seq_QMARK_.call(null, b)) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b, d = cljs.core.get.call(null, c, "\ufdd0'search-id");
-  leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-search", "\ufdd0'at":"start"}));
-  var e = cljs.core.pr_str.call(null, c);
-  a.on("ready", function() {
-    leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-search", "\ufdd0'at":"readying"}));
-    leech.server.util.set_interval.call(null, 0, 1E3, function() {
-      leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-search", "\ufdd0'at":"tick"}));
-      return a.zadd("searches", leech.server.util.millis.call(null), e, function(a, b) {
-        return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'e", "\ufdd0'r"], {"\ufdd0'fn":"start-search", "\ufdd0'at":"post", "\ufdd0'e":a, "\ufdd0'r":b}))
-      })
-    });
-    return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at", "\ufdd0'search-id"], {"\ufdd0'fn":"start", "\ufdd0'at":"ready", "\ufdd0'search-id":d}))
-  });
-  return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-search", "\ufdd0'at":"finish"}))
-};
-leech.server.tail.start_stream = function(a, b) {
-  leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-stream", "\ufdd0'at":"start"}));
-  a.on("ready", function() {
-    leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-stream", "\ufdd0'at":"readying"}));
-    a.subscribe(b);
-    a.on("subscribe", function() {
-      return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'event"], {"\ufdd0'fn":"start-stream", "\ufdd0'event":"subscribed"}))
-    });
-    a.on("message", function(a, b) {
-      var e = cljs.reader.read_string.call(null, b), f = cljs.core.get.call(null, leech.server.tail.component_colors, cljs.core.get.call(null, e, "component"), "\ufdd0'default");
-      return cljs.core.println.call(null, leech.server.tail.colored.call(null, f, cljs.core.get.call(null, e, "line")))
-    });
-    return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-stream", "\ufdd0'at":"ready"}))
-  });
-  return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start-stream", "\ufdd0'at":"start"}))
-};
-leech.server.tail.start = function() {
-  leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"start"}));
-  var a = leech.server.tail.node_uuid.call(null), b = clojure.string.join.call(null, " ", cljs.core.drop.call(null, 3, leech.server.util.argv.call(null))), c = cljs.core.str.call(null, "searches.", a, ".events"), a = cljs.core.ObjMap.fromObject(["\ufdd0'search-id", "\ufdd0'query", "\ufdd0'events-key", "\ufdd0'target"], {"\ufdd0'search-id":a, "\ufdd0'query":b, "\ufdd0'events-key":c, "\ufdd0'target":"\ufdd0'publish"}), b = leech.server.tail.redis.createClient(leech.server.conf.redis_url.call(null)), 
-  d = leech.server.tail.redis.createClient(leech.server.conf.redis_url.call(null));
-  leech.server.tail.start_traps.call(null);
-  leech.server.tail.start_search.call(null, b, a);
-  leech.server.tail.start_stream.call(null, d, c);
-  return leech.server.tail.log.call(null, cljs.core.ObjMap.fromObject(["\ufdd0'fn", "\ufdd0'at"], {"\ufdd0'fn":"start", "\ufdd0'at":"finish"}))
-};
-leech.server.util.main.call(null, "tail", leech.server.tail.start);
 cljs.nodejscli = {};
 cljs.core.apply.call(null, cljs.core._STAR_main_cli_fn_STAR_, cljs.core.drop.call(null, 2, cljs.nodejs.process.argv));
 
