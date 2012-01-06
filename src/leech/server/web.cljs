@@ -26,22 +26,22 @@
 (defn handle-redirect [conn loc]
   (write-res conn 302 {"Location" loc} "You are being redirected."))
 
-(defn handle-not-found [{:keys [conn-id] :as conn}]
-  (log {:fn "handle-not-found" :at "start" :conn-id conn-id})
+(defn handle-not-found [{:keys [request-id] :as conn}]
+  (log {:fn "handle-not-found" :at "start" :request-id request-id})
   (write-res conn 404 {"Content-Type" "application/clj"} (pr-str {"error" "not found"})))
 
-(defn handle-not-authorized [{:keys [conn-id] :as conn}]
-  (log {:fn "handle-not-authorized" :at "start" :conn-id conn-id})
+(defn handle-not-authorized [{:keys [request-id] :as conn}]
+  (log {:fn "handle-not-authorized" :at "start" :request-id request-id})
   (write-res conn 403 {"Content-Type" "application/clj"} (pr-str {"error" "not authorized"})))
 
-(defn handle-static [{:keys [conn-id] :as conn} asset]
-  (log {:fn "handle-static" :at "start" :conn-id conn-id :asset asset})
+(defn handle-static [{:keys [request-id] :as conn} asset]
+  (log {:fn "handle-static" :at "start" :request-id request-id :asset asset})
   (.readFile fs (str "./public/" asset) (fn [e c]
     (log {:fn "handle-static" :at "read"})
       (write-res conn 200 {"Content-Type" "text/html"} c))))
 
-(defn handle-search [{:keys [conn-id req res query-params] :as conn}]
-  (log {:fn "handle-search" :at "start" :conn-id conn-id})
+(defn handle-search [{:keys [request-id req res query-params] :as conn}]
+  (log {:fn "handle-search" :at "start" :request-id request-id})
   (let [{:strs [search-id query]} query-params
         events-key (str "searches." search-id ".events")
         search-data {:search-id search-id :query query :events-key events-key :target :list}
@@ -53,12 +53,12 @@
       (ltrim events-key 100000 -1)
       (exec (fn [err res-js]
         (let [res (js->clj res-js)]
-          (log {:fn "handle-search" :at "execed" :conn-id conn-id :search-id search-id})
+          (log {:fn "handle-search" :at "execed" :request-id request-id :search-id search-id})
           (let [events (map reader/read-string (second res))]
             (write-res conn 200 {"Content-Type" "application/json"} (util/json-generate events)))))))))
 
-(defn handle-core [{:keys [conn-id method path] :as conn}]
-  (log {:fn "handle-core" :at "start" :conn-id conn-id :method method :path path})
+(defn handle-core [{:keys [request-id method path] :as conn}]
+  (log {:fn "handle-core" :at "start" :request-id request-id :method method :path path})
   (cond
     (and (= "GET" method) (= "/" path))
       (handle-static conn "index.html")
@@ -73,9 +73,9 @@
     :else
       (handle-not-found conn)))
 
-(defn handle-openid [{:keys [conn-id method path query-params req] :as conn}]
+(defn handle-openid [{:keys [request-id method path query-params req] :as conn}]
   (let [sess (.session req)]
-    (log {:fn "handle-openid" :at "start" :conn-id conn-id})
+    (log {:fn "handle-openid" :at "start" :request-id request-id})
     (cond
       (= ["GET" "/auth"] [method path])
         (if (= (conf/proxy-secret) (get query-params "proxy_secret"))
@@ -89,12 +89,12 @@
       :authorized
         (handle-core conn))))
 
-(defn handle-https [{:keys [conn-id headers] :as conn}]
+(defn handle-https [{:keys [request-id headers] :as conn}]
   (if (and (conf/force-https?) (not= (get headers "x-forwarded-proto") "https"))
     (handle-redirect conn (conf/canonical-host))
     (handle-openid conn)))
 
-(defn handle-favicon [{:keys [conn-id method path] :as conn}]
+(defn handle-favicon [{:keys [request-id method path] :as conn}]
   (if (= ["GET" "/favicon.ico"] [method path])
     (handle-not-found conn)
     (handle-https conn)))
@@ -112,10 +112,10 @@
     (fn [req res]
       (cp req res (fn [_]
         (s req res (fn [_]
-          (let [conn-id (node-uuid)
+          (let [request-id (node-uuid)
                {:keys [method path query-params headers]} (parse-req req)
-                conn {:conn-id conn-id :req req :res res :method method :path path :query-params query-params :headers headers}]
-            (log {:fn "handle" :at "start" :conn-id conn-id :method method :path path})
+                conn {:request-id request-id :req req :res res :method method :path path :query-params query-params :headers headers}]
+            (log {:fn "handle" :at "start" :request-id request-id :method method :path path})
             (handle-favicon conn)))))))))
 
 (defn listen [handle-fn port callback]
