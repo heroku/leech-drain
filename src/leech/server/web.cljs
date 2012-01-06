@@ -76,7 +76,7 @@
 
 (defn handle-openid [{:keys [request-id method path query-params req] :as conn}]
   (let [sess (.session req)]
-    (prn "sess1" sess)
+    (prn "sess1" (js->clj sess))
     (log {:fn "handle-openid" :at "start" :request-id request-id})
     (cond
       (= ["GET" "/auth"] [method path])
@@ -84,7 +84,7 @@
           (do
             (log {:fn "handle-openid" :at "authorize" :request-id request-id})
             (set! (.authorized sess) true)
-            (prn "sess2" sess)
+            (prn "sess2" (js->clj sess))
             (handle-redirect conn "/"))
           (do
             (log {:fn "handle-openid" :at "not-authorized" :request-id request-id})
