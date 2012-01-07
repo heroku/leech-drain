@@ -4,7 +4,7 @@
 
 Leech provides web-accessible, real-time filtered views of the Heroku event stream. This provides instant visibility into specific aspects of the Heroku infrastructure and its operations. Leech replaces manual log tailing and filtering.
 
-The Leech drain component consumes the HTTPS event stream, performs filtering, and writes the results to Redis for consumption by by the [Leech drain](https://github.com/heroku/leech-drain) component.
+The Leech drain component consumes the HTTPS event stream, performs filtering, and writes the results to Redis for consumption by by the [Leech web](https://github.com/heroku/leech-web) component.
 
 
 ## Local deploy
