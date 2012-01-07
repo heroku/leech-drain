@@ -7,11 +7,6 @@ Leech provides web-accessible, real-time filtered views of the Heroku event stre
 The Leech drain component consumes the HTTPS event stream, performs filtering, and writes the results to Redis for consumption by by the [Leech drain](https://github.com/heroku/leech-drain) component.
 
 
-## ClojureScript and Node.js
-
-The Leech drain is written in ClojureScript, and compiles to Node.js for execution. Leech uses the standard Node.js package management system `npm` for its JavaScript dependencies.
-
-
 ## Local deploy
 
 ```bash
@@ -26,30 +21,11 @@ $ foreman start
 
 ```bash
 $ heroku create leech-drain-production --stack cedar
-$ heroku config:add DEPLOY=production REDIS_URL=... AORTA_URLS=...
+$ heroku config:add DEPLOY=production REDIS_URL=...
 $ git push heroku master
-$ heroku scale drain=32
+$ heroku scale web=32
 ```
 
-
-## Updating code
-
 ```bash
-$ mate .
-$ npm install
-$ bin/compile
-$ git commit -am "update code"
-```
-
-
-## Updating ClojureScript
-
-```bash
-$ cd ~/repos/clojurescript
-$ git fetch github
-$ git merge github/master
-$ ./script/bootstrap
-$ cd ~/repos/leech
-$ bin/compile
-$ git commit -am "update clojurescript"
+$ ventricle drains:add https://leech-drain-production.herokuapp.com/events
 ```

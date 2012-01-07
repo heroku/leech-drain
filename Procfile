@@ -1,1 +1,1 @@
-drain:  bin/run drain
+web:  bin/web
